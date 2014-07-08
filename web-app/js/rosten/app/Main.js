@@ -88,12 +88,10 @@ define(["dojo/_base/kernel"
              	});
             }else if (oString == "person") {
             	addMailNavigation();
-            } else if (oString == "bbs") {
+            } else if (oString == "zcpz") {
             	deleteMailNavigation();
-            	require(["rosten/app/BbsManage"],function(){
-            		if(rosten.variable.showStartBbs==undefined || rosten.variable.showStartBbs!=true){
-            			show_bbsNaviEntity("mybbsManage");
-            		}
+            	require(["rosten/app/AssetConfigManage"],function(){
+            		show_assetConfigNaviEntity("zcdl");
             	});
             }else if(oString=="personconfig"){
                 deleteMailNavigation();

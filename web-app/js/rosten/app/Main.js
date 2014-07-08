@@ -224,10 +224,10 @@ define(["dojo/_base/kernel"
     		userId = rosten.kernel.getUserInforByKey("idnumber");
     		companyId = rosten.kernel.getUserInforByKey("companyid");
     	}
-    	showStartBbs(userId,companyId);
-    	showStartGtask(userId,companyId);
+    	//showStartBbs(userId,companyId);
+    	//showStartGtask(userId,companyId);
     	//showStartMail(userId,companyId);
-    	showStartDownloadFile(userId,companyId);
+    	//showStartDownloadFile(userId,companyId);
     };
     showStartGtask = function(userId,companyId){
     	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(data) {

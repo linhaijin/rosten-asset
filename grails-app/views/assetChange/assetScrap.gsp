@@ -106,7 +106,7 @@
 					var content = {};
 	
 					//增加对应节点上的金额控制
-					//if("${assetScrap?.status}" == "后勤分管领导审核" || "${assetScrap?.status}" == "秘书长审核"){
+					//if("${assetScrap?.status}" == "后勤分管领导审核" || "${assetScrap?.status}" == "秘书长审批"){
 						if(!conditionObj){
 							conditionObj = {};
 						}
@@ -243,10 +243,6 @@
 						rosten.toggleAction(buttonWidget,false);
 					});
 				};
-
-
-
-					
 			});
 
 			assetTypeSelect = function(){
@@ -530,15 +526,15 @@
 		</form>
 	</div>
 	<g:if test="${assetScrap?.id}">
-			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
-				href:"${createLink(controller:'share',action:'getCommentLog',id:assetScrap?.id)}"
-			'>	
-			</div>
-			<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
-				href:"${createLink(controller:'share',action:'getFlowLog',id:assetScrap?.id,params:[processDefinitionId:assetScrap?.processDefinitionId,taskId:assetScrap?.taskId])}"
-			'>	
-			</div>
-		</g:if>
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getCommentLog',id:assetScrap?.id)}"
+		'>	
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getFlowLog',id:assetScrap?.id,params:[processDefinitionId:assetScrap?.processDefinitionId,taskId:assetScrap?.taskId])}"
+		'>	
+		</div>
+	</g:if>
 </div> 
 <div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:455px'">
 	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:415px; margin:5 auto;">

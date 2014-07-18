@@ -530,42 +530,42 @@ class AssetLoseController {
 				if(assetType.equals("car")){
 					carCards = CarCards.get(it)
 					if(carCards){
-						carCards.assetStatus = "废损待审批"
+						carCards.assetStatus = "资产已报失"
 						carCards.seriesNo = seriesNo
 						totalPrice = carCards.onePrice
 					}
 				}else if(assetType.equals("land")){
 					landCards = LandCards.get(it)
 					if(landCards){
-						landCards.assetStatus = "废损待审批"
+						landCards.assetStatus = "资产已报失"
 						landCards.seriesNo = seriesNo
 						totalPrice = landCards.onePrice
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
 					if(houseCards){
-						houseCards.assetStatus = "废损待审批"
+						houseCards.assetStatus = "资产已报失"
 						houseCards.seriesNo = seriesNo
 						totalPrice = houseCards.onePrice
 					}
 				}else if(assetType.equals("device")){
 					deviceCards = DeviceCards.get(it)
 					if(deviceCards){
-						deviceCards.assetStatus = "废损待审批"
+						deviceCards.assetStatus = "资产已报失"
 						deviceCards.seriesNo = seriesNo
 						totalPrice = deviceCards.onePrice
 					}
 				}else if(assetType.equals("book")){
 					bookCards = BookCards.get(it)
 					if(bookCards){
-						bookCards.assetStatus = "废损待审批"
+						bookCards.assetStatus = "资产已报失"
 						bookCards.seriesNo = seriesNo
 						totalPrice = bookCards.onePrice
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
-						furnitureCards.assetStatus = "废损待审批"
+						furnitureCards.assetStatus = "资产已报失"
 						furnitureCards.seriesNo = seriesNo
 						totalPrice = furnitureCards.onePrice
 					}

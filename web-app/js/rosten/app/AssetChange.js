@@ -4,7 +4,7 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
-	//导出
+	//资产报损导出
 	assetScrap_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		 /*
@@ -25,7 +25,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				content.departName = departName.get("value");
 			}
 		 */
-		rosten.openNewWindow("export", rosten.webPath + "/assetScrap/exportAssetScrap?companyId="+companyId);
+		rosten.openNewWindow("export", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId);
+	};
+	//资产调拨导出
+	assetAllocate_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("export", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId);
 	};
 	
 	//报废报损
@@ -64,7 +69,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetAllocate_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetAllocate");
 	};
 	
 	assetAllocate_delete = function(){

@@ -92,6 +92,16 @@ class ApplyNotes {
 		}
 	}
 	
+	Date regDate = new Date()
+	def getFormattedRegDate(){
+		if(regDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(regDate)
+		}else{
+			return ""
+		}
+	}
+	
 	//国别
 	String country = "中国"
 	
@@ -162,6 +172,7 @@ class ApplyNotes {
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
 		applyUser nullable:false,blank:false
+		userDepart nullable:false,blank:false
 		userCategory nullable:false,blank:false
 		rootAssetCategory nullable:false,blank:false
 		assetName nullable:false,blank:false

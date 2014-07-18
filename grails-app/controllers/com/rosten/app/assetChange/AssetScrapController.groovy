@@ -1,7 +1,6 @@
 package com.rosten.app.assetChange
 
 import grails.converters.JSON
-import org.activiti.engine.runtime.ProcessInstance
 
 import com.rosten.app.assetCards.CarCards
 import com.rosten.app.assetCards.LandCards
@@ -12,14 +11,15 @@ import com.rosten.app.assetCards.FurnitureCards
 import com.rosten.app.assetChange.AssetScrap
 
 import com.rosten.app.util.FieldAcl
-import com.rosten.app.util.GridUtil
 import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
+
+import com.rosten.app.util.GridUtil
+import org.activiti.engine.runtime.ProcessInstance
 import com.rosten.app.system.Model
 import com.rosten.app.system.SystemService
-
 import com.rosten.app.workflow.WorkFlowService
 import com.rosten.app.workflow.FlowBusiness
 
@@ -29,11 +29,9 @@ import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
 
 import com.rosten.app.export.ExcelExport
-import com.rosten.app.export.WordExport;
+import com.rosten.app.export.WordExport
 
 class AssetScrapController {
-
-//	def bookKeepingService
 	def assetCardsService
     def assetChangeService
 	def springSecurityService
@@ -64,14 +62,14 @@ class AssetScrapController {
 						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
 				}
 			}
 		}else{
-			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 		}
 		render actionList as JSON
 	}
@@ -80,10 +78,9 @@ class AssetScrapController {
 		def actionList =[]
 		def strname = "assetScrap"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
-		
 		actionList << createAction("导出",imgPath + "read.gif",strname + "_export")
 		
 		render actionList as JSON
@@ -631,42 +628,42 @@ class AssetScrapController {
 				if(assetType.equals("car")){
 					carCards = CarCards.get(it)
 					if(carCards){
-						carCards.assetStatus = "废损待审批"
+						carCards.assetStatus = "资产已报损"
 						carCards.seriesNo = seriesNo
 						totalPrice = carCards.onePrice
 					}
 				}else if(assetType.equals("land")){
 					landCards = LandCards.get(it)
 					if(landCards){
-						landCards.assetStatus = "废损待审批"
+						landCards.assetStatus = "资产已报损"
 						landCards.seriesNo = seriesNo
 						totalPrice = landCards.onePrice
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
 					if(houseCards){
-						houseCards.assetStatus = "废损待审批"
+						houseCards.assetStatus = "资产已报损"
 						houseCards.seriesNo = seriesNo
 						totalPrice = houseCards.onePrice
 					}
 				}else if(assetType.equals("device")){
 					deviceCards = DeviceCards.get(it)
 					if(deviceCards){
-						deviceCards.assetStatus = "废损待审批"
+						deviceCards.assetStatus = "资产已报损"
 						deviceCards.seriesNo = seriesNo
 						totalPrice = deviceCards.onePrice
 					}
 				}else if(assetType.equals("book")){
 					bookCards = BookCards.get(it)
 					if(bookCards){
-						bookCards.assetStatus = "废损待审批"
+						bookCards.assetStatus = "资产已报损"
 						bookCards.seriesNo = seriesNo
 						totalPrice = bookCards.onePrice
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
-						furnitureCards.assetStatus = "废损待审批"
+						furnitureCards.assetStatus = "资产已报损"
 						furnitureCards.seriesNo = seriesNo
 						totalPrice = furnitureCards.onePrice
 					}
@@ -761,7 +758,7 @@ class AssetScrapController {
 		def json=[:]
 		
 		def assetScrap = AssetScrap.get(params.id)
-		//处理资产申请状态
+		//处理资产报损状态
 		assetScrap.dataStatus = params.status
 //		if(params.status.equals("已归档")){
 //			assetScrap.dataStatus = params.status
@@ -825,7 +822,7 @@ class AssetScrapController {
 					
 					def args = [:]
 					args["type"] = "【资产报损】"
-					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的报损信息"
+					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的资产报损信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = assetScrap.id
 					args["user"] = nextUser
@@ -937,7 +934,7 @@ class AssetScrapController {
 				//增加待办事项
 				def args = [:]
 				args["type"] = "【资产报损】"
-				args["content"] = "编号为  【" + assetScrap.seriesNo +  "】 的报损信息被退回，请查看！"
+				args["content"] = "编号为  【" + assetScrap.seriesNo +  "】 的资产报损信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = assetScrap.id
 				args["user"] = user
@@ -987,13 +984,59 @@ class AssetScrapController {
 		render json as JSON
 	}
 	
-	def exportAssetScrap ={
+//	def exportAssetScrap ={
+//		OutputStream os = response.outputStream
+//		def company = Company.get(params.companyId)
+//		response.setContentType('application/vnd.ms-excel')
+//		response.setHeader("Content-disposition", "attachment; filename=" + new String("员工信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+//		
+//		def excel = new ExcelExport()
+//		excel.mbxz(os)
+//	} 
+	
+	def assetScrapExport = {
 		OutputStream os = response.outputStream
 		def company = Company.get(params.companyId)
 		response.setContentType('application/vnd.ms-excel')
-		response.setHeader("Content-disposition", "attachment; filename=" + new String("员工信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报损信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
+		//查询条件
+//		def searchArgs =[:]
+//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
+		def c = AssetScrap.createCriteria()
+
+		def scrapList = c.list{
+			
+			eq("company",company)
+			eq("status","已结束")
+			
+//			searchArgs.each{k,v->
+//				if(k.equals("departName")){
+//					departs{
+//						like(k,"%" + v + "%")
+//					}
+//				}else if(k.equals("username")){
+//					createAlias('user', 'a')
+//					like("a.username","%" + v + "%")
+//					
+//				}else{
+//					like(k,"%" + v + "%")
+//				}
+//			}
+			
+//			if("staffAdd".equals(params.type)){
+//				not {'in'("status",["在职","退休","离职"])}
+//				order("createDate", "desc")
+//			}else{
+//				'in'("status",["在职","退休","离职"])
+//				order("createDate", "desc")
+//			}
+			
+		}
 		def excel = new ExcelExport()
-		excel.mbxz(os)
-	} 
+		excel.scrapDc(os,scrapList)
+	}
 }

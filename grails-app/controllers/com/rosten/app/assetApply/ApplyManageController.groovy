@@ -1,6 +1,7 @@
 package com.rosten.app.assetApply
 
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 import org.activiti.engine.runtime.ProcessInstance
 
 import com.rosten.app.util.FieldAcl
@@ -46,6 +47,41 @@ class ApplyManageController {
 	def systemService
 	def shareService
 	def startService
+	
+	/*机构代码转化列表*/
+	def getRegions = {
+		def regions = []
+		regions<<[name:'协会本部',orgno:'01']
+		regions<<[name:'舟山办事处',orgno:'02']
+		regions<<[name:'普陀办事处',orgno:'03']
+		regions<<[name:'岱山办事处',orgno:'04']
+		regions<<[name:'嵊泗办事处',orgno:'05']
+		regions<<[name:'定海办事处',orgno:'06']
+		regions<<[name:'台州办事处',orgno:'07']
+		regions<<[name:'温岭办事处',orgno:'08']
+		regions<<[name:'玉环办事处',orgno:'09']
+		regions<<[name:'路桥办事处',orgno:'10']
+		regions<<[name:'椒江办事处',orgno:'11']
+		regions<<[name:'临海办事处',orgno:'12']
+		regions<<[name:'三门办事处',orgno:'13']
+		regions<<[name:'温州办事处',orgno:'14']
+		regions<<[name:'瑞安办事处',orgno:'15']
+		regions<<[name:'苍南办事处',orgno:'16']
+		regions<<[name:'平阳办事处',orgno:'17']
+		regions<<[name:'乐清办事处',orgno:'18']
+		regions<<[name:'洞头办事处',orgno:'19']
+		regions<<[name:'嘉善办事处',orgno:'20']
+		regions<<[name:'平湖办事处',orgno:'21']
+		regions<<[name:'淳安办事处',orgno:'22']
+		regions<<[name:'上虞办事处',orgno:'23']
+		regions<<[name:'海盐办事处',orgno:'24']
+		regions<<[name:'台州服务中心本级',orgno:'61']
+		regions<<[name:'台州服务中心松门服务部',orgno:'62']
+		regions<<[name:'舟山服务中心',orgno:'63']
+		regions<<[name:'温州服务中心',orgno:'64']
+		
+		return regions
+	}
 	
 	def assetApplyForm ={
 		def webPath = request.getContextPath() + "/"
@@ -221,6 +257,7 @@ class ApplyManageController {
 		
 		if(applyNotes.save(flush:true)){
 			json["result"] = "true"
+			json["id"] = applyNotes.id
 		}else{
 			applyNotes.errors.each{
 				println it
@@ -296,11 +333,45 @@ class ApplyManageController {
 				ids.each {  
 					def applyNotes = ApplyNotes.get(it)
 					def assetType = applyNotes.rootAssetCategory
+//					//获取资产编号A代码
+//					def regNo_A
+					def assetCount = applyNotes.amount
+					def totalPrice = applyNotes.totalPrice
+					def onePrice = totalPrice/assetCount
+//					if(onePrice>2000){
+//						regNo_A = "1"
+//					}
+//					//获取资产编号BC代码
+//					def regNo_BC
+//					def departName = applyNotes.getDepartName()
+//					def regions = getRegions()
+//					def orgRegion
+//					def region
+//					region = regions.find{
+//						it.name.equals(departName)
+//					}
+//					if(region != null) {
+//						regNo_BC = region["orgno"]
+//					}
+//					//获取资产编号DE代码
+//					SimpleDateFormat sdf = new SimpleDateFormat("yy-MM")
+//					def taskTime = sdf.format(applyNotes.regDate).toString()
+//					def regNo_DE = taskTime.replaceAll("-","")
+//					Date regDate = applyNotes.regDate
+//					def year = regDate.getYear()
+//					println "departName="+departName
+//					println "regNo_A=="+regNo_A
+//					println "regNo_BC=="+regNo_BC
+//					println "regNo_DE=="+regNo_DE
+//					println "regNo=="+regNo_A+regNo_BC+regNo_DE
+//					println "year=="+year
+//					return
+					
 					if(assetType.equals("设备")){
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+						
 						for(int i=0;i<assetCount;i++){
 							def deviceCard = new DeviceCards()
 							deviceCard.company = company
@@ -309,7 +380,7 @@ class ApplyManageController {
 							deviceCard.userCategory = applyNotes.userCategory
 							deviceCard.assetName = applyNotes.assetName
 							deviceCard.userDepart = applyNotes.userDepart
-							deviceCard.onePrice = applyNotes.totalPrice/assetCount
+							deviceCard.onePrice = onePrice
 							deviceCard.country = applyNotes.country
 							deviceCard.assetStatus = "新建"
 							deviceCard.save(flush: true)
@@ -318,7 +389,7 @@ class ApplyManageController {
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+//						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def carCard = new CarCards()
 							carCard.company = company
@@ -332,7 +403,7 @@ class ApplyManageController {
 	//						carCard.costCategory = applyNotes.costCategory
 	//						carCard.buyDate = applyNotes.buyDate
 	//						carCard.organizationalType = applyNotes.organizationalType
-							carCard.onePrice = applyNotes.totalPrice/assetCount
+							carCard.onePrice = onePrice
 	//						if(applyNotes.undertakingRevenue == 0){
 	//							carCard.undertakingRevenue = 0
 	//						}else{
@@ -358,7 +429,7 @@ class ApplyManageController {
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+//						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def houseCard = new HouseCards()
 							houseCard.company = company
@@ -367,7 +438,7 @@ class ApplyManageController {
 							houseCard.userCategory = applyNotes.userCategory
 							houseCard.assetName = applyNotes.assetName
 							houseCard.userDepart = applyNotes.userDepart
-							houseCard.onePrice = applyNotes.totalPrice/assetCount
+							houseCard.onePrice = onePrice
 							houseCard.country = applyNotes.country
 							houseCard.assetStatus = "新建"
 							houseCard.save(flush: true)
@@ -376,7 +447,7 @@ class ApplyManageController {
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+//						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def landCard = new LandCards()
 							landCard.company = company
@@ -385,7 +456,7 @@ class ApplyManageController {
 							landCard.userCategory = applyNotes.userCategory
 							landCard.assetName = applyNotes.assetName
 							landCard.userDepart = applyNotes.userDepart
-							landCard.onePrice = applyNotes.totalPrice/assetCount
+							landCard.onePrice = onePrice
 							landCard.country = applyNotes.country
 							landCard.assetStatus = "新建"
 							landCard.save(flush: true)
@@ -394,7 +465,7 @@ class ApplyManageController {
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+//						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def bookCard = new BookCards()
 							bookCard.company = company
@@ -403,7 +474,7 @@ class ApplyManageController {
 							bookCard.userCategory = applyNotes.userCategory
 							bookCard.assetName = applyNotes.assetName
 							bookCard.userDepart = applyNotes.userDepart
-							bookCard.onePrice = applyNotes.totalPrice/assetCount
+							bookCard.onePrice = onePrice
 							bookCard.country = applyNotes.country
 							bookCard.assetStatus = "新建"
 							bookCard.save(flush: true)
@@ -412,7 +483,7 @@ class ApplyManageController {
 						/*
 						 * 获取申请信息中的数量，创建相同数量的资产卡片
 						 */
-						def assetCount = applyNotes.amount
+//						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def furnitureCard = new FurnitureCards()
 							furnitureCard.company = company
@@ -421,7 +492,7 @@ class ApplyManageController {
 							furnitureCard.userCategory = applyNotes.userCategory
 							furnitureCard.assetName = applyNotes.assetName
 							furnitureCard.userDepart = applyNotes.userDepart
-							furnitureCard.onePrice = applyNotes.totalPrice/assetCount
+							furnitureCard.onePrice = onePrice
 							furnitureCard.country = applyNotes.country
 							furnitureCard.assetStatus = "新建"
 							furnitureCard.save(flush: true)

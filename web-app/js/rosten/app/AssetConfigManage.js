@@ -50,7 +50,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		
 		switch (oString) {
-		case "zcdl":
+		case "assetCategory":
             var naviJson = {
                 identifier : oString,
                 actionBarSrc : rosten.webPath + "/assetConfigAction/assetCategoryView?userId=" + userid,

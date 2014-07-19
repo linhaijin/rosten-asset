@@ -72,8 +72,8 @@
 					<table border="0" width="740" align="left">
 				
 					<tr>
-						    <td><div align="right"><span style="color:red">*&nbsp;</span>机动车辆登记号：</div></td>
-							    <td>
+						    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>机动车辆登记号：</div></td>
+							    <td width="250">
 		                           	<input id="registerNum" data-dojo-type="dijit/form/ValidationTextBox" 
 		                               	data-dojo-props='name:"registerNum",${fieldAcl.isReadOnly("registerNum")},
 		                               		trim:true,
@@ -81,8 +81,8 @@
 		             						value:"${carRegister?.registerNum}"
 		                           	'/>
 					            </td>
-							    <td><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
-							    <td>
+							    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
+							    <td width="250">
 							    	<input id="assetCategory" data-dojo-type="dijit/form/ValidationTextBox" 
 		                               	data-dojo-props='name:"assetCategory",${fieldAcl.isReadOnly("assetCategory")},
 		                               		trim:true,
@@ -138,12 +138,16 @@
 						<tr>
 						    <td><div align="right"><span style="color:red">*&nbsp;</span>机动车来源：</div></td>
 							    <td>
-							    	<input id="carSource" data-dojo-type="dijit/form/ValidationTextBox" 
-		                               	data-dojo-props='name:"carSource",${fieldAcl.isReadOnly("carSource")},
-		                               		trim:true,
-		                               		required:true,
-		             						value:"${carRegister?.carSource}"
-		                           	'/>
+		                           	<select id="carSource" data-dojo-type="dijit/form/FilteringSelect"
+		                           		data-dojo-props='name:"carSource",trim:true,required:true,
+		                           			autoComplete:false,${fieldAcl.isReadOnly("carSource")},
+		            						value:"${carRegister?.carSource}"
+		                            '>
+			                            <option value="购置">购置</option>
+										<option value="捐赠">捐赠</option>
+										<option value="自制">自制</option>
+										<option value="其他">其他</option>
+		                           	</select>
 					            </td>
 							    <td><div align="right"><span style="color:red">*&nbsp;</span>购买日期：</div></td>
 							    <td>
@@ -157,21 +161,32 @@
 						<tr>
 						    <td><div align="right"><span style="color:red">*&nbsp;</span>使用方向：</div></td>
 							    <td>
-							    	<input id="userDirection" data-dojo-type="dijit/form/ValidationTextBox" 
-		                               	data-dojo-props='name:"userDirection",${fieldAcl.isReadOnly("userDirection")},
-		                               		trim:true,
-		                               		required:true,
-		             						value:"${carRegister?.userDirection}"
-		                           	'/>
+							    	<select id="userDirection" data-dojo-type="dijit/form/FilteringSelect"
+		                           		data-dojo-props='name:"userDirection",trim:true,required:true,
+		                           			autoComplete:false,${fieldAcl.isReadOnly("userDirection")},
+		            						value:"${carRegister?.userDirection}"
+		                            '>
+			                            <option value="教学">教学</option>
+										<option value="科研">科研</option>
+										<option value="行政">行政</option>
+										<option value="生活">生活</option>
+										<option value="社会服务">社会服务</option>
+										<option value="其他">其他</option>
+		                           	</select>
+		                           	
 					            </td>
 							    <td><div align="right"><span style="color:red">*&nbsp;</span>使用状况：</div></td>
 							    <td>
-							    	<input id="userStatus" data-dojo-type="dijit/form/ValidationTextBox" 
-		                               	data-dojo-props='name:"userStatus",${fieldAcl.isReadOnly("userStatus")},
-		                               		trim:true,
-		                               		required:true,
-		             						value:"${carRegister?.userStatus}"
-		                           	'/>
+							    	<select id="userStatus" data-dojo-type="dijit/form/FilteringSelect"
+		                           		data-dojo-props='name:"userStatus",trim:true,required:true,
+		                           			autoComplete:false,${fieldAcl.isReadOnly("userStatus")},
+		            						value:"${carRegister?.userStatus}"
+		                            '>
+			                            <option value="在用">在用</option>
+										<option value="多余">多余</option>
+										<option value="待修">待修</option>
+										<option value="其他">其他</option>
+		                           	</select>
 					            </td>
 						</tr>
 						
@@ -204,7 +219,7 @@
 		                               		trim:true,
 		                               		required:true,
 		             						value:"${carRegister?.undertakingRevenue}"
-		                           	'/>
+		                           	'/><span style="margin-left:10px">元</span>
 					            </td>
 							    <td><div align="right"><span style="color:red">*&nbsp;</span>财政拨款：</div></td>
 							    <td>
@@ -213,7 +228,7 @@
 		                               		trim:true,
 		                               		required:true,
 		             						value:"${carRegister?.fiscalAppropriation}"
-		                           	'/>
+		                           	'/><span style="margin-left:10px">元</span>
 					            </td>
 						</tr>
 						
@@ -225,7 +240,7 @@
 		                               		trim:true,
 		                               		required:true,
 		             						value:"${carRegister?.otherFund}"
-		                           	'/>
+		                           	'/><span style="margin-left:10px">元</span>
 					            </td>
 							    <td><div align="right"><span style="color:red">*&nbsp;</span>总金额：</div></td>
 							    <td>
@@ -234,18 +249,23 @@
 		                               		trim:true,
 		                               		required:true,
 		             						value:"${carRegister?.totalPrice}"
-		                           	'/>
+		                           	'/><span style="margin-left:10px">元</span>
 					            </td>
 						</tr>
 						
 							<tr>
 						    <td><div align="right">采购组织形式：</div></td>
 							    <td>
-							    	<input id="organizationalType" data-dojo-type="dijit/form/ValidationTextBox" 
-		                               	data-dojo-props='name:"organizationalType",${fieldAcl.isReadOnly("organizationalType")},
-		                               		trim:true,
-		             						value:"${carRegister?.organizationalType}"
-		                           	'/>
+							    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
+		                           		data-dojo-props='name:"organizationalType",trim:true,required:true,
+		                           			autoComplete:false,${fieldAcl.isReadOnly("organizationalType")},
+		            						value:"${carRegister?.organizationalType}"
+		                            '>
+			                            <option value="政府集中采购">政府集中采购</option>
+										<option value="部门集中采购">部门集中采购</option>
+										<option value="分散采购">分散采购</option>
+										<option value="其他">其他</option>
+		                           	</select>
 					            </td>
 							    <td><div align="right">存放地点：</div></td>
 							    <td>
@@ -306,7 +326,7 @@
 					<table border="0" width="740" align="left">
 				
 					<tr>
-						     <td width="120"><div align="right">车牌号：</div></td>
+						     <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>车牌号：</div></td>
 							      <td width="250">
 							    	<input id="plateNumber" data-dojo-type="dijit/form/ValidationTextBox" 
 		                               	data-dojo-props='name:"plateNumber",${fieldAcl.isReadOnly("plateNumber")},

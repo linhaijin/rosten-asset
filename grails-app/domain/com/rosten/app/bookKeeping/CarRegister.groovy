@@ -15,7 +15,7 @@ class CarRegister {
 	String id
 	
 	//登记号
-	@GridColumn(name="登记号")
+	@GridColumn(name="登记号",formatter="carRegister_formatTopic")
 	String registerNum
 	
 	//资产分类名称

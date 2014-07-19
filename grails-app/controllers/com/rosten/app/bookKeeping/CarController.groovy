@@ -40,7 +40,7 @@ class CarController {
 		
 		//特殊字段信息处理
 		carRegister.buyDate = Util.convertToTimestamp(params.buyDate)
-		carRegister.userDepart = Depart.get(params.departId)
+		carRegister.userDepart = Depart.get(params.allowdepartsId)
 		
 		if(carRegister.save(flush:true)){
 			json["result"] = "true"
@@ -103,7 +103,11 @@ class CarController {
 		
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
+		
 		def carRegister = new CarRegister()
+		if(params.id){
+			carRegister = CarRegister.get(params.id)
+		}
 		
 		model["company"] = company
 		model["carRegister"] = carRegister

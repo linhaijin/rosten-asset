@@ -47,7 +47,6 @@ class CarController {
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		def carRegister = new CarRegister()
-
 		
 		model["company"] = company
 		model["carRegister"] = carRegister
@@ -57,7 +56,7 @@ class CarController {
 		}
 		model["fieldAcl"] = fa
 		
-		render(view:'/car/carRegister',model:model)
+		render(view:'/bookKeeping/carRegister',model:model)
 	}
    
 }

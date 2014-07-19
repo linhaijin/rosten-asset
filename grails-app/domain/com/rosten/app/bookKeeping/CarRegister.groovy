@@ -60,6 +60,15 @@ class CarRegister {
 		}
 	}
 	
+	def getFormattedShowBuyDate(){
+		if(buyDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(buyDate)
+		}else{
+			return ""
+		}
+	}
+	
 	//使用方向	 
 	String userDirection = "行政"
 	
@@ -124,7 +133,7 @@ class CarRegister {
 	static belongsTo = [company:Company]
 	
     static constraints = {
-		registerNum nullable:true ,blank: false, unique: true
+		registerNum nullable:false ,blank: false, unique: true
 		organizationalType nullable:true,blank:true
 		storePlace nullable:true,blank:true
 		staffingStatus nullable:true,blank:true

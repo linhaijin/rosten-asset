@@ -110,6 +110,11 @@ define(["dojo/_base/kernel"
 //            		show_publicNaviEntity("downloadFileManage");
             		returnToMain();
             	});
+            }else if (oString == "bookKeeping") {
+            	deleteMailNavigation();
+            	require(["rosten/app/CarRegister"],function(){
+            		show_carNaviEntity("carRegister");
+            	});
             }else{
             	deleteMailNavigation();
             	returnToMain();

@@ -115,6 +115,11 @@ define(["dojo/_base/kernel"
             	require(["rosten/app/CarRegister"],function(){
             		show_carNaviEntity("carRegister");
             	});
+            }else if (oString == "static") {
+            	deleteMailNavigation();
+            	require(["rosten/app/StaticManage"],function(){
+            		show_staticNaviEntity("static");
+            	});
             }else{
             	deleteMailNavigation();
             	returnToMain();

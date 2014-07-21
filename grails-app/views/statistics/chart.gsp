@@ -172,7 +172,7 @@
    			var groupList = JSON.parse('${groupList}');
    			var departList = JSON.parse('${departList}');
    			
-   			var store1 = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getDepartUsersByType',id:company?.id,params:[departIds:departIds,groupNames:groupNames])}"});
+   			var store1 = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getAssetByDepart',id:company?.id,params:[departIds:departIds,groupNames:groupNames])}"});
    			
 	        var chartC = new Chart("cols");
             chartC.setTheme(ThreeD);
@@ -256,7 +256,7 @@
 				
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"部门员工人数分布统计   (2014年度)",toggleable:false,
+			data-dojo-props='region:"center",title:"各部门车辆统计",toggleable:false,
 				height:"210px",moreText:""'>
 				
 			<div class="charts">

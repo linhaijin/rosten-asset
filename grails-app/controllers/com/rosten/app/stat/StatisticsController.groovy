@@ -19,20 +19,36 @@ class StatisticsController {
 			
 			groupNames.each{item ->
 				def lastIndex = Util.obj2str(index).padLeft(3,"0")
+				
+				def sMap
 				def _number = 0
-				depart.getAllUser().each{ _user ->
-					if(item.equals(_user.userTypeEntity.typeName)){
-						_number += 1
-					}
+				
+				switch (item){
+					case "土地":
+						_number = 1000
+						sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+						break
+					case "房屋":
+						_number = 3000
+						sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+						break
+					case "设备":
+						_number = 200
+						sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+						break
+					case "图书":
+						_number = 500
+						sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+						break
+					case "车辆":
+						_number = 1500
+						sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+						break
 				}
 				
-				if(_number!=0){
-					def sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
-					
-					index += 1
-					
-					json.items+=sMap
-				}
+				index += 1
+				
+				json.items+=sMap
 			}
 		}
 		render json as JSON

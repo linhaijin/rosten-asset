@@ -96,7 +96,7 @@ define(["dojo/_base/kernel"
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
-                	show_smsNaviEntity("gtaskManage");
+                	show_smsNaviEntity("personInformation");
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();

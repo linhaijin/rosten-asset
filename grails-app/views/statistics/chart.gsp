@@ -85,11 +85,15 @@
 	function( kernel,JSON,lang,query,domStyle,domClass,domConstruct,registry,ItemFileWriteStore,
 		Chart,DataSeries,ThreeD,Legend,Default,Markers,Tooltip,Magnify,Grid,MoveSlice,Pie,Shake,ClusteredColumns,Columns,StackedAreas
 		) {
+		
 		kernel.addOnLoad(function() {
 			makeCharts();
 		});
 		
 		makeCharts = function(){
+			var dom = document.getElementById("lines1");
+			if(dom==undefined) return;
+			
 	        var chartL = new Chart("lines1");
 	        
 	        chartL.addPlot("default", {type: Markers});

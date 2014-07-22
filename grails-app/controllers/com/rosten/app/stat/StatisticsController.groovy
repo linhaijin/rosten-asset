@@ -7,6 +7,38 @@ import grails.converters.JSON
 
 class StatisticsController {
 	
+	def getAssetStatic ={
+		def company = Company.get(params.id)
+		def json = [identifier:'id',label:'name',items:[]]
+		
+		def index = 1
+		
+		params.departIds.split(",").each{
+			def depart = Depart.get(it)
+			def lastIndex,sMap
+			
+			//土地
+			lastIndex = Util.obj2str(index).padLeft(3,"0")
+			sMap = ["id":lastIndex,"name":depart.departName,"type":"td","money":4000]
+			index += 1
+			json.items+=sMap
+			
+			//房屋
+			lastIndex = Util.obj2str(index).padLeft(3,"0")
+			sMap = ["id":lastIndex,"name":depart.departName,"type":"fw","money":2000]
+			index += 1
+			json.items+=sMap
+			
+			//车辆
+			lastIndex = Util.obj2str(index).padLeft(3,"0")
+			sMap = ["id":lastIndex,"name":depart.departName,"type":"cl","number":30,"money":1000]
+			index += 1
+			json.items+=sMap
+			
+			
+		}
+		render json as JSON
+	}
 	def getAssetByDepart ={
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]

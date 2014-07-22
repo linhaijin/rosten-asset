@@ -200,7 +200,95 @@
             chartC.render();
     		addLegend(chartC, "cols_legend");
 
-    		
+
+			//各部门车辆统计
+			
+			var store2 = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getAssetStatic',id:company?.id,params:[departIds:departIds])}"});
+			
+			var chartCl = new Chart("cols_cl");
+			chartCl.addPlot("default", {type: Columns,gap: 15});
+			chartCl.setTheme(ThreeD);
+
+			chartCl.addAxis("x", {
+            	natural: true,
+            	labelFunc: function(value){
+            		return departList[value-1];
+				}
+            });
+
+			chartCl.addAxis("y", {
+	        	title: "车辆数(辆)",
+	        	titleGap: 20, 
+	        	titleFontColor: "green",
+	            titleOrientation: "axis",
+	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
+	        	
+	        });
+			chartCl.addSeries("机动车辆", new DataSeries(store2, {query: {type: "cl"}}, dojo.hitch(null, valTrans1, "number"))
+			//,{stroke: {color: "lightblue"}, fill: "lightblue"}
+			);
+			
+			new Tooltip(chartCl);
+			chartCl.render();
+	        addLegend(chartCl, "cols_legend_cl");
+
+	        //各部门土地统计
+			var chartTd = new Chart("cols_td");
+			chartTd.addPlot("default", {type: Columns,gap: 15});
+			chartTd.setTheme(ThreeD);
+
+			chartTd.addAxis("x", {
+            	natural: true,
+            	labelFunc: function(value){
+            		return departList[value-1];
+				}
+            });
+
+			chartTd.addAxis("y", {
+	        	title: "总金额(万元)",
+	        	titleGap: 20, 
+	        	titleFontColor: "green",
+	            titleOrientation: "axis",
+	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
+	        	
+	        });
+			chartTd.addSeries("土地", new DataSeries(store2, {query: {type: "td"}}, {y: "money", tooltip: "money"}));
+			
+			new Tooltip(chartTd);
+			chartTd.render();
+	        addLegend(chartTd, "cols_legend_td");
+	        
+	        //各部门土地统计
+	        var chartFw = new Chart("cols_fw");
+	        chartFw.addPlot("default", {type: Columns,gap: 15});
+	        chartFw.setTheme(ThreeD);
+
+	        chartFw.addAxis("x", {
+            	natural: true,
+            	labelFunc: function(value){
+            		return departList[value-1];
+				}
+            });
+
+	        chartFw.addAxis("y", {
+	        	title: "总金额(万元)",
+	        	titleGap: 20, 
+	        	titleFontColor: "green",
+	            titleOrientation: "axis",
+	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
+	        	
+	        });
+	        chartFw.addSeries("房屋", new DataSeries(store2, {query: {type: "td"}}, {y: "money", tooltip: "money"}));
+			
+			new Tooltip(chartFw);
+			chartFw.render();
+	        addLegend(chartFw, "cols_legend_fw");
+	    };
+	    function valTrans1(value, store, item){
+	        return {
+	            y: store.getValue(item, value),
+	            tooltip: "总金额:" + store.getValue(item, "money") + "万元"
+	        };
 	    };
 	    function valTrans(value, store, item){
 	        return {
@@ -260,9 +348,9 @@
 				height:"210px",moreText:""'>
 				
 			<div class="charts">
-				<div id="pie_legend"></div>
-				<div class="chart-area-pie">
-					<div id="pie" class="chart-pie"></div>
+				<div id="cols_legend_cl"></div>
+				<div class="chart-area-cols">
+					<div id="cols_cl" class="chart-cols"></div>
 				</div>
 			</div>	
 				
@@ -271,27 +359,27 @@
 	
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"。。。",toggleable:false,
+			data-dojo-props='region:"left",title:"各部门土地统计",toggleable:false,
 				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
 				
 			<div class="charts">
-				<div id="cols_legend"></div>
+				<div id="cols_legend_td"></div>
 				<div class="chart-area-cols">
-					<div id="cols" class="chart-cols"></div>
+					<div id="cols_td" class="chart-cols"></div>
 				</div>
 			</div>	
 			
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"。。。",toggleable:false,
+			data-dojo-props='region:"center",title:"各部门土地统计",toggleable:false,
 				height:"210px",moreText:""'>
 				
-			<div class="charts">	
-				<div class="chart-area-pie">
-		            <div id="pie_legend1"></div>
-					<div id="pie1" class="chart-pie"></div>
+			<div class="charts">
+				<div id="cols_legend_fw"></div>
+				<div class="chart-area-cols">
+					<div id="cols_fw" class="chart-cols"></div>
 				</div>
-			</div>	
+			</div>		
 				
 		</div>						
 	</div>

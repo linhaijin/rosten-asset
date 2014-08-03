@@ -10,7 +10,7 @@ import java.util.Date
 
 class AssetCategory {
 	String id
-	
+	 
 	//类型名称
 	@GridColumn(name="大类名称",formatter="zcdl_formatTitle",colIdx=1)
 	String category

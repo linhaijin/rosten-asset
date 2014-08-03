@@ -119,5 +119,114 @@ class CarController {
 		
 		render(view:'/bookKeeping/carRegister',model:model)
 	}
+	
+//	土地登记操作start
+	def landRegisterSave ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		
+		//车辆基本信息---------------------------
+		def landBaseInfor = new LandBaseInfor()
+		if(params.landBaseInforId && !"".equals(params.landBaseInforId)){
+			landBaseInfor = LandBaseInfor.get(params.landBaseInforId)
+		}else{
+			landBaseInfor.company = company
+		}
+		landBaseInfor.properties = params
+		landBaseInfor.clearErrors()
+		//----------------------------------------
+		
+		//车辆登记信息保存-------------------------------
+		def land = new LandRegister()
+		if(params.id && !"".equals(params.id)){
+			landRegister = LandRegister.get(params.id)
+		}else{
+			landRegister.company = company
+			landRegister.landBaseInfor = landBaseInfor
+		}
+		landRegister.properties = params
+		landRegister.clearErrors()
+		
+		//特殊字段信息处理
+		landRegister.buyDate = Util.convertToTimestamp(params.buyDate)
+		carRegister.userDepart = Depart.get(params.allowdepartsId)
+		
+		if(landRegister.save(flush:true)){
+			json["result"] = "true"
+		}else{
+			landRegister.errors.each{
+				println it
+			}
+			json["result"] = "false"
+		}
+		render json as JSON
+	}
+	def landRegisterDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def landRegister = LandRegister.get(it)
+				if(landRegister){
+					landRegister.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def landRegisterGrid ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = carService.getLandRegisterListLayout()
+		}
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			json["gridData"] = carService.getLandRegisterDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = carService.getLandRegisterCount(company)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	
+	
+	def landRegisterAdd ={
+		redirect(action:"landRegisterShow",params:params)
+	}
+	
+	def landRegisterShow ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		
+		def landRegister = new LandRegister()
+		if(params.id){
+			landRegister = LandRegister.get(params.id)
+		}
+		
+		model["company"] = company
+		model["carRegister"] = landRegister
+		
+		FieldAcl fa = new FieldAcl()
+		if("normal".equals(user.getUserType())){
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/bookKeeping/landRegister',model:model)
+	}
    
 }

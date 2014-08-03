@@ -112,7 +112,9 @@ define(["dojo/_base/kernel"
             	});
             }else if (oString == "bookKeeping") {
             	deleteMailNavigation();
+            	
             	require(["rosten/app/CarRegister"],function(){
+//            		rosten.readSync(url,function(data))
             		show_carNaviEntity("carRegister");
             	});
             }else if (oString == "static") {

@@ -21,7 +21,7 @@ class AssetConfigService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-//			order("createDate", "desc")
+			order("createdTime", "asc")
 		}
 		return c.list(pa,query)
 	}

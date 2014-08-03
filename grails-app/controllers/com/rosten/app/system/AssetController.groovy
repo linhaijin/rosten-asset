@@ -1,6 +1,7 @@
 package com.rosten.app.system
 
-import grails.converters.JSON
+import grails.converters.JSON;
+import com.rosten.app.assetconfig.AssetCategory;
 
 class AssetController {
 	def systemService
@@ -38,15 +39,51 @@ class AssetController {
 			model.modelCode = "bookKeeping"
 			model.serialNo = 5
 			
+//			def ac = AssetCategory.createCriteria()
+//			def rs = ac.list {
+//				order("serialNo", "asc")
+//			}
+//			rs.each {  
+//				resource = new Resource()
+//				resource.resourceName = it.category+"登记"
+//				resource.url = "zcjz_"+it.serialNo
+//				resource.imgUrl = "images/rosten/navigation/rosten.png"
+//				model.addToResources(resource)
+//			}
+			
 			resource = new Resource()
-			resource.resourceName = "建账登记"
-			resource.url = "register"
+			resource.resourceName = "机动车登记"
+			resource.url = "carRegister"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+					
+			resource = new Resource()
+			resource.resourceName = "土地登记"
+			resource.url = "landRegister"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "审批入库"
-			resource.url = "approveStorage"
+			resource.resourceName = "房屋登记"
+			resource.url = "houseRegister"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "设备登记"
+			resource.url = "deviceRegister"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "图书登记"
+			resource.url = "bookRegister"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "家具登记"
+			resource.url = "furnitureRegister"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			

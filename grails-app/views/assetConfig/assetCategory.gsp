@@ -82,6 +82,8 @@
 					    </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>日期：</div></td>
 					    <td width="250">
+					    	<input id="createdTime" data-dojo-type="dijit/form/DateTextBox" 
+					    	data-dojo-props='name:"createdTime",trim:true,${fieldAcl.isReadOnly("createdTime")},value:"${assetCategory?.getFormattedShowCreatedTime()}"'/>
 			           </td>
 					</tr>
 					

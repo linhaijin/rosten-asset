@@ -3,12 +3,13 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
-	
+	//机动车登记操作start
 	carRegister_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         rosten.openNewWindow("carRegister", rosten.webPath + "/car/carRegisterAdd?companyId=" + companyId + "&userid=" + userid);
 	};
+	
 	
 	carRegister_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
@@ -33,6 +34,40 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.openNewWindow("carRegister", rosten.webPath + "/car/carRegisterShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rosten.kernel.getGrid().clearSelected();
 	};
+	//机动车登记操作end
+	
+	//土地登记操作start
+	landRegister_add = function(){
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("landRegister", rosten.webPath + "/car/landRegisterAdd?companyId=" + companyId + "&userid=" + userid);
+	};
+	
+	
+	landRegister_delete = function(){
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/car/landRegisterDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	landRegister_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:landRegister_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	
+	landRegister_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("landRegister", rosten.webPath + "/car/landRegisterShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.kernel.getGrid().clearSelected();
+	};
+	//土地登记操作end
 	
 	/*
 	 * 此功能默认必须存在
@@ -46,6 +81,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/carAction/carRegisterView?userId=" + userid,
 	                gridSrc : rosten.webPath + "/car/carRegisterGrid?companyId=" + companyId
+	            };
+	            rosten.kernel.addRightContent(naviJson);
+	
+	            var rostenGrid = rosten.kernel.getGrid();
+	            break;
+			case "landRegister":
+	            var naviJson = {
+	                identifier : oString,
+	                actionBarSrc : rosten.webPath + "/carAction/landRegisterView?userId=" + userid,
+	                gridSrc : rosten.webPath + "/car/landRegisterGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
 	

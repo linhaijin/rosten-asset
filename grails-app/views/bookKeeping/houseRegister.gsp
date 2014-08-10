@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>土地登记</title>
+    <title>房屋登记</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;
@@ -33,8 +33,8 @@
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
 				});
-				landRegister_save = function(){
-					rosten.readSync(rosten.webPath + "/land/landRegisterSave",{},function(data){
+				houseRegister_save = function(){
+					rosten.readSync(rosten.webPath + "/house/houseRegisterSave",{},function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
 								page_quit();
@@ -48,15 +48,13 @@
 				page_quit = function(){
 					rosten.pagequit();
 				};
-
-				
 		});
     </script>
 </head>
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'land',action:'landRegisterForm',id:landRegister?.id,params:[userid:user?.id])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'house',action:'houseRegisterForm',id:houseRegister?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
 
@@ -64,7 +62,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:550px;padding:0px">
 			<div style="display:none">
-				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${landRegister?.id }"' />
+				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${houseRegister?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"380px",marginBottom:"2px"'>
@@ -77,7 +75,7 @@
                                		trim:true,
                                		required:true,
                                		disabled:"disabled",
-             						value:"${landRegister?.registerNum}"
+             						value:"${houseRegister?.registerNum}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
@@ -86,7 +84,7 @@
                                	data-dojo-props='name:"assetCategory",${fieldAcl.isReadOnly("assetCategory")},
                                		trim:true,
                                		required:true,
-             						value:"${landRegister?.assetCategory}"
+             						value:"${houseRegister?.assetCategory}"
                            	'/>
 			            </td>
 					</tr>
@@ -97,7 +95,7 @@
                                	data-dojo-props='name:"assetName",${fieldAcl.isReadOnly("assetName")},
                                		trim:true,
                                		required:true,
-             						value:"${landRegister?.assetName}"
+             						value:"${houseRegister?.assetName}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
@@ -106,9 +104,9 @@
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               		trim:true,
 				               		required:true,
-									value:"${landRegister?.getDepartName()}"
+									value:"${houseRegister?.getDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="allowdepartsId" value="${landRegister?.userDepart?.id }" />
+				         	<g:hiddenField name="allowdepartsId" value="${houseRegister?.userDepart?.id }" />
 							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
 			           </td>
 					</tr>
@@ -118,7 +116,7 @@
 					    	<select id="userStatus" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"userStatus",trim:true,required:true,
                            			autoComplete:false,${fieldAcl.isReadOnly("userStatus")},
-            						value:"${landRegister?.userStatus}"
+            						value:"${houseRegister?.userStatus}"
                             '>
 	                            <option value="在用">在用</option>
 								<option value="多余">多余</option>
@@ -131,7 +129,7 @@
                            	<select id="assetSource" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"assetSource",trim:true,required:true,
                            			autoComplete:false,${fieldAcl.isReadOnly("assetSource")},
-            						value:"${landRegister?.assetSource}"
+            						value:"${houseRegister?.assetSource}"
                             '>
 	                            <option value="购置">购置</option>
 								<option value="捐赠">捐赠</option>
@@ -146,14 +144,14 @@
                                	data-dojo-props='name:"costCategory",${fieldAcl.isReadOnly("costCategory")},
                                		trim:true,
                                		required:true,
-             						value:"${landRegister?.costCategory}"
+             						value:"${houseRegister?.costCategory}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>购置日期：</div></td>
 					    <td>
 					    	<input id="buyDate" data-dojo-type="dijit/form/DateTextBox" 
 		                 	data-dojo-props='name:"buyDate",trim:true,${fieldAcl.isReadOnly("buyDate")},
-								value:"${landRegister?.getFormattedShowBuyDate()}"
+								value:"${houseRegister?.getFormattedShowBuyDate()}"
 		                '/>
 			            </td>
 					</tr>
@@ -164,14 +162,14 @@
                                	data-dojo-props='name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                		trim:true,
                                		required:true,
-             						value:"${landRegister?.totalPrice}"
+             						value:"${houseRegister?.totalPrice}"
                            	'/><span style="margin-left:10px">元</span>
 			            </td>
 			            <td><div align="right"><span style="color:red">*&nbsp;</span>事业收入：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"undertakingRevenue",${fieldAcl.isReadOnly("undertakingRevenue")},
-                               		value:"${landRegister?.undertakingRevenue}"
+                               		value:"${houseRegister?.undertakingRevenue}"
                            	'/><span style="margin-left:10px">元</span>
 			            </td>
 					</tr>
@@ -180,23 +178,23 @@
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"fiscalAppropriation",${fieldAcl.isReadOnly("fiscalAppropriation")},
-                               		value:"${landRegister?.fiscalAppropriation}"
+                               		value:"${houseRegister?.fiscalAppropriation}"
                            	'/><span style="margin-left:10px">元</span>
 			            </td>
 			            <td><div align="right"><span style="color:red">*&nbsp;</span>其他资金：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"otherFund",${fieldAcl.isReadOnly("otherFund")},
-                               		value:"${landRegister?.otherFund}"
+                               		value:"${houseRegister?.otherFund}"
                            	'/><span style="margin-left:10px">元</span>
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right">土地面积：</div></td>
+					    <td><div align="right">建筑面积：</div></td>
 					    <td>
-					    	<input id="landArea" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"landArea",${fieldAcl.isReadOnly("landArea")},
-                               		value:"${landRegister?.landArea}"
+					    	<input id="houseArea" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"houseArea",${fieldAcl.isReadOnly("houseArea")},
+                               		value:"${houseRegister?.houseArea}"
                            	'/> <span style="margin-left:10px">m<SUP>2</SUP></span>
 			            </td>
 					    <td><div align="right">采购组织形式：</div></td>
@@ -204,7 +202,7 @@
 					    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"organizationalType",
                            			autoComplete:false,${fieldAcl.isReadOnly("organizationalType")},
-            						value:"${landRegister?.organizationalType}"
+            						value:"${houseRegister?.organizationalType}"
                             '>
 	                            <option value="政府集中采购">政府集中采购</option>
 								<option value="部门集中采购">部门集中采购</option>
@@ -219,7 +217,7 @@
 						    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
 	    							data-dojo-props='name:"remark",
 	                               		style:{width:"550px",height:"150px"},
-	                               		trim:true,value:"${landRegister?.remark}"
+	                               		trim:true,value:"${houseRegister?.remark}"
 	                           '>
 	    						</textarea>
 						    </td>
@@ -227,7 +225,7 @@
 				</table>
 			</div>
 			<div style="height:5px;"></div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"土地信息",toggleable:false,moreText:"",height:"160px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"房屋信息",toggleable:false,moreText:"",height:"160px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>产权形式：</div></td>
@@ -235,21 +233,23 @@
 					    	<select id="rightModality" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"rightModality",trim:true,required:true,
                            			autoComplete:false,${fieldAcl.isReadOnly("rightModality")},
-            						value:"${landRegister?.rightModality}"
+            						value:"${houseRegister?.rightModality}"
                             '>
 	                            <option value="有产权">有产权</option>
 								<option value="无产权">无产权</option>
                            </select>
 			           </td>
-					   <td width="120"><div align="right">权属性质：</div></td>
+					   <td width="120"><div align="right">建筑结构：</div></td>
 					   <td>
-					    	<select id="ownershipProperty" data-dojo-type="dijit/form/FilteringSelect"
-                           		data-dojo-props='name:"ownershipProperty",trim:true,required:true,
-                           			autoComplete:false,${fieldAcl.isReadOnly("ownershipProperty")},
-            						value:"${landRegister?.ownershipProperty}"
+					    	<select id="houseStructure" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"houseStructure",trim:true,required:true,
+                           			autoComplete:false,${fieldAcl.isReadOnly("houseStructure")},
+            						value:"${houseRegister?.houseStructure}"
                             '>
-	                            <option value="国有">国有</option>
-								<option value="集体">集体</option>
+	                            <option value="钢结构">钢结构</option>
+								<option value="钢混结构">钢混结构</option>
+								<option value="砖混结构">砖混结构</option>
+								<option value="砖木结构">砖木结构</option>
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
@@ -259,50 +259,32 @@
 					    <td>
 					    	<input id="ownershipProve" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"ownershipProve",${fieldAcl.isReadOnly("ownershipProve")},
-                               		value:"${landRegister?.ownershipProve}"
+                               		value:"${houseRegister?.ownershipProve}"
                            	'/>
 			            </td>
 					    <td><div align="right">权属证号：</div></td>
 					    <td>
 					    	<input id="ownershipNo" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"ownershipNo",${fieldAcl.isReadOnly("ownershipNo")},
-                               		value:"${landRegister?.ownershipNo}"
+                               		value:"${houseRegister?.ownershipNo}"
                            	'/>
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right">地号：</div></td>
-					    <td>
-					    	<input id="landNo" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"landNo",${fieldAcl.isReadOnly("landNo")},
-                               		value:"${landRegister?.landNo}"
-                           	'/>
-			            </td>
-			            
 			            <td><div align="right"><span style="color:red">*&nbsp;</span>发证时间：</div></td>
 						    <td>
 						    	<input id="certificationDate" data-dojo-type="dijit/form/DateTextBox" 
 			                 	data-dojo-props='name:"certificationDate",${fieldAcl.isReadOnly("certificationDate")},
-									value:"${landRegister?.getFormattedShowCertificationDate()}"
+									value:"${houseRegister?.getFormattedShowCertificationDate()}"
 			                '/>
 				        </td>
-					    
-					</tr>
-					<tr>
-					    <td><div align="right">土地证载明面积：</div></td>
-					    <td>
-					    	<input id="landProveArea" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"landProveArea",${fieldAcl.isReadOnly("landProveArea")},
-                               		value:"${landRegister?.landProveArea}"
-                           	'/><span style="margin-left:10px">m<SUP>2</SUP></span>
-			            </td>
 					    <td><div align="right">坐落位置：</div></td>
 					    <td>
-					    	<input id="landLocated" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"landLocated",${fieldAcl.isReadOnly("landLocated")},
+					    	<input id="houseLocated" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"houseLocated",${fieldAcl.isReadOnly("houseLocated")},
                                		trim:true,
                                		required:true,
-             						value:"${landRegister?.landLocated}"
+             						value:"${houseRegister?.houseLocated}"
                            	'/>
 			            </td>
 					</tr>
@@ -310,6 +292,5 @@
 			</div>
 		</form>
 	</div>
-	
 </div>
 </body>

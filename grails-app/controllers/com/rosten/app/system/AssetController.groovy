@@ -52,7 +52,7 @@ class AssetController {
 //			}
 			
 			resource = new Resource()
-			resource.resourceName = "机动车登记"
+			resource.resourceName = "车辆登记"
 			resource.url = "carRegister"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
@@ -97,19 +97,19 @@ class AssetController {
 			
 			resource = new Resource()
 			resource.resourceName = "报废报损"
-			resource.url = "scrap"
+			resource.url = "assetScrap"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "调拨"
-			resource.url = "allocate"
+			resource.resourceName = "资产调拨"
+			resource.url = "assetAllocate"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "增值减值"
-			resource.url = "addOrDelete"
+			resource.url = "assetAddDelete"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			

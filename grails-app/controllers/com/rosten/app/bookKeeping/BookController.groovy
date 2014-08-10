@@ -1,22 +1,23 @@
 package com.rosten.app.bookKeeping
 
 import grails.converters.JSON
+
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 
-class CarController {
+class BookController {
 
-	def bookKeepingService
+    def bookKeepingService
 	def springSecurityService
-	
+
 	def imgPath ="images/rosten/actionbar/"
 	
-	def carRegisterForm ={
+	def bookRegisterForm ={
 		def webPath = request.getContextPath() + "/"
-		def strname = "carRegister"
+		def strname = "bookRegister"
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
@@ -25,9 +26,9 @@ class CarController {
 		render actionList as JSON
 	}
 	
-	  def carRegisterView ={
+	  def bookRegisterView ={
 		def actionList =[]
-		def strname = "carRegister"
+		def strname = "bookRegister"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
@@ -35,7 +36,7 @@ class CarController {
 		
 		render actionList as JSON
 	}
-	
+
 	private def createAction={name,img,action->
 		def model =[:]
 		model["name"] = name
@@ -44,56 +45,56 @@ class CarController {
 		return model
 	}
 	
-	def carRegisterAdd ={
-		redirect(action:"carRegisterShow",params:params)
+	def bookRegisterAdd ={
+		redirect(action:"bookRegisterShow",params:params)
 	}
 	
-	def carRegisterShow ={
+	def bookRegisterShow ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
 		
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		
-		def carRegister = new CarRegister()
+		def bookRegister = new BookRegister()
 		if(params.id){
-			carRegister = CarRegister.get(params.id)
+			bookRegister = BookRegister.get(params.id)
 		}
 		
 		model["user"] = user
 		model["company"] = company
-		model["carRegister"] = carRegister
+		model["bookRegister"] = bookRegister
 		
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){
 		}
 		model["fieldAcl"] = fa
 		
-		render(view:'/bookKeeping/carRegister',model:model)
+		render(view:'/bookKeeping/bookRegister',model:model)
 	}
 	
-	def carRegisterSave ={
+	def bookRegisterSave ={
 		def json=[:]
 		def company = Company.get(params.companyId)
 		
-		//车辆登记信息保存-------------------------------
-		def carRegister = new CarRegister()
+		//图书登记信息保存-------------------------------
+		def bookRegister = new BookRegister()
 		if(params.id && !"".equals(params.id)){
-			carRegister = CarRegister.get(params.id)
+			bookRegister = BookRegister.get(params.id)
 		}else{
-			carRegister.company = company
+			bookRegister.company = company
 		}
-		carRegister.properties = params
-		carRegister.clearErrors()
+		bookRegister.properties = params
+		bookRegister.clearErrors()
 		
 		//特殊字段信息处理
-		carRegister.buyDate = Util.convertToTimestamp(params.buyDate)
-		carRegister.userDepart = Depart.get(params.allowdepartsId)
+		bookRegister.buyDate = Util.convertToTimestamp(params.buyDate)
+		bookRegister.userDepart = Depart.get(params.allowdepartsId)
 		
-		if(carRegister.save(flush:true)){
+		if(bookRegister.save(flush:true)){
 			json["result"] = "true"
 		}else{
-			carRegister.errors.each{
+			bookRegister.errors.each{
 				println it
 			}
 			json["result"] = "false"
@@ -101,14 +102,14 @@ class CarController {
 		render json as JSON
 	}
 	
-	def carRegisterDelete ={
+	def bookRegisterDelete ={
 		def ids = params.id.split(",")
 		def json
 		try{
 			ids.each{
-				def carRegister = CarRegister.get(it)
-				if(carRegister){
-					carRegister.delete(flush: true)
+				def bookRegister = BookRegister.get(it)
+				if(bookRegister){
+					bookRegister.delete(flush: true)
 				}
 			}
 			json = [result:'true']
@@ -118,11 +119,11 @@ class CarController {
 		render json as JSON
 	}
 	
-	def carRegisterGrid ={
+	def bookRegisterGrid ={
 		def json=[:]
 		def company = Company.get(params.companyId)
 		if(params.refreshHeader){
-			json["gridHeader"] = bookKeepingService.getCarRegisterListLayout()
+			json["gridHeader"] = bookKeepingService.getBookRegisterListLayout()
 		}
 		if(params.refreshData){
 			def args =[:]
@@ -132,11 +133,11 @@ class CarController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = bookKeepingService.getCarRegisterDataStore(args)
+			json["gridData"] = bookKeepingService.getBookRegisterDataStore(args)
 			
 		}
 		if(params.refreshPageControl){
-			def total = bookKeepingService.getCarRegisterCount(company)
+			def total = bookKeepingService.getBookRegisterCount(company)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

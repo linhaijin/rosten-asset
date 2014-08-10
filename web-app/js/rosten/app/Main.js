@@ -88,7 +88,7 @@ define(["dojo/_base/kernel"
              	});
             }else if (oString == "person") {
             	addMailNavigation();
-            } else if (oString == "assetConfig") {
+            } else if (oString == "assetConfig") {//资产配置
             	deleteMailNavigation();
             	require(["rosten/app/AssetConfigManage"],function(){
             		show_assetConfigNaviEntity("assetCategory");
@@ -110,14 +110,21 @@ define(["dojo/_base/kernel"
 //            		show_publicNaviEntity("downloadFileManage");
             		returnToMain();
             	});
-            }else if (oString == "bookKeeping") {
+            }else if (oString == "bookKeeping") {//资产建账
             	deleteMailNavigation();
-            	
-            	require(["rosten/app/CarRegister"],function(){
+            	require(["rosten/app/BookKeeping"],function(){
 //            		rosten.readSync(url,function(data))
-            		show_carNaviEntity("carRegister");
+            		show_bookKeepingNaviEntity("carRegister");
             	});
-            }else if (oString == "static") {
+            }
+            else if (oString == "assetChange") {//资产变动
+            	deleteMailNavigation();
+            	require(["rosten/app/AssetChange"],function(){
+//            		rosten.readSync(url,function(data))
+            		show_assetChangeNaviEntity("assetScrap");
+            	});
+            }
+            else if (oString == "static") {//统计分析
             	deleteMailNavigation();
             	require(["rosten/app/StaticManage"],function(){
             		show_staticNaviEntity("static");

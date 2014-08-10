@@ -2,11 +2,12 @@
  * @author rosten
  */
 define(["dojo/_base/lang",
+        "dojo/dom",
 		"dijit/registry",
 		"rosten/widget/MultiSelectDialog",
 		"rosten/widget/PickTreeDialog",
 		"rosten/widget/DepartUserDialog",
-		"rosten/kernel/_kernel"], function(lang,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog) {
+		"rosten/kernel/_kernel"], function(lang,dom,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog) {
 			
 	var application = {};
     application.cssinitcommon = function() {
@@ -162,7 +163,12 @@ define(["dojo/_base/lang",
             	registry.byId(inputName).attr("value", _data.join(","));
             }
             if( inputId !=undefined){
-            	registry.byId(inputId).attr("value", _data_1.join(","));
+            	if(registry.byId(inputId)){
+            		registry.byId(inputId).attr("value", _data_1.join(","));
+            	}else{
+            		dom.byId(inputId).value = _data_1.join(",");
+            	}
+            	
             }
         };
     };

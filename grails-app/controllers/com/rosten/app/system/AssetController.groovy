@@ -6,6 +6,7 @@ import com.rosten.app.assetconfig.AssetCategory;
 class AssetController {
 	def systemService
 	
+	
 	def modelInit ={
 		def json,model,resource
 		def company = Company.get(params.id)

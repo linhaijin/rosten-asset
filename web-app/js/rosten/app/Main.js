@@ -15,6 +15,24 @@ define(["dojo/_base/kernel"
 		,"rosten/util/general"
 //		, "rosten/app/Mail"
 		, "rosten/kernel/behavior"], function(kernel, lang, registry, dom,domStyle,domClass,domConstruct,connect,ContentPane,rostenKernel,general) {
+	
+	//demo演示-------------------------------------
+	demo_static = function(oString){
+		rosten.kernel.setHref(rosten.webPath + "/demo/demo?type=" + oString, oString);
+	};
+	demo_staticDesign = function(){
+		//报表设计
+		demo_static("design");
+	}; 
+	demo = function(){
+		
+	};
+	
+	more_demo = function(){
+		demo_static("designMore");
+	};
+	
+	//---------------------------------------------
 	var main = {};
 	main._getGridUnid = function(rostenGrid,type){
 		/*
@@ -81,9 +99,9 @@ define(["dojo/_base/kernel"
             	deleteMailNavigation();
              	require(["rosten/app/SystemManage"],function(){
              		if(oString=="plat"){
-             			show_systemNaviEntity("companyManage");
+             			show_naviEntity("companyManage");
              		}else{
-             			show_systemNaviEntity("userManage");
+             			show_naviEntity("userManage");
              		}
              	});
             }else if (oString == "person") {
@@ -91,60 +109,61 @@ define(["dojo/_base/kernel"
             } else if (oString == "assetConfig") {//资产配置
             	deleteMailNavigation();
             	require(["rosten/app/AssetConfigManage"],function(){
-            		show_assetConfigNaviEntity("assetCategory");
+            		show_naviEntity("assetCategory");
             	});
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
-                	show_smsNaviEntity("personInformation");
+                	show_naviEntity("personInformation");
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();
             	require(["rosten/app/WorkFlowManage"],function(){
-//            		show_workFlowNaviEntity("flowDefinedManage");
+//            		show_naviEntity("flowDefinedManage");
             		returnToMain();
             	});
             }else if (oString == "public") {
             	deleteMailNavigation();
             	require(["rosten/app/PublicManage"],function(){
-//            		show_publicNaviEntity("downloadFileManage");
+//            		show_naviEntity("downloadFileManage");
             		returnToMain();
             	});
             }else if (oString == "bookKeeping") {//资产建账
             	deleteMailNavigation();
             	require(["rosten/app/BookKeeping"],function(){
 //            		rosten.readSync(url,function(data))
-            		show_bookKeepingNaviEntity("carRegister");
+            		show_naviEntity("carRegister");
             	});
             }
             else if (oString == "assetChange") {//资产变动
             	deleteMailNavigation();
             	require(["rosten/app/AssetChange"],function(){
-            		show_assetChangeNaviEntity("assetScrap");
+            		show_naviEntity("assetScrap");
             	});
             }
             else if (oString == "assetMaintain") {//资产运维
             	deleteMailNavigation();
             	require(["rosten/app/AssetMaintain"],function(){
-            		show_assetMaintainNaviEntity("assetRepair");
+            		show_naviEntity("assetRepair");
             	});
             }
             else if (oString == "assetCheck") {//资产核查
             	deleteMailNavigation();
             	require(["rosten/app/AssetCheck"],function(){
-            		show_assetCheckNaviEntity("assetInventory");
+            		show_naviEntity("assetInventory");
             	});
             }
             else if (oString == "assetReport") {//资产上报
             	deleteMailNavigation();
-            	require(["rosten/app/AssetReport"],function(){
-            		show_assetReportNaviEntity("fiscalReport");
-            	});
+            	returnToMain();
+//            	require(["rosten/app/AssetReport"],function(){
+//            		show_naviEntity("fiscalReport");
+//            	});
             }
             else if (oString == "assetStatist") {//统计分析
             	deleteMailNavigation();
-            	require(["rosten/app/AssetStatist"],function(){
-            		show_assetStatistNaviEntity("assetAnalysis");
+            	require(["rosten/app/StaticManage"],function(){
+            		show_naviEntity("static");
             	});
             }else{
             	deleteMailNavigation();

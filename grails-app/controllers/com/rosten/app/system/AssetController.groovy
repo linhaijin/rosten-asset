@@ -1,7 +1,6 @@
 package com.rosten.app.system
 
 import grails.converters.JSON;
-import com.rosten.app.assetconfig.AssetCategory;
 
 class AssetController {
 	def systemService
@@ -39,18 +38,6 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "bookKeeping"
 			model.serialNo = 5
-			
-//			def ac = AssetCategory.createCriteria()
-//			def rs = ac.list {
-//				order("serialNo", "asc")
-//			}
-//			rs.each {  
-//				resource = new Resource()
-//				resource.resourceName = it.category+"登记"
-//				resource.url = "zcjz_"+it.serialNo
-//				resource.imgUrl = "images/rosten/navigation/rosten.png"
-//				model.addToResources(resource)
-//			}
 			
 			resource = new Resource()
 			resource.resourceName = "车辆登记"
@@ -185,6 +172,12 @@ class AssetController {
 			model.serialNo = 10
 			
 			resource = new Resource()
+			resource.resourceName = "报表设计"
+			resource.url = "staticDesign"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "统计分析"
 			resource.url = "assetAnalysis"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
@@ -198,6 +191,20 @@ class AssetController {
 			}
 			
 			systemService.initData_service(path,company)
+			
+			def _service = new NormalService()
+			_service.serviceName = "协同办公系统"
+			_service.company = company
+			_service.functionUrl = "http://oa.html"
+			_service.imgUrl = "images/rosten/service/oa.gif"
+			_service.save(flush:true)
+			
+			_service = new NormalService()
+			_service.serviceName = "人事管理系统"
+			_service.company = company
+			_service.functionUrl = "http://zcxt.html"
+			_service.imgUrl = "images/rosten/service/rsxt.gif"
+			_service.save(flush:true)
 			
 			json = [result:'true']
 		}catch(Exception e){

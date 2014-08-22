@@ -32,6 +32,7 @@ class FurnitureController {
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -90,6 +91,9 @@ class FurnitureController {
 		//特殊字段信息处理
 		furnitureRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		furnitureRegister.userDepart = Depart.get(params.allowdepartsId)
+		if(!params.registerNum_form.equals("")){
+			furnitureRegister.registerNum = params.registerNum_form
+		}
 		
 		if(furnitureRegister.save(flush:true)){
 			json["result"] = "true"
@@ -110,6 +114,23 @@ class FurnitureController {
 				def furnitureRegister = FurnitureRegister.get(it)
 				if(furnitureRegister){
 					furnitureRegister.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def furnitureRegisterSubmit ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def furnitureRegister = FurnitureRegister.get(it)
+				if(furnitureRegister){
+					furnitureRegister.assetStatus = "已入库"
 				}
 			}
 			json = [result:'true']

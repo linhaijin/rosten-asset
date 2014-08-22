@@ -120,14 +120,31 @@ define(["dojo/_base/kernel"
             else if (oString == "assetChange") {//资产变动
             	deleteMailNavigation();
             	require(["rosten/app/AssetChange"],function(){
-//            		rosten.readSync(url,function(data))
             		show_assetChangeNaviEntity("assetScrap");
             	});
             }
-            else if (oString == "static") {//统计分析
+            else if (oString == "assetMaintain") {//资产运维
             	deleteMailNavigation();
-            	require(["rosten/app/StaticManage"],function(){
-            		show_staticNaviEntity("static");
+            	require(["rosten/app/AssetMaintain"],function(){
+            		show_assetMaintainNaviEntity("assetRepair");
+            	});
+            }
+            else if (oString == "assetCheck") {//资产核查
+            	deleteMailNavigation();
+            	require(["rosten/app/AssetCheck"],function(){
+            		show_assetCheckNaviEntity("assetInventory");
+            	});
+            }
+            else if (oString == "assetReport") {//资产上报
+            	deleteMailNavigation();
+            	require(["rosten/app/AssetReport"],function(){
+            		show_assetReportNaviEntity("fiscalReport");
+            	});
+            }
+            else if (oString == "assetStatist") {//统计分析
+            	deleteMailNavigation();
+            	require(["rosten/app/AssetStatist"],function(){
+            		show_assetStatistNaviEntity("assetAnalysis");
             	});
             }else{
             	deleteMailNavigation();

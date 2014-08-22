@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>资产变动--资产调拨</title>
+    <title>资产运维--资产报修</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .dsj_form table tr{
@@ -40,8 +40,8 @@
 				rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 				rosten.cssinit();
 			});
-			assetAllocate_save = function(){
-				rosten.readSync(rosten.webPath + "/assetAllocate/assetAllocateSave",{},function(data){
+			assetRepair_save = function(){
+				rosten.readSync(rosten.webPath + "/assetRepair/assetRepairSave",{},function(data){
 					if(data.result=="true" || data.result == true){
 						rosten.alert("保存成功！").queryDlgClose= function(){
 							page_quit();
@@ -58,7 +58,7 @@
 		});
 
 		assetTypeSelect = function(){
-			var url = "${createLink(controller:'assetAllocate',action:'assetChooseListDataStore')}";
+			var url = "${createLink(controller:'assetRepair',action:'assetChooseListDataStore')}";
 			var qs;
 			var qCompany = "";
 			var compamyId;
@@ -113,7 +113,7 @@
 					assetType = assetSel.attr("value");
 				}
 			}
-
+			/*
 			var assetTotal;
 			var assetTotalSel = dijit.byId("assetTotal");
 			if(assetTotalSel){
@@ -121,18 +121,19 @@
 					assetTotal = assetTotalSel.attr("value").replace(".","-");
 				}
 			}
+			*/
 			//异步处理所选资产数据
-			var url = "${createLink(controller:'assetAllocate',action:'assetChooseOperate')}";
-			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
+			var url = "${createLink(controller:'assetRepair',action:'assetChooseOperate')}";
+			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
 				load : function(response,args) {
 					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						var assetTotal = response.assetTotal;
-						dojo.byId("assetTotal").value = assetTotal;
+						//var assetTotal = response.assetTotal;
+						//dojo.byId("assetTotal").value = assetTotal;
 	
-						var url_twice = "${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore')}";
+						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
 						var qs;
 						var qCompany = "";
 						var compamyId;
@@ -156,7 +157,7 @@
 						var qSeriesNo = "&seriesNo="+seriesNo;
 						
 						url_twice += qCompany+qSeriesNo;
-						var grid_twice = dijit.byId("assetAllocateListGrid");
+						var grid_twice = dijit.byId("assetRepairListGrid");
 						
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
@@ -175,7 +176,7 @@
 		}
 	
 		deleteAsset = function(){
-			var grid = dijit.byId("assetAllocateListGrid");
+			var grid = dijit.byId("assetRepairListGrid");
 			var selected = grid.getSelected();
 			if (selected.length == 0) {
 				alert("请在资产列表中选择数据！");
@@ -192,20 +193,20 @@
 				}
 			});
 
-			var allocateId = "${assetAllocate?.id}";
-			var seriesNo = "${assetAllocate?.seriesNo}";
+			var repairId = "${assetRepair?.id}";
+			var seriesNo = "${assetRepair?.seriesNo}";
 			
-			var url = "${createLink(controller:'assetAllocate',action:'assetChooseDelete')}";
-			url += "?assetId="+encodeURI(assetId)+"&allocateId="+allocateId;
+			var url = "${createLink(controller:'assetRepair',action:'assetChooseDelete')}";
+			url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
 				load : function(response,args) {
 					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						var assetTotal = response.assetTotal;
-						dojo.byId("assetTotal").value = assetTotal;
+						//var assetTotal = response.assetTotal;
+						//dojo.byId("assetTotal").value = assetTotal;
 	
-						var url_twice = "${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore')}";
+						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
 						var qs;
 						var qCompany = "";
 						var compamyId;
@@ -219,7 +220,7 @@
 						var qSeriesNo = "&seriesNo="+seriesNo;
 						
 						url_twice += qCompany+qSeriesNo;
-						var grid_twice = dijit.byId("assetAllocateListGrid");
+						var grid_twice = dijit.byId("assetRepairListGrid");
 						
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
@@ -241,19 +242,19 @@
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'assetAllocate',action:'assetAllocateForm',id:assetAllocate?.id,params:[userid:user?.id])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'assetRepair',action:'assetRepairForm',id:assetRepair?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
 
 <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"490px",marginBottom:"2px",region:"top"'>
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
-			<g:hiddenField name="seriesNo_form" value="${assetAllocate?.seriesNo}" />
+			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
 			<div style="display:none">
-				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetAllocate?.id }"' />
+				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"120px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"150px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请单号：</div></td>
@@ -262,14 +263,14 @@
                                	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
                                		trim:true,
                                		required:true,disabled:"disabled",
-             						value:"${assetAllocate?.seriesNo}"
+             						value:"${assetRepair?.seriesNo}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请日期：</div></td>
 					    <td width="250">
 					    	<input id="applyDate" data-dojo-type="dijit/form/DateTextBox" 
                                	data-dojo-props='name:"applyDate",trim:true,${fieldAcl.isReadOnly("applyDate")},
-                               		value:"${assetAllocate?.getFormattedShowApplyDate()}"
+                               		value:"${assetRepair?.getFormattedShowApplyDate()}"
                            	'/>
 			            </td>
 					</tr>
@@ -284,49 +285,128 @@
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
-					   	<td width="250">
-					    	<input id="callOutDeptName" data-dojo-type="dijit/form/ValidationTextBox" 
-				               	data-dojo-props='name:"callOutDeptName",${fieldAcl.isReadOnly("callOutDeptName")},
+					   <td width="250">
+					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               		trim:true,
 				               		required:true,
-									value:"${assetAllocate?.getOutDepartName()}"
+									value:"${assetRepair?.getDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="callOutDeptId" value="${assetAllocate?.callOutDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callOutDeptName","callOutDeptId")}'>选择</button>
+				         	<g:hiddenField name="allowdepartsId" value="${assetRepair?.applyDept?.id }" />
+							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+			           </td>
+					</tr>
+					<tr>
+						<td><div align="right">报修原因：</div></td>
+					    <td>
+					    	<input id="repairReason" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
+                               		trim:true,
+             						value:"${assetRepair?.repairReason}"
+                           	'/>
+			            </td>
+			            <td ><div align="right"><span style="color:red">*&nbsp;</span>预约维修时间：</div></td>
+						<td>
+						    <input id="expectDate" data-dojo-type="dijit/form/DateTextBox" 
+	    						data-dojo-props='name:"expectDate",${fieldAcl.isReadOnly("expectDate")},
+	                               	trim:true,
+	                               	required:true,
+	                               	value:"${assetRepair?.getFormattedShowExpectDate()}"
+	                         '/>
 						</td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>调入部门：</div></td>
-					    <td>
-					    	<input id="callInDeptName" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"callInDeptName",${fieldAcl.isReadOnly("callInDeptName")},
+						<td><div align="right">存放地点：</div></td>
+					    <td colspan="3">
+					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
                                		trim:true,
-                               		required:true,
-             						value:"${assetAllocate?.getInDepartName()}"
-                           	'/>
-                           	<g:hiddenField name="callInDeptId" value="${assetAllocate?.callInDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callInDeptName","callInDeptId")}'>选择</button>
-			            </td>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
-					    <td>
-					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
-                               		trim:true,
-                               		required:true,
-             						value:"${assetAllocate?.assetTotal}"
+             						value:"${assetRepair?.storagePosition}"
                            	'/>
 			            </td>
 					</tr>
 					<tr>
-					 	<td ><div align="right"><span style="color:red">*&nbsp;</span>申请描述：</div></td>
-					  	<td colspan="3">
-					    	<input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
-    							data-dojo-props='name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
+						<td><div align="right"><span style="color:red">*&nbsp;</span>联系人：</div></td>
+					    <td>
+					    	<input id="contacts" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"contacts",${fieldAcl.isReadOnly("contacts")},
                                		trim:true,
                                		required:true,
-                               		value:"${assetAllocate?.applyDesc}"
-                           '/>
-					    </td>
+             						value:"${assetRepair?.contacts}"
+                           	'/>
+			            </td>
+			            <td ><div align="right"><span style="color:red">*&nbsp;</span>联系电话：</div></td>
+						<td>
+						    <input id="contactPhone" data-dojo-type="dijit/form/ValidationTextBox" 
+	    						data-dojo-props='name:"contactPhone",${fieldAcl.isReadOnly("contactPhone")},
+	                               	trim:true,
+	                               	required:true,
+	                               	value:"${assetRepair?.contactPhone}"
+	                         '/>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"维护信息",toggleable:false,moreText:"",height:"90px",marginBottom:"2px"'>
+				<table border="0" width="740" align="left">
+					<tr>
+					    <td width="120"><div align="right">维护人：</div></td>
+					    <td width="250">
+                           	<input id="maintenanceMan" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"maintenanceMan",${fieldAcl.isReadOnly("maintenanceMan")},
+                               		trim:true,
+             						value:"${assetRepair?.maintenanceMan}"
+                           	'/>
+			            </td>
+					    <td width="120"><div align="right">维护联系电话：</div></td>
+					    <td width="250">
+                           	<input id="maintenancePhone" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"maintenancePhone",${fieldAcl.isReadOnly("maintenancePhone")},
+                               		trim:true,
+             						value:"${assetRepair?.maintenancePhone}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+					    <td><div align="right">维护时间：</div></td>
+					    <td>
+					    	<input id="maintenanceDate" data-dojo-type="dijit/form/DateTextBox" 
+                               	data-dojo-props='name:"maintenanceDate",${fieldAcl.isReadOnly("maintenanceDate")},
+                               		trim:true,
+             						value:"${assetRepair?.maintenanceDate}"
+                           	'/>
+			            </td>
+					    <td><div align="right">维护费用：</div></td>
+					   <td width="250">
+					    	<input id="maintenanceCost" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"maintenanceCost",${fieldAcl.isReadOnly("maintenanceCost")},
+				               		trim:true,
+									value:"${assetRepair?.maintenanceCost}"
+				          	'/>
+			           </td>
+					</tr>
+					<tr>
+						<td><div align="right">是否修复：</div></td>
+					    <td>
+					    	<select id="repairComplete" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"repairComplete",${fieldAcl.isReadOnly("repairComplete")},
+                           			autoComplete:false,
+                           			trim:true,
+            						value:"${assetRepair?.repairComplete}"
+                            '>
+	                            <option value="未修复">未修复</option>
+								<option value="已修复">已修复</option>
+								<option value="无法修复">无法修复</option>
+                           	</select>
+			            </td>
+			            <td ><div align="right">维护反馈：</div></td>
+						<td>
+						    <input id="feedback" data-dojo-type="dijit/form/ValidationTextBox" 
+	    						data-dojo-props='name:"feedback",${fieldAcl.isReadOnly("feedback")},
+	                               	trim:true,
+	                               	value:"${assetRepair?.feedback}"
+	                         '/>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -344,9 +424,9 @@
 			</button>
 			<div style="height:5px;"></div>
 	
-			<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
-				<div data-dojo-type="rosten/widget/RostenGrid" id="assetAllocateListGrid" data-dojo-id="assetAllocateListGrid"
-					data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
+			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
+				<div data-dojo-type="rosten/widget/RostenGrid" id="assetRepairListGrid" data-dojo-id="assetRepairListGrid"
+					data-dojo-props='url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>
 			</div>
 		</form>
 	</div>
@@ -370,7 +450,7 @@
 			<div id="chooseAsset">
 				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:820px;height:360px;padding:2px;"'>
 					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
-						data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
+						data-dojo-props='url:"${createLink(controller:'assetRepair',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
 				</div>
 			</div>
 		</div>

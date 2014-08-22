@@ -16,25 +16,25 @@ class BookRegister {
 	
 	def getFormattedSeriesDate(){
 		def nowDate= new Date()
-		def SeriesDate= nowDate.time
+		def SeriesDate= "20"+nowDate.time
 		return SeriesDate
 	}
 	//资产编号
-	@GridColumn(name="资产编号",formatter="bookRegister_formatTopic")
+	@GridColumn(name="资产编号",colIdx=1,formatter="bookRegister_formatTopic")
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
-	@GridColumn(name="资产分类")
+	@GridColumn(name="资产分类",colIdx=2)
 	String assetCategory
 	
 	//资产名称
-	@GridColumn(name="资产名称")
+	@GridColumn(name="资产名称",colIdx=3)
 	String assetName
 	
 	//管理部门
 	Depart userDepart
 	
-	@GridColumn(name="管理部门")
+	@GridColumn(name="管理部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName
@@ -44,7 +44,7 @@ class BookRegister {
 	}
 	
 	//使用状况
-	@GridColumn(name="使用状况")
+	@GridColumn(name="使用状况",colIdx=5)
 	String userStatus = "在用"
 	
 	//资产来源
@@ -55,7 +55,7 @@ class BookRegister {
 	
 	//购置日期
 	Date buyDate = new Date()
-	@GridColumn(name="购置日期",width="106px")
+	@GridColumn(name="购置日期",width="106px",colIdx=6)
 	def getFormattedBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -77,7 +77,7 @@ class BookRegister {
 	int amount = 0
 	
 	//总金额
-	@GridColumn(name="总金额")
+	@GridColumn(name="总金额",colIdx=7)
 	Double totalPrice = 0
 	
 	//事业收入
@@ -104,12 +104,9 @@ class BookRegister {
 	//备注
 	String remark
 	
-	//资产状态
-	int assetStatus
-	
 	//创建时间
 	Date createDate = new Date()
-	@GridColumn(name="创建时间",width="106px")
+	@GridColumn(name="创建时间",width="106px",colIdx=8)
 	def getFormattedCreatedDate(){
 		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -118,6 +115,12 @@ class BookRegister {
 			return ""
 		}
 	}
+	
+	//资产状态
+	@GridColumn(name="资产状态",colIdx=9)
+	String assetStatus = "新建"
+	
+	String seriesNo
 	
 	static belongsTo = [company:Company]
 	
@@ -141,6 +144,7 @@ class BookRegister {
 		locatePosition nullable:true,blank:true
 		remark nullable:true,blank:true
 		assetStatus nullable:true,blank:true
+		seriesNo nullable:true,blank:true
     }
 	
 	static mapping = {

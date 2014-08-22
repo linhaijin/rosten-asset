@@ -3,7 +3,7 @@ package com.rosten.app.assetChange
 import com.rosten.app.util.GridUtil
 
 class AssetChangeService {
-//	报废报损
+	//报废报损
     def getAssetScrapListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new AssetScrap())
@@ -33,7 +33,7 @@ class AssetChangeService {
 		return c.count(query)
 	}
 	
-//	资产调拨
+	//资产调拨
 	def getAssetAllocateListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new AssetAllocate())
@@ -63,7 +63,7 @@ class AssetChangeService {
 		return c.count(query)
 	}
 	
-//	增值减值
+	//增值减值
 	def getAssetAddDeleteListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new AssetAddDelete())

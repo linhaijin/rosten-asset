@@ -62,6 +62,7 @@
 <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:455px;padding:0px">
+			<g:hiddenField name="registerNum_form" value="${bookRegister?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${bookRegister?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />

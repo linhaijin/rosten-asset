@@ -25,12 +25,13 @@ class CarController {
 		render actionList as JSON
 	}
 	
-	  def carRegisterView ={
+	def carRegisterView ={
 		def actionList =[]
 		def strname = "carRegister"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -89,6 +90,9 @@ class CarController {
 		//特殊字段信息处理
 		carRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		carRegister.userDepart = Depart.get(params.allowdepartsId)
+		if(!params.registerNum_form.equals("")){
+			carRegister.registerNum = params.registerNum_form
+		}
 		
 		if(carRegister.save(flush:true)){
 			json["result"] = "true"
@@ -109,6 +113,27 @@ class CarController {
 				def carRegister = CarRegister.get(it)
 				if(carRegister){
 					carRegister.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def carRegisterSubmit ={
+		def ids = params.id.split(",")
+		def json
+		def assetStatus
+		try{
+			ids.each{
+				def carRegister = CarRegister.get(it)
+				if(carRegister){
+					assetStatus = carRegister.assetStatus
+					if(assetStatus=="新建"){
+						carRegister.assetStatus = "已入库"
+					}
 				}
 			}
 			json = [result:'true']

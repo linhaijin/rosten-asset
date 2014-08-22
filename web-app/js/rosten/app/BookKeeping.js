@@ -23,6 +23,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		};
 	};
 	
+	carRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/car/carRegisterSubmit", content,rosten.submitCallback);
+		};
+	};
+	
 	carRegister_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:carRegister_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -52,6 +64,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var content = {};
 			content.id = unids;
 			rosten.read(rosten.webPath + "/land/landRegisterDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	landRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/land/landRegisterSubmit", content,rosten.submitCallback);
 		};
 	};
 	
@@ -87,6 +111,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		};
 	};
 	
+	houseRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/house/houseRegisterSubmit", content,rosten.submitCallback);
+		};
+	};
+	
 	houseRegister_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:houseRegister_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -106,7 +142,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("deviceRegister", rosten.webPath + "/device/deviceRegisterAdd?companyId=" + companyId + "&userid=" + userid);
 	};
 	
-	
 	deviceRegister_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
@@ -116,6 +151,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var content = {};
 			content.id = unids;
 			rosten.read(rosten.webPath + "/device/deviceRegisterDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	deviceRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/device/deviceRegisterSubmit", content,rosten.submitCallback);
 		};
 	};
 	
@@ -138,7 +185,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("bookRegister", rosten.webPath + "/book/bookRegisterAdd?companyId=" + companyId + "&userid=" + userid);
 	};
 	
-	
 	bookRegister_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
@@ -148,6 +194,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var content = {};
 			content.id = unids;
 			rosten.read(rosten.webPath + "/book/bookRegisterDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	bookRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/book/bookRegisterSubmit", content,rosten.submitCallback);
 		};
 	};
 	
@@ -170,7 +228,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("furnitureRegister", rosten.webPath + "/furniture/furnitureRegisterAdd?companyId=" + companyId + "&userid=" + userid);
 	};
 	
-	
 	furnitureRegister_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
@@ -180,6 +237,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var content = {};
 			content.id = unids;
 			rosten.read(rosten.webPath + "/furniture/furnitureRegisterDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	furnitureRegister_submit = function(){
+		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/furniture/furnitureRegisterSubmit", content,rosten.submitCallback);
 		};
 	};
 	

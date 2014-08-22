@@ -32,6 +32,7 @@ class LandController {
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -90,6 +91,9 @@ class LandController {
 		//特殊字段信息处理
 		landRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		landRegister.userDepart = Depart.get(params.allowdepartsId)
+		if(!params.registerNum_form.equals("")){
+			landRegister.registerNum = params.registerNum_form
+		}
 		
 		if(landRegister.save(flush:true)){
 			json["result"] = "true"
@@ -110,6 +114,23 @@ class LandController {
 				def landRegister = LandRegister.get(it)
 				if(landRegister){
 					landRegister.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def landRegisterSubmit ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def landRegister = LandRegister.get(it)
+				if(landRegister){
+					landRegister.assetStatus = "已入库"
 				}
 			}
 			json = [result:'true']

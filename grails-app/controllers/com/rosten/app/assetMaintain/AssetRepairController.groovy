@@ -1,4 +1,4 @@
-package com.rosten.app.assetChange
+package com.rosten.app.assetMaintain
 
 import grails.converters.JSON
 
@@ -8,22 +8,24 @@ import com.rosten.app.bookKeeping.HouseRegister
 import com.rosten.app.bookKeeping.DeviceRegister
 import com.rosten.app.bookKeeping.BookRegister
 import com.rosten.app.bookKeeping.FurnitureRegister
-
 import com.rosten.app.util.FieldAcl
+import com.rosten.app.util.GridUtil
+import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
-import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 
-class AssetAddDeleteController {
-    def assetChangeService
+class AssetRepairController {
+
+    def bookKeepingService
+    def assetMaintainService
 	def springSecurityService
 
 	def imgPath ="images/rosten/actionbar/"
 	
-	def assetAddDeleteForm = {
+	def assetRepairForm = {
 		def webPath = request.getContextPath() + "/"
-		def strname = "assetAddDelete"
+		def strname = "assetRepair"
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
@@ -32,9 +34,9 @@ class AssetAddDeleteController {
 		render actionList as JSON
 	}
 	
-	  def assetAddDeleteView = {
+	  def assetRepairView = {
 		def actionList =[]
-		def strname = "assetAddDelete"
+		def strname = "assetRepair"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
@@ -51,68 +53,63 @@ class AssetAddDeleteController {
 		return model
 	}
 	
-	def assetAddDeleteAdd = {
-		redirect(action:"assetAddDeleteShow",params:params)
+	def assetRepairAdd = {
+		redirect(action:"assetRepairShow",params:params)
 	}
 	
-	def assetAddDeleteShow = {
+	def assetRepairShow = {
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
 		
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		
-		def assetAddDelete = new AssetAddDelete()
+		def assetRepair = new AssetRepair()
 		if(params.id){
-			assetAddDelete = AssetAddDelete.get(params.id)
+			assetRepair = AssetRepair.get(params.id)
 		}
 		
 		model["user"] = user
 		model["company"] = company
-		model["assetAddDelete"] = assetAddDelete
+		model["assetRepair"] = assetRepair
 		
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){
 		}
 		model["fieldAcl"] = fa
 		
-		render(view:'/assetChange/assetAddDelete',model:model)
+		render(view:'/assetMaintain/assetRepair',model:model)
 	}
 	
-	def assetAddDeleteSave = {
+	def assetRepairSave = {
 		def json=[:]
 		def company = Company.get(params.companyId)
 		
-		//增值减值申请信息保存-------------------------------
-		def assetAddDelete = new AssetAddDelete()
+		//资产报修申请信息保存-------------------------------
+		def assetRepair = new AssetRepair()
 		if(params.id && !"".equals(params.id)){
-			assetAddDelete = AssetAddDelete.get(params.id)
+			assetRepair = AssetRepair.get(params.id)
 		}else{
-			assetAddDelete.company = company
+			assetRepair.company = company
 		}
-		assetAddDelete.properties = params
-		assetAddDelete.clearErrors()
+		assetRepair.properties = params
+		assetRepair.clearErrors()
 		
 		//特殊字段信息处理
-		assetAddDelete.applyDate = Util.convertToTimestamp(params.applyDate)
-		if(params.callOutDeptId && !params.callOutDeptId.equals("")){
-			assetAddDelete.callOutDept = Depart.get(params.callOutDeptId)
+		assetRepair.applyDate = Util.convertToTimestamp(params.applyDate)
+		if(params.allowdepartsId.equals("")){
+			assetRepair.applyDept = params.allowdepartsName
 		}else{
-			assetAddDelete.callOutDept = params.callOutDeptName
-		}
-		if(params.callInDeptId && !params.callInDeptId.equals("")){
-			assetAddDelete.callInDept = Depart.get(params.callInDeptId)
-		}else{
-			assetAddDelete.callInDept = params.callInDeptName
+			assetRepair.applyDept = Depart.get(params.allowdepartsId)
 		}
 		if(!params.seriesNo_form.equals("")){
-			assetAddDelete.seriesNo = params.seriesNo_form
+			assetRepair.seriesNo = params.seriesNo_form
 		}
 		
-		if(assetAddDelete.save(flush:true)){
+		if(assetRepair.save(flush:true)){
 			json["result"] = "true"
 		}else{
-			assetAddDelete.errors.each{
+			assetRepair.errors.each{
 				println it
 			}
 			json["result"] = "false"
@@ -120,7 +117,7 @@ class AssetAddDeleteController {
 		render json as JSON
 	}
 	
-	def assetAddDeleteDelete = {
+	def assetRepairDelete = {
 		/*
 		def seriesNo
 		
@@ -143,12 +140,12 @@ class AssetAddDeleteController {
 		def json
 		try{
 			ids.each{
-				def assetAddDelete = AssetAddDelete.get(it)
-				if(assetAddDelete){
-					assetAddDelete.delete(flush: true)
+				def assetRepair = AssetRepair.get(it)
+				if(assetRepair){
+					assetRepair.delete(flush: true)
 					/*
 					//获取当前资产变更申请单号，用以重置资产建账中的值
-					seriesNo = assetAddDelete.seriesNo
+					seriesNo = assetRepair.seriesNo
 					//重置车辆资产建账的资产变更申请单号
 					assetList_car = CarRegister.findAllBySeriesNo(seriesNo)
 					if(assetList_car.size()>0){
@@ -225,11 +222,11 @@ class AssetAddDeleteController {
 		render json as JSON
 	}
 	
-	def assetAddDeleteGrid = {
+	def assetRepairGrid = {
 		def json=[:]
 		def company = Company.get(params.companyId)
 		if(params.refreshHeader){
-			json["gridHeader"] = assetChangeService.getAssetAddDeleteListLayout()
+			json["gridHeader"] = assetMaintainService.getAssetRepairListLayout()
 		}
 		if(params.refreshData){
 			def args =[:]
@@ -239,16 +236,16 @@ class AssetAddDeleteController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetChangeService.getAssetAddDeleteDataStore(args)
+			json["gridData"] = assetMaintainService.getAssetRepairDataStore(args)
 		}
 		if(params.refreshPageControl){
-			def total = assetChangeService.getAssetAddDeleteCount(company)
+			def total = assetMaintainService.getAssetRepairCount(company)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
 	}
 	
-	def assetAddDeleteListDataStore = {
+	def assetRepairListDataStore = {
 		def json=[:]
 		
 		def car = CarRegister.createCriteria()
@@ -306,6 +303,12 @@ class AssetAddDeleteController {
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
 					eq("seriesNo",seriesNo)
+//					if(assetType=="" || assetType==null){
+//						eq("assetStatus","报废待审批")
+//					}
+//					if(freshType=="twice"){
+//						eq("assetStatus","报废待审批")
+//					}
 				}
 			}
 		}
@@ -424,7 +427,12 @@ class AssetAddDeleteController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
-					eq("assetStatus","已入库")
+//					if(freshType=="twice"){
+//						eq("assetStatus","报废待审批")
+//						eq("seriesNo",seriesNo)
+//					}else{
+						eq("assetStatus","已入库")
+//					}
 				}
 			}
 		}
@@ -434,6 +442,7 @@ class AssetAddDeleteController {
 			if(!(assetType.equals("") || assetType==null)){
 				if(assetType.equals("car")){
 					assetList = car.list(pa,query)
+//					assetList = CarRegister.findAllByCompany(companyEntity,[max: max, sort: "createDate", order: "desc", offset: offset])
 					totalNum = assetList.size()
 				}else if(assetType.equals("land")){
 					assetList = land.list(pa,query)
@@ -516,46 +525,46 @@ class AssetAddDeleteController {
 		
 		if(assetIds.size()>0){
 			assetIds.each{
-				//将申请单号和资产变更类型写入资产建账信息中，同时计算总金额
+				//将申请单号和资产变更类型写入资产建账信息中
 				if(assetType.equals("car")){
 					carRegister = CarRegister.get(it)
 					if(carRegister){
-						carRegister.assetStatus = "调拨待审批"
+						carRegister.assetStatus = "废损待审批"
 						carRegister.seriesNo = seriesNo
 						totalPrice = carRegister.totalPrice
 					}
 				}else if(assetType.equals("land")){
 					landRegister = LandRegister.get(it)
 					if(landRegister){
-						landRegister.assetStatus = "调拨待审批"
+						landRegister.assetStatus = "废损待审批"
 						landRegister.seriesNo = seriesNo
 						totalPrice = landRegister.totalPrice
 					}
 				}else if(assetType.equals("house")){
 					houseRegister = HouseRegister.get(it)
 					if(houseRegister){
-						houseRegister.assetStatus = "调拨待审批"
+						houseRegister.assetStatus = "废损待审批"
 						houseRegister.seriesNo = seriesNo
 						totalPrice = houseRegister.totalPrice
 					}
 				}else if(assetType.equals("device")){
 					deviceRegister = DeviceRegister.get(it)
 					if(deviceRegister){
-						deviceRegister.assetStatus = "调拨待审批"
+						deviceRegister.assetStatus = "废损待审批"
 						deviceRegister.seriesNo = seriesNo
 						totalPrice = deviceRegister.totalPrice
 					}
 				}else if(assetType.equals("book")){
 					bookRegister = BookRegister.get(it)
 					if(bookRegister){
-						bookRegister.assetStatus = "调拨待审批"
+						bookRegister.assetStatus = "废损待审批"
 						bookRegister.seriesNo = seriesNo
 						totalPrice = bookRegister.totalPrice
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureRegister = FurnitureRegister.get(it)
 					if(furnitureRegister){
-						furnitureRegister.assetStatus = "调拨待审批"
+						furnitureRegister.assetStatus = "废损待审批"
 						furnitureRegister.seriesNo = seriesNo
 						totalPrice = furnitureRegister.totalPrice
 					}
@@ -573,7 +582,7 @@ class AssetAddDeleteController {
 	
 	def assetChooseDelete = {
 		def json,message
-		def assetAddDelete = new AssetAddDelete()
+		def assetRepair = new AssetRepair()
 		
 		def carRegister
 		def landRegister
@@ -582,13 +591,13 @@ class AssetAddDeleteController {
 		def bookRegister
 		def furnitureRegister
 		
-		double totalPrice = 0
-		double assetTotal = 0
-		
-		if(params.addDeleteId && !"".equals(params.addDeleteId)){
-			assetAddDelete = AssetAddDelete.get(params.addDeleteId)
-			assetTotal = assetAddDelete.assetTotal
-		}
+//		double totalPrice = 0
+//		double assetTotal = 0
+//		
+//		if(params.repairId && !"".equals(params.repairId)){
+//			assetRepair = AssetRepair.get(params.repairId)
+//			assetTotal = assetRepair.assetTotal
+//		}
 		
 		def assetId
 		def assetIds
@@ -603,45 +612,47 @@ class AssetAddDeleteController {
 				if(carRegister){
 					carRegister.assetStatus = "已入库"
 					carRegister.seriesNo = null
-					totalPrice = carRegister.totalPrice
+//					totalPrice = carRegister.totalPrice
 				}
 				landRegister = LandRegister.get(it)
 				if(landRegister){
 					landRegister.assetStatus = "已入库"
 					landRegister.seriesNo = null
-					totalPrice = landRegister.totalPrice
+//					totalPrice = landRegister.totalPrice
 				}
 				houseRegister = HouseRegister.get(it)
 				if(houseRegister){
 					houseRegister.assetStatus = "已入库"
 					houseRegister.seriesNo = null
-					totalPrice = houseRegister.totalPrice
+//					totalPrice = houseRegister.totalPrice
 				}
 				deviceRegister = DeviceRegister.get(it)
 				if(deviceRegister){
 					deviceRegister.assetStatus = "已入库"
 					deviceRegister.seriesNo = null
-					totalPrice = deviceRegister.totalPrice
+//					totalPrice = deviceRegister.totalPrice
 				}
 				bookRegister = BookRegister.get(it)
 				if(bookRegister){
 					bookRegister.assetStatus = "已入库"
 					bookRegister.seriesNo = null
-					totalPrice = bookRegister.totalPrice
+//					totalPrice = bookRegister.totalPrice
 				}
 				furnitureRegister = FurnitureRegister.get(it)
 				if(furnitureRegister){
 					furnitureRegister.assetStatus = "已入库"
 					furnitureRegister.seriesNo = null
-					totalPrice = furnitureRegister.totalPrice
+//					totalPrice = furnitureRegister.totalPrice
 				}
-				assetTotal -= totalPrice
+//				assetTotal -= totalPrice
 			}
 			message = "操作成功！"
-			json = [result:'true',assetTotal:assetTotal,message:message]
+			json = [result:'true',message:message]
+//			json = [result:'true',assetTotal:assetTotal,message:message]
 		}else{
 			message = "操作失败！"
-			json = [result:'error',assetTotal:assetTotal,message:message]
+			json = [result:'error',message:message]
+//			json = [result:'error',assetTotal:assetTotal,message:message]
 		}
 		render json as JSON
 	}

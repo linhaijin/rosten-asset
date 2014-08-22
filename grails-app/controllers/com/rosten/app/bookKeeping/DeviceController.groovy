@@ -32,6 +32,7 @@ class DeviceController {
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -90,6 +91,9 @@ class DeviceController {
 		//特殊字段信息处理
 		deviceRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		deviceRegister.userDepart = Depart.get(params.allowdepartsId)
+		if(!params.registerNum_form.equals("")){
+			deviceRegister.registerNum = params.registerNum_form
+		}
 		
 		if(deviceRegister.save(flush:true)){
 			json["result"] = "true"
@@ -110,6 +114,23 @@ class DeviceController {
 				def deviceRegister = DeviceRegister.get(it)
 				if(deviceRegister){
 					deviceRegister.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def deviceRegisterSubmit ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def deviceRegister = DeviceRegister.get(it)
+				if(deviceRegister){
+					deviceRegister.assetStatus = "已入库"
 				}
 			}
 			json = [result:'true']

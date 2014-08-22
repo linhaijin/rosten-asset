@@ -136,12 +136,13 @@ class AssetController {
 			model = new Model(company:company)
 			model.modelName = "资产运维"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "maintain"
+//			model.modelCode = "maintain"
+			model.modelCode = "assetMaintain"
 			model.serialNo = 7
 			
 			resource = new Resource()
 			resource.resourceName = "资产报修"
-			resource.url = "assetMaintain"
+			resource.url = "assetRepair"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -150,12 +151,12 @@ class AssetController {
 			model = new Model(company:company)
 			model.modelName = "资产核查"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "check"
+			model.modelCode = "assetCheck"
 			model.serialNo = 8
 			
 			resource = new Resource()
 			resource.resourceName = "资产盘点"
-			resource.url = "assetCheck"
+			resource.url = "assetInventory"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -164,7 +165,7 @@ class AssetController {
 			model = new Model(company:company)
 			model.modelName = "资产上报"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "report"
+			model.modelCode = "assetReport"
 			model.serialNo = 9
 			
 			resource = new Resource()
@@ -178,13 +179,13 @@ class AssetController {
 			model = new Model(company:company)
 			model.modelName = "统计分析"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "static"
+			model.modelCode = "assetStatist"
 			model.description ="统计分析"
 			model.serialNo = 10
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"
-			resource.url = "static"
+			resource.url = "assetAnalysis"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			

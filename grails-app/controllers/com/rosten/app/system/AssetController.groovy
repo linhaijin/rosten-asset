@@ -143,8 +143,14 @@ class AssetController {
 			model.serialNo = 8
 			
 			resource = new Resource()
-			resource.resourceName = "资产盘点"
-			resource.url = "assetInventory"
+			resource.resourceName = "盘点任务发布"
+			resource.url = "assetRwfb"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "我的盘点任务"
+			resource.url = "myPdrw"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -179,7 +185,7 @@ class AssetController {
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"
-			resource.url = "assetAnalysis"
+			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			

@@ -29,7 +29,7 @@ define(["dojo/_base/kernel"
 	};
 	
 	more_demo = function(){
-		demo_static("designMore");
+		rosten.openNewWindow("demoView", rosten.webPath + "/demo/staticView");
 	};
 	
 	//---------------------------------------------
@@ -132,7 +132,7 @@ define(["dojo/_base/kernel"
             	deleteMailNavigation();
             	require(["rosten/app/BookKeeping"],function(){
 //            		rosten.readSync(url,function(data))
-            		show_naviEntity("carRegister");
+            		show_naviEntity("deviceRegister");
             	});
             }
             else if (oString == "assetChange") {//资产变动
@@ -150,7 +150,7 @@ define(["dojo/_base/kernel"
             else if (oString == "assetCheck") {//资产核查
             	deleteMailNavigation();
             	require(["rosten/app/AssetCheck"],function(){
-            		show_naviEntity("assetInventory");
+            		show_naviEntity("myPdrw");
             	});
             }
             else if (oString == "assetReport") {//资产上报

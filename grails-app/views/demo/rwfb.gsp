@@ -19,10 +19,10 @@
 </script>
 <body>
 	<div data-dojo-type="rosten/widget/ActionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'demo',action:'staticDesign')}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'demo',action:'rwfbAction')}"'>
 	</div>
 	<div style="margin:0 auto;text-align:center;margin-top:10px">
-		<img src="${resource(dir:'images/rosten/demo',file:'1.jpg')}">
+		<img src="${resource(dir:'images/rosten/demo',file:'rwfb.jpg')}">
 	</div>
 </body>
 </html>

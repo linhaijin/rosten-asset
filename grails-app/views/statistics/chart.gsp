@@ -192,7 +192,7 @@
 	        	titleFontColor: "green",
 	            titleOrientation: "axis"
 	        });
-            chartC.addPlot("default", {type: ClusteredColumns,gap: 30, labels: true});
+            chartC.addPlot("default", {type: ClusteredColumns,gap: 10, labels: true});
 
             for (var i = 0; i < groupList.length; i++) {
             	chartC.addSeries(groupList[i], new DataSeries(store1, {query: {group: groupList[i]}}, dojo.hitch(null, valTrans, "number")));
@@ -324,7 +324,7 @@
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
 			data-dojo-props='region:"center",title:"固定资产分类统计",toggleable:false,
-				height:"210px",moreText:""'>
+				height:"210px",_moreClick:more_demo,moreText:"详情"'>
 				
 			<div class="charts">
 				<div id="pie_legend"></div>

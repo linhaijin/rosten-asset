@@ -153,6 +153,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			rosten.read(rosten.webPath + "/device/deviceRegisterDelete", content,rosten.deleteCallback);
 		};
 	};
+	deviceRegister_kp = function(){
+		
+	};
+	deviceRegister_print = function(){
+		
+	};
 	
 	deviceRegister_submit = function(){
 		var _1 = rosten.confirm("确认提交入库，是否继续?");

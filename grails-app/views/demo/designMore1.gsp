@@ -12,22 +12,7 @@
      	],
 	function( kernel
 		) {
-		demoReturn = function(){
-			demo_static("staticDesign");
-		};
-		addDemoTitle = function(){
-			rosten.kernel.createRostenShowDialog(rosten.webPath + "/demo/addTitle", {
-	            onLoadFunction : function() {
-
-	            }
-	        });
-		};
-		deleteDemoTitle = function(){
-
-		};
-		demoView = function(){
-			rosten.openNewWindow("demoView", rosten.webPath + "/demo/staticView");
-		};
+		
 	
 	});
 	
@@ -37,7 +22,7 @@
 		data-dojo-props='actionBarSrc:"${createLink(controller:'demo',action:'desgine')}"'>
 	</div>
 	<div style="margin:0 auto;text-align:center;margin-top:10px">
-		<img src="${resource(dir:'images/rosten/demo',file:'6.jpg')}">
+		<img src="${resource(dir:'images/rosten/demo',file:'rosten.png')}">
 	</div>
 	
 </body>

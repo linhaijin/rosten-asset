@@ -5,6 +5,14 @@ import grails.converters.JSON
 class DemoController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def importDe ={
+		def model=[:]
+		render(view:'/demo/importDe',model:model)
+	}
+	def kpshow ={
+		def model=[:]
+		render(view:'/demo/kpshow',model:model)
+	}
 	def staticView ={
 		def model=[:]
 		render(view:'/demo/designMore',model:model)

@@ -29,10 +29,23 @@ class DeviceController {
 	  def deviceRegisterView ={
 		def actionList =[]
 		def strname = "deviceRegister"
+		
+		def user = springSecurityService.getCurrentUser()
+		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
-		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
+		
+		if("资产管理员".equals(user.getUserTypeName())){
+			actionList << createAction("通过",imgPath + "hf.gif",strname + "_agree")
+			actionList << createAction("生成条形码",imgPath + "hf.gif",strname + "_kp")
+			actionList << createAction("批量打印条形码",imgPath + "hf.gif",strname + "_print")
+		}else{
+			actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
+		}
+		
+		actionList << createAction("批量导入",imgPath + "add.png",strname + "_import")
+		actionList << createAction("导出",imgPath + "add.png",strname + "_export")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -124,6 +137,22 @@ class DeviceController {
 	}
 	
 	def deviceRegisterSubmit ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def deviceRegister = DeviceRegister.get(it)
+				if(deviceRegister){
+					deviceRegister.assetStatus = "审核"
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def deviceRegisterAgree ={
 		def ids = params.id.split(",")
 		def json
 		try{

@@ -34,10 +34,31 @@ class AssetController {
 			model.save()
 			
 			model = new Model(company:company)
+			model.modelName = "资产申请"
+			model.modelUrl = path + "/system/navigation"
+			model.modelCode = "zcsq"
+			model.serialNo = 5
+			
+			resource = new Resource()
+			resource.resourceName = "资产申请"
+			resource.url = "zcsq"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "申请审核"
+			resource.url = "sqsh"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			model.save()
+			
+			
+			model = new Model(company:company)
 			model.modelName = "资产建账"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "bookKeeping"
-			model.serialNo = 5
+			model.serialNo = 6
 			
 			resource = new Resource()
 			resource.resourceName = "车辆登记"
@@ -81,7 +102,7 @@ class AssetController {
 			model.modelName = "资产变动"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetChange"
-			model.serialNo = 6
+			model.serialNo = 7
 			
 			resource = new Resource()
 			resource.resourceName = "报废报损"
@@ -126,7 +147,7 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 //			model.modelCode = "maintain"
 			model.modelCode = "assetMaintain"
-			model.serialNo = 7
+			model.serialNo = 8
 			
 			resource = new Resource()
 			resource.resourceName = "资产报修"
@@ -140,7 +161,7 @@ class AssetController {
 			model.modelName = "资产核查"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetCheck"
-			model.serialNo = 8
+			model.serialNo = 9
 			
 			resource = new Resource()
 			resource.resourceName = "盘点任务发布"
@@ -160,7 +181,7 @@ class AssetController {
 			model.modelName = "资产上报"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetReport"
-			model.serialNo = 9
+			model.serialNo = 10
 			
 			resource = new Resource()
 			resource.resourceName = "财政上报"
@@ -175,7 +196,7 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetStatist"
 			model.description ="统计分析"
-			model.serialNo = 10
+			model.serialNo = 11
 			
 			resource = new Resource()
 			resource.resourceName = "报表设计"

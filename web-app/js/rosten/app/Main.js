@@ -120,7 +120,7 @@ define(["dojo/_base/kernel"
             	deleteMailNavigation();
             	require(["rosten/app/WorkFlowManage"],function(){
 //            		show_naviEntity("flowDefinedManage");
-            		returnToMain();
+            		show_naviEntity("flowDemo");
             	});
             }else if (oString == "public") {
             	deleteMailNavigation();
@@ -159,6 +159,11 @@ define(["dojo/_base/kernel"
 //            	require(["rosten/app/AssetReport"],function(){
 //            		show_naviEntity("fiscalReport");
 //            	});
+            }else if (oString == "zcsq") {//统计分析
+            	deleteMailNavigation();
+            	require(["rosten/app/AssetApply"],function(){
+            		show_naviEntity("zcsq");
+            	});
             }
             else if (oString == "assetStatist") {//统计分析
             	deleteMailNavigation();

@@ -260,12 +260,17 @@
 							data-dojo-props='region:"left",title:"待办工作",toggleable:false,
 								height:"157px",width:"50%",style:{marginRight:"1px"},
 								_moreClick:more_gtask,moreText:"更多"'>
+								
+								
+								<ul><li><span class="type">【公告】</span><a href="javascript:openGtask('【公告】','4028ac81-480d9b6a-0148-0db22f03-0009')"><span>请您审核名称为 【组织2014年度公司集体活动的通知！】 的公告</span></a><span class="time">2014-08-25 23:09</span></li></ul>
 						</div>
 							
 						<div data-dojo-type="rosten/widget/TitlePane" id="home_bbs"
 							data-dojo-props='region:"center",title:"最新公告",toggleable:false,
 								height:"157px",
 								_moreClick:more_bbs,moreText:"更多"'>
+								
+								<ul><li><a href="javascript:openBbs('4028ac81-480d9b6a-0148-0db17b22-0005')"><span>定于2014年8月26日召开公司党组会议！</span></a><span class="new">&nbsp;</span><span class="time">2014-08-25 00:00</span></li><li><a href="javascript:openBbs('4028ac81-480d9b6a-0148-0dca205b-001f')"><span>关于学习十八大会议精神的会议通知!</span></a><span class="new">&nbsp;</span><span class="time">2014-08-25 00:00</span></li></ul>
 						</div>	
 						
 					</div>

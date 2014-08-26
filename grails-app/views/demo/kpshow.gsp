@@ -7,9 +7,35 @@
   
 <body>
 	<div style="text-Align:center">
-        <div class="rosten_form" style="width:400px;text-align:left">
+        <div class="rosten_form" style="width:500px;text-align:left">
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">卡片信息</legend>
+                <table class="tableData">
+                	<tr>
+                		<td>资产名称：</td>
+                		<td><input data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='
+             						value:"笔记本电脑"
+                           	'/></td>
+                		<td>购买时间</td>
+                		<td><input data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='
+             						value:"2014-8-25"
+                           	'/></td>
+                	</tr>
+                	<tr>
+                		<td>使用人：</td>
+                		<td><input data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='
+             						value:"张三"
+                           	'/></td>
+                		<td>使用部门</td>
+                		<td><input data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='
+             						value:"人力资源部"
+                           	'/></td>
+                	</tr>
+                </table>
                 <div style="text-align:center">
                 	<img src="${resource(dir:'images/rosten/demo',file:'kp.jpg')}" >
                 </div>

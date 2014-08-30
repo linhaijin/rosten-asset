@@ -373,7 +373,7 @@
 					    	<input id="maintenanceDate" data-dojo-type="dijit/form/DateTextBox" 
                                	data-dojo-props='name:"maintenanceDate",${fieldAcl.isReadOnly("maintenanceDate")},
                                		trim:true,
-             						value:"${assetRepair?.maintenanceDate}"
+             						value:"${assetRepair?.getFormattedShowMaintenanceDate()}"
                            	'/>
 			            </td>
 					    <td><div align="right">维护费用：</div></td>

@@ -529,42 +529,42 @@ class AssetRepairController {
 				if(assetType.equals("car")){
 					carRegister = CarRegister.get(it)
 					if(carRegister){
-						carRegister.assetStatus = "废损待审批"
+						carRegister.assetStatus = "报修待审批"
 						carRegister.seriesNo = seriesNo
 						totalPrice = carRegister.totalPrice
 					}
 				}else if(assetType.equals("land")){
 					landRegister = LandRegister.get(it)
 					if(landRegister){
-						landRegister.assetStatus = "废损待审批"
+						landRegister.assetStatus = "报修待审批"
 						landRegister.seriesNo = seriesNo
 						totalPrice = landRegister.totalPrice
 					}
 				}else if(assetType.equals("house")){
 					houseRegister = HouseRegister.get(it)
 					if(houseRegister){
-						houseRegister.assetStatus = "废损待审批"
+						houseRegister.assetStatus = "报修待审批"
 						houseRegister.seriesNo = seriesNo
 						totalPrice = houseRegister.totalPrice
 					}
 				}else if(assetType.equals("device")){
 					deviceRegister = DeviceRegister.get(it)
 					if(deviceRegister){
-						deviceRegister.assetStatus = "废损待审批"
+						deviceRegister.assetStatus = "报修待审批"
 						deviceRegister.seriesNo = seriesNo
 						totalPrice = deviceRegister.totalPrice
 					}
 				}else if(assetType.equals("book")){
 					bookRegister = BookRegister.get(it)
 					if(bookRegister){
-						bookRegister.assetStatus = "废损待审批"
+						bookRegister.assetStatus = "报修待审批"
 						bookRegister.seriesNo = seriesNo
 						totalPrice = bookRegister.totalPrice
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureRegister = FurnitureRegister.get(it)
 					if(furnitureRegister){
-						furnitureRegister.assetStatus = "废损待审批"
+						furnitureRegister.assetStatus = "报修待审批"
 						furnitureRegister.seriesNo = seriesNo
 						totalPrice = furnitureRegister.totalPrice
 					}

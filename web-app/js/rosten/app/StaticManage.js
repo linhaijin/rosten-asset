@@ -16,6 +16,9 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		case "static":
             rosten.kernel.setHref(rosten.webPath + "/statistics/chart?companyId=" + companyId, oString);
             break;
+		case "staticDesign":
+			demo_static(oString);
+            break;
 		}
 		
 	}

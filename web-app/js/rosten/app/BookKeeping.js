@@ -153,9 +153,31 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			rosten.read(rosten.webPath + "/device/deviceRegisterDelete", content,rosten.deleteCallback);
 		};
 	};
+	deviceRegister_kp = function(){
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/demo/kpshow", {
+            onLoadFunction : function() {
+
+            }
+        });
+	};
+	deviceRegister_print = function(){
+		
+	};
+	
+	deviceRegister_import = function(){
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/demo/importDe", {
+            onLoadFunction : function() {
+
+            }
+        });
+	};
+	
+	deviceRegister_export = function(){
+		
+	};
 	
 	deviceRegister_submit = function(){
-		var _1 = rosten.confirm("确认提交入库，是否继续?");
+		var _1 = rosten.confirm("确认提交审核，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("multi");
 			if (unids == "")
@@ -164,6 +186,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.id = unids;
 			rosten.read(rosten.webPath + "/device/deviceRegisterSubmit", content,rosten.submitCallback);
 		};
+	};
+	deviceRegister_agree = function(){
+		var unids = rosten.getGridUnid("multi");
+		if (unids == "")
+			return;
+		var content = {};
+		content.id = unids;
+		rosten.read(rosten.webPath + "/device/deviceRegisterAgree", content,rosten.submitCallback);
 	};
 	
 	deviceRegister_formatTopic = function(value,rowIndex){

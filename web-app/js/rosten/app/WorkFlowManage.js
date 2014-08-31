@@ -198,6 +198,9 @@ define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/kernel/beha
             var rostenGrid = rosten.kernel.getGrid();
             rostenGrid.onRowDblClick = read_modeler;
             break;
+		case "flowDemo":
+			rosten.kernel.setHref(rosten.webPath + "/demo/showFlowhello?companyId=" + companyId, oString);
+            break;
 		}
 	}
 	connect.connect("show_naviEntity", show_workFlowNaviEntity);

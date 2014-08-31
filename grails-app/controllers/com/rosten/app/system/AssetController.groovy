@@ -1,10 +1,10 @@
 package com.rosten.app.system
 
 import grails.converters.JSON;
-import com.rosten.app.assetconfig.AssetCategory;
 
 class AssetController {
 	def systemService
+	
 	
 	def modelInit ={
 		def json,model,resource
@@ -34,22 +34,31 @@ class AssetController {
 			model.save()
 			
 			model = new Model(company:company)
+			model.modelName = "资产申请"
+			model.modelUrl = path + "/system/navigation"
+			model.modelCode = "zcsq"
+			model.serialNo = 5
+			
+			resource = new Resource()
+			resource.resourceName = "资产申请"
+			resource.url = "zcsq"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "申请审核"
+			resource.url = "sqsh"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			model.save()
+			
+			
+			model = new Model(company:company)
 			model.modelName = "资产建账"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "bookKeeping"
-			model.serialNo = 5
-			
-//			def ac = AssetCategory.createCriteria()
-//			def rs = ac.list {
-//				order("serialNo", "asc")
-//			}
-//			rs.each {  
-//				resource = new Resource()
-//				resource.resourceName = it.category+"登记"
-//				resource.url = "zcjz_"+it.serialNo
-//				resource.imgUrl = "images/rosten/navigation/rosten.png"
-//				model.addToResources(resource)
-//			}
+			model.serialNo = 6
 			
 			resource = new Resource()
 			resource.resourceName = "车辆登记"
@@ -93,7 +102,7 @@ class AssetController {
 			model.modelName = "资产变动"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetChange"
-			model.serialNo = 6
+			model.serialNo = 7
 			
 			resource = new Resource()
 			resource.resourceName = "报废报损"
@@ -138,7 +147,7 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 //			model.modelCode = "maintain"
 			model.modelCode = "assetMaintain"
-			model.serialNo = 7
+			model.serialNo = 8
 			
 			resource = new Resource()
 			resource.resourceName = "资产报修"
@@ -152,11 +161,17 @@ class AssetController {
 			model.modelName = "资产核查"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetCheck"
-			model.serialNo = 8
+			model.serialNo = 9
 			
 			resource = new Resource()
-			resource.resourceName = "资产盘点"
-			resource.url = "assetInventory"
+			resource.resourceName = "盘点任务发布"
+			resource.url = "assetRwfb"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "我的盘点任务"
+			resource.url = "myPdrw"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -166,7 +181,7 @@ class AssetController {
 			model.modelName = "资产上报"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetReport"
-			model.serialNo = 9
+			model.serialNo = 10
 			
 			resource = new Resource()
 			resource.resourceName = "财政上报"
@@ -181,11 +196,17 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetStatist"
 			model.description ="统计分析"
-			model.serialNo = 10
+			model.serialNo = 11
+			
+			resource = new Resource()
+			resource.resourceName = "报表设计"
+			resource.url = "staticDesign"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"
-			resource.url = "assetAnalysis"
+			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -197,6 +218,20 @@ class AssetController {
 			}
 			
 			systemService.initData_service(path,company)
+			
+			def _service = new NormalService()
+			_service.serviceName = "协同办公系统"
+			_service.company = company
+			_service.functionUrl = "http://oa.html"
+			_service.imgUrl = "images/rosten/service/oa.gif"
+			_service.save(flush:true)
+			
+			_service = new NormalService()
+			_service.serviceName = "人事管理系统"
+			_service.company = company
+			_service.functionUrl = "http://zcxt.html"
+			_service.imgUrl = "images/rosten/service/rsxt.gif"
+			_service.save(flush:true)
 			
 			json = [result:'true']
 		}catch(Exception e){

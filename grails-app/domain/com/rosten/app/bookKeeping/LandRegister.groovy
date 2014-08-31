@@ -25,7 +25,7 @@ class LandRegister {
 	
 	//资产分类名称
 	@GridColumn(name="资产分类",colIdx=2)
-	String assetCategory
+	String assetCategory = "土地"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)

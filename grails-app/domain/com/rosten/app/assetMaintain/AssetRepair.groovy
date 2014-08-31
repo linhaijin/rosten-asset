@@ -96,7 +96,7 @@ class AssetRepair {
 	
 	//维修时间
 	@GridColumn(name="维修时间",width="120px",colIdx=8)
-	Date maintenanceDate
+	Date maintenanceDate = new Date()
 	def getFormattedShowMaintenanceDate(){//详细视图展示
 		if(maintenanceDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")

@@ -134,6 +134,11 @@ class CarController {
 					if(assetStatus=="新建"){
 						carRegister.assetStatus = "已入库"
 					}
+					//获取建账信息中的数量，创建相同数量的资产卡片
+					
+					/*
+					 * undo
+					 */
 				}
 			}
 			json = [result:'true']

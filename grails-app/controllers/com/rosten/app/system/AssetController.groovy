@@ -27,8 +27,16 @@ class AssetController {
 			model.serialNo = 4
 			
 			resource = new Resource()
-			resource.resourceName = "资产大类"
+//			resource.resourceName = "资产大类"
+			resource.resourceName = "资产分类管理"
 			resource.url = "assetCategory"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			model.save()
+			
+			resource = new Resource()
+			resource.resourceName = "资产限额配置"
+			resource.url = "assetQuotaConfigure"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			model.save()
@@ -116,17 +124,17 @@ class AssetController {
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
-			resource = new Resource()
-			resource.resourceName = "增值减值"
-			resource.url = "assetAddDelete"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
+//			resource = new Resource()
+//			resource.resourceName = "增值减值"
+//			resource.url = "assetAddDelete"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
 			
-			resource = new Resource()
-			resource.resourceName = "资产调出"
-			resource.url = "assetExport"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
+//			resource = new Resource()
+//			resource.resourceName = "资产调出"
+//			resource.url = "assetExport"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "资产报失"
@@ -134,11 +142,11 @@ class AssetController {
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
-			resource = new Resource()
-			resource.resourceName = "资产退库"
-			resource.url = "assetQuit"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
+//			resource = new Resource()
+//			resource.resourceName = "资产退库"
+//			resource.url = "assetQuit"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
 			
 			model.save()
 			

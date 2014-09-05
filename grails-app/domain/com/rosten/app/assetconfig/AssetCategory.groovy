@@ -7,29 +7,39 @@ import com.rosten.app.system.Company
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.List;
 
 class AssetCategory {
 	String id
-	 
-	//类型名称
-	@GridColumn(name="大类名称",formatter="zcdl_formatTitle",colIdx=1)
-	String category
 	
-	Date createdTime = new Date()
+	//父资产名称
+	String parentName
+	 
+	//资产分类
+	@GridColumn(name="资产分类")
+	String categoryName
+	
+	//分类代码
+	@GridColumn(name="分类代码")
+	String categoryCode
+	
+	//总分类
+	String allCode
+	
+	Date createDate = new Date()
 	@GridColumn(name="创建日期",width="106px",colIdx=2)
-	def getFormattedCreatedTime(){
-		if(createdTime!=null){
+	def getFormattedCreateDate(){
+		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-			return sd.format(createdTime)
+			return sd.format(createDate)
 		}else{
 			return ""
 		}
 	}
-	
-	def getFormattedShowCreatedTime(){
-		if(createdTime!=null){
+	def getFormattedShowCreateDate(){
+		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
-			return sd.format(createdTime)
+			return sd.format(createDate)
 		}else{
 			return ""
 		}
@@ -39,9 +49,24 @@ class AssetCategory {
 	@GridColumn(name="描述")
 	String description
 	
+	List children
+	
+	//上层分类
+	AssetCategory parent
+	
 	static belongsTo = [company:Company]
 	
+	static hasMany = [children:AssetCategory]
+	
     static constraints = {
+		parentName nullable:true,blank:true
+		categoryName nullable:false,blank:false
+		categoryCode nullable:false,blank:false
+		allCode nullable:true,blank:true
+		createDate nullable:false,blank:false
+		description nullable:true,blank:true
+		parent nullable:true
+		children(nullable:true)
     }
 	
 	static mapping = {
@@ -49,6 +74,9 @@ class AssetCategory {
 		table "ROSTEN_ASSET_CATEGORY"
 		
 		description sqlType:"text"
+	}
+	
+	def beforeDelete(){
 	}
 	
 }

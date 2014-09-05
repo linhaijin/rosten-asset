@@ -117,7 +117,7 @@ class DeviceRegister {
 	String supplier
 	
 	//国别
-	String country
+	String country = "中国"
 	
 	//创建时间
 	Date createDate = new Date()

@@ -96,6 +96,9 @@ class CarRegister {
 	//存放地点
 	String storagePosition
 	
+	//国别
+	String country = "中国"
+	
 	//车牌号-------------------必填项
 	String carplateNo
 	
@@ -165,6 +168,7 @@ class CarRegister {
 		otherFund nullable:true,blank:true
 		organizationalType nullable:true,blank:true
 		storagePosition nullable:true,blank:true
+		country nullable:true,blank:true
 		carplateNo nullable:false ,blank: false, unique: true
 		carframeNo nullable:true,blank:true
 		carengineNo nullable:true,blank:true

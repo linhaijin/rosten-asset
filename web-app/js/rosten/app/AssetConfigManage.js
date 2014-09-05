@@ -4,33 +4,33 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
-	zcdl_formatTitle = function(value,rowIndex){
-		return "<a href=\"javascript:zcdl_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	assetCategory_formatTitle = function(value,rowIndex){
+		return "<a href=\"javascript:assetCategory_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
-	zcdl_onMessageOpen = function(rowIndex){
+	assetCategory_onMessageOpen = function(rowIndex){
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("zcdl", rosten.webPath + "/assetConfig/assetCategoryShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("assetCategory", rosten.webPath + "/assetConfig/assetCategoryShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rosten.kernel.getGrid().clearSelected();
 	};
-	zcdl_add = function(){
+	assetCategory_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("zcdl", rosten.webPath + "/assetConfig/assetCategoryAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("assetCategory", rosten.webPath + "/assetConfig/assetCategoryAdd?companyId=" + companyId + "&userid=" + userid);
 	};
-	zcdl_read = function(){
-		zcdl_change();
+	assetCategory_read = function(){
+		assetCategory_change();
 	};
-	zcdl_change = function(){
+	assetCategory_change = function(){
 		var unid = rosten.getGridUnid("single");
 		if (unid == "")
 			return;
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("zcdl", rosten.webPath + "/assetConfig/assetCategoryShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("assetCategory", rosten.webPath + "/assetConfig/assetCategoryShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 	};
-	zcdl_delete = function(){
+	assetCategory_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("multi");
@@ -51,14 +51,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		
 		switch (oString) {
 		case "assetCategory":
+			/*获取Grid方法
             var naviJson = {
                 identifier : oString,
-                actionBarSrc : rosten.webPath + "/assetConfigAction/assetCategoryView?userId=" + userid,
+                actionBarSrc : rosten.webPath + "/assetConfig/assetCategoryView?userId=" + userid,
                 gridSrc : rosten.webPath + "/assetConfig/assetCategoryGrid?companyId=" + companyId
             };
             rosten.kernel.addRightContent(naviJson);
-
             var rostenGrid = rosten.kernel.getGrid();
+           */
+            /*直接挑战页面*/
+            var companyId = rosten.kernel.getUserInforByKey("companyid");
+            rosten.kernel.setHref(rosten.webPath + "/assetConfig/assetCategory?companyId=" + companyId, oString);
             break;
 		}
 		

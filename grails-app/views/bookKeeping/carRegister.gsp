@@ -160,54 +160,54 @@
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>数量（辆）：</div></td>
 					    <td>
 					    	<input id="amount" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"amount",${fieldAcl.isReadOnly("amount")},
                                		trim:true,
                                		required:true,
              						value:"${carRegister?.amount}"
-                           	'/><span style="margin-left:10px">辆</span>
+                           	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>总金额：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>总金额（元）：</div></td>
 					    <td>
 					    	<input id="totalPrice" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                		trim:true,
                                		required:true,
              						value:"${carRegister?.totalPrice}"
-                           	'/><span style="margin-left:10px">元</span>
+                           	'/>
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>事业收入：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"undertakingRevenue",${fieldAcl.isReadOnly("undertakingRevenue")},
                                		trim:true,
                                		required:true,
              						value:"${carRegister?.undertakingRevenue}"
-                           	'/><span style="margin-left:10px">元</span>
+                           	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>财政拨款：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"fiscalAppropriation",${fieldAcl.isReadOnly("fiscalAppropriation")},
                                		trim:true,
                                		required:true,
              						value:"${carRegister?.fiscalAppropriation}"
-                           	'/><span style="margin-left:10px">元</span>
+                           	'/>
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>其他资金：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"otherFund",${fieldAcl.isReadOnly("otherFund")},
                                		trim:true,
                                		required:true,
              						value:"${carRegister?.otherFund}"
-                           	'/><span style="margin-left:10px">元</span>
+                           	'/>
 			            </td>
 					    <td><div align="right">采购组织形式：</div></td>
 					    <td>
@@ -224,8 +224,17 @@
 			            </td>
 					</tr>
 					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>国别：</div></td>
+					    <td>
+					    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"country",${fieldAcl.isReadOnly("country")},
+                               		trim:true,
+                               		required:true,
+             						value:"${carRegister?.country}"
+                           	'/>
+			            </td>
 					    <td><div align="right">存放地点：</div></td>
-					    <td colspan="3">
+					    <td>
 					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
                                		trim:true,

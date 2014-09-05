@@ -2,107 +2,174 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="layout" content="rosten" />
-    <title>资产大类</title>
-    <style type="text/css">
-    	.rosten .dsj_form table tr{
-    		height:30px;
-    	}
-    	
-    	body{
-			overflow:auto;
-		}
-    </style>
+    <title>资产分类管理</title>
 	<script type="text/javascript">
-	require(["dojo/parser",
-		 		"dojo/_base/kernel",
-		 		"dijit/registry",
-		 		"dijit/layout/TabContainer",
-		 		"dijit/layout/ContentPane",
-		 		"dijit/form/ValidationTextBox",
-		 		"dijit/form/SimpleTextarea",
-		 		"dijit/form/Button",
-		     	"rosten/widget/ActionBar",
-		     	"rosten/widget/TitlePane",
-		     	"rosten/app/Application",
-		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry){
-				kernel.addOnLoad(function(){
-					rosten.init({webpath:"${request.getContextPath()}"});
-					rosten.cssinit();
+		require([
+				"dojo/_base/kernel",
+				"dijit/registry",
+				"dojo/_base/connect",
+				"dijit/Menu",
+				"dijit/MenuItem",
+				"dojo/data/ItemFileReadStore",
+				"dijit/Tree",
+				"dijit/tree/ForestStoreModel",
+				"dijit/layout/BorderContainer",
+				"dojox/layout/ContentPane",
+				"dijit/form/SimpleTextarea",
+				"dijit/form/Button"
+			], function(kernel,registry,connect,Menu, MenuItem,ItemFileReadStore,Tree,ForestStoreModel){
+			
+			var assetCategory_treenode;
+			treeOnLoad = function(){
+				var menu = registry.byId("assetCategory_tree_menu");
+				var tree = registry.byId("assetCategory_tree");
+				menu.bindDomNode(tree.domNode);
+				connect.connect(menu,"_openMyself",tree,function(e){
+					assetCategory_treenode = registry.getEnclosingWidget(e.target);
 				});
-				zcdl_save = function(){
-					var category = registry.byId("category");
-					if(category.attr("value")==""){
-						rosten.alert("大类名称不正确！").queryDlgClose = function(){
-							category.focus();
-						};
-						return;
+			}
+			
+			kernel.addOnLoad(function(){
+				if(registry.byId("assetCategory_tree_menu")) return;
+				var menu = new Menu({
+					id: 'assetCategory_tree_menu',
+					selector: ".dijitTreeNode"
+				});
+				menu.addChild(new MenuItem({
+					label: "添加分类",
+					disabled:false,
+					iconClass:'docCreateIcon',
+					onClick:function() {createSubassetCategory(assetCategory_treenode)}
+				}));
+				menu.addChild(new MenuItem({
+					label: "编辑分类",
+					iconClass:"docOpenIcon",
+					disabled:false,
+					onClick:function(){editSubassetCategory(assetCategory_treenode)}
+				}));
+				menu.addChild(new MenuItem({
+					label: "删除分类",
+					iconClass:"docDeleteIcon",
+					disabled:false,
+					onClick:function(){deleteSubassetCategory(assetCategory_treenode)}
+				}));
+				
+			});
+			
+			createSubassetCategory = function(selectedTreeNode){
+				var w = registry.byId("assetCategoryEditPane");
+				var href = "${createLink(controller:'assetConfig',action:'assetCategoryCreate')}";
+				href = href + "?companyId=${company?.id}";
+				if(!assetCategory_treenode.item.root){
+					href = href + "&parentId="+assetCategory_treenode.item.id;
+				}
+				w.attr("href",href);
+			}
+			
+			editSubassetCategory = function(selectedTreeNode){
+				if(!selectedTreeNode.item.root){
+					var w = registry.byId("assetCategoryEditPane");
+					var tree = registry.byId("assetCategory_tree");
+					
+					if(tree.model==null) var store = tree.store;
+					else store = tree.model.store;
+					
+					var href = "${createLink(controller:'assetConfig',action:'assetCategoryShow')}";
+					var href = href+"/"+selectedTreeNode.item.id+"?categoryName="+encodeURI(selectedTreeNode.item.name);
+					alert(href);
+					w.attr("href",href);
+				}
+			}
+
+			deleteSubassetCategory = function(selectedTreeNode){
+				var w = registry.byId("assetCategoryEditPane");
+				var tree = registry.byId("assetCategory_tree");
+				if(tree.model==null) var store = tree.store;
+				else store = tree.model.store;
+							
+				rosten.confirm("您是否将删除所选中的分类？").callback = function(){
+					var href = "${createLink(controller:'assetConfig',action:'assetCategoryDelete')}";
+					if(!selectedTreeNode.item.root){
+						href = href + "/"+selectedTreeNode.item.id;
+						w.attr("href",href);
 					}
-					rosten.readSync(rosten.webPath + "/assetConfig/assetCategorySave",{},function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("保存成功！").queryDlgClose= function(){
-								page_quit();
-							};
-						}else{
-							rosten.alert("保存失败!");
-						}
-					},null,"rosten_form");
-				};
-				page_quit = function(){
-					rosten.pagequit();
-				};
+				}
+			}
+			
+			refreshAssetCategoryTree = function(){
+				var tree = registry.byId("assetCategory_tree");
+				if(tree){
+					var store = new ItemFileReadStore({url:"${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}"});
+					tree.destroy();
+					var div = document.createElement("div");
+					var treeModel = new ForestStoreModel({ 
+				    	store: store, // the data store that this model connects to 
+				    	query: {parentId:null}, // filter multiple top level items 
+				    	rootLabel: "资产分类", 
+				    	showRoot:false,
+				    	childrenAttrs: ["children"] // children attributes used in data store. 
+					}); 
+					var tree = new Tree({
+						id:"assetCategory_tree",
+						model: treeModel,
+						onClick:function(item){
+							if(item && !item.root){
+								var w = registry.byId("assetCategoryEditPane");
+								var href = "${createLink(controller:'assetConfig',action:'assetCategoryShow')}";
+								var href = href+"/"+item.id;
+								w.attr("href",href);
+							}
+						},
+						onLoad:treeOnLoad,
+						autoExpand:true,
+						openOnClick:false,openOnDblClick:true},div);
+					var p = registry.byId("assetCategoryTreePane");
+					p.domNode.appendChild(tree.domNode);
+				}
+			}
+			
+			getItem = function(){
+				var tree = registry.byId('assetCategory_tree');
+				if(tree.selectedItem){
+					if(tree.selectedItem != tree.model.root){
+						console.log(tree.selectedItem.name);
+					}else{
+						console.log("root 节点....");
+					}
+				}else{
+					alert("请选择节点");
+				}
+				
+			};
 		});
-    </script>
+	</script>
 </head>
 <body>
-<div class="rosten_action">
-	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'assetConfigAction',action:'assetCategoryForm',id:assetCategory?.id,params:[userid:user?.id])}"'>
-	</div>
-</div>
+	<g:set var="dataurl" scope="page"> ${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}</g:set>
+	<div data-dojo-id="treeDataStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props='url:"${dataurl}"'></div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" url='[controller:"assetConfig",action:"assetCategorySave"]' onsubmit="return false;" class="rosten_form" style="padding:0px">
-			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetCategory?.id }"' />
-        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-        	
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
-				<table border="0" width="740" align="left">
-					<tr>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>大类名称：</div></td>
-					    <td width="250">
-					    	<input id="category" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='name:"category",${fieldAcl.isReadOnly("category")},
-			                 		trim:true,required:true,"class":"input",
-			                 		missingMessage:"请正确填写大类名称！",invalidMessage:"请正确填写大类名称！",
-									value:"${assetCategory?.category}"
-			                '/>
-					    </td>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>日期：</div></td>
-					    <td width="250">
-					    	<input id="createdTime" data-dojo-type="dijit/form/DateTextBox" 
-					    	data-dojo-props='name:"createdTime",trim:true,${fieldAcl.isReadOnly("createdTime")},value:"${assetCategory?.getFormattedShowCreatedTime()}"'/>
-			           </td>
-					</tr>
-					
-					<tr>
-					    <td><div align="right">备注：</div></td>
-					    <td  colspan=3>
-					    	<textarea id="description" data-dojo-type="dijit/form/SimpleTextarea" 
-    							data-dojo-props='name:"description","class":"input",
-                               		style:{width:"550px"},rows:"10",
-                               		trim:true
-                           '>
-    						</textarea>
-					    </td>
-					</tr>
-					
-				</table>
+	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='style:"height:100%;padding:0"'>
+		
+		<div id="assetCategoryTreePane" data-dojo-type="dojox/layout/ContentPane" data-dojo-props="region:'leading',splitter:true,style:'width:280px'">
+			<div id="assetCategory_tree" data-dojo-type="dijit.Tree" data-dojo-props='store:treeDataStore, query:{parentId:null},
+				//label:"资产分类",
+				autoExpand:true, 
+				showRoot:false,
+				onLoad:function(){treeOnLoad()}'>
+				<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">
+					if(item && !item.root){
+						var w = dijit.byId("assetCategoryEditPane");
+						var href = "${createLink(controller:'assetConfig',action:'assetCategoryShow')}";
+						var href = href+"/"+item.id+"?categoryName="+encodeURI(item.name);
+						w.attr("href",href);
+					}
+				</script>
 			</div>
-			
-		</form>
+		</div>
+		<div id="assetCategoryEditPane" data-dojo-type="dojox/layout/ContentPane" 
+			data-dojo-props="style:'padding:0px',renderStyles:true,region:'center'">
+		</div>
 	</div>
-</div>
+
 </body>
+</html>

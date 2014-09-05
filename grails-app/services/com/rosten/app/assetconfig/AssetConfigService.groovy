@@ -21,7 +21,7 @@ class AssetConfigService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			order("createdTime", "asc")
+			order("createDate", "asc")
 		}
 		return c.list(pa,query)
 	}
@@ -29,5 +29,20 @@ class AssetConfigService {
 		def c = AssetCategory.createCriteria()
 		def query = { eq("company",company) }
 		return c.count(query)
+	}
+	/*
+	 * 资产分类变更 at 2014-08-31 Edit by ercjlo
+	 */
+	def deleteAssetCategory ={assetCategory->
+		for(def index=0;assetCategory.children.size();index++){
+			deleteAssetCategory(assetCategory.children[index])
+		}
+		def p = assetCategory.parent
+		if(p){
+			p.removeFromChildren(assetCategory)
+			p.save(flush:true)
+		}
+		assetCategory.refresh()
+		assetCategory.delete(flush:true)
 	}
 }

@@ -34,6 +34,13 @@ define(["dojo/_base/kernel"
 	
 	//---------------------------------------------
 	var main = {};
+	main.getGridSelectedValue = function(ostr){
+	    var rostenGrid = rosten.kernel.getGrid();
+	    var selectitems = rostenGrid.getSelected();
+	    var item = selectitems[0];
+	    var gridStore = rostenGrid.getStore();
+	    return gridStore.getValue(item, ostr);
+	};
 	main._getGridUnid = function(rostenGrid,type){
 		/*
 		 * type:single ---单个
@@ -86,7 +93,7 @@ define(["dojo/_base/kernel"
         }
         rosten.replaceRostenTheme(rostencss);
 
-        connect.subscribe("loadjsfile", null, function(oString) {
+        connect.subscribe("loadjsfile", null, function(obj) {
         	domStyle.set(registry.byId("home").domNode,"display","none");
     		domStyle.set(registry.byId("modelMain").domNode,"display","");
     		registry.byId("modelMain").resize();
@@ -94,14 +101,18 @@ define(["dojo/_base/kernel"
             /*
              * 用于加载对应的js文件,此方法在后续开发过程中需要修改
              */
+    		var oString = obj.naviMenu;
+    		var oRight = "";
+    		if(obj.naviRight) oRight = obj.naviRight;
             console.log("loadjs file is :" + oString);
+            
             if (oString == "plat" || oString == "system") {
             	deleteMailNavigation();
              	require(["rosten/app/SystemManage"],function(){
              		if(oString=="plat"){
              			show_naviEntity("companyManage");
              		}else{
-             			show_naviEntity("userManage");
+             			show_naviEntity(oRight);
              		}
              	});
             }else if (oString == "person") {
@@ -109,36 +120,32 @@ define(["dojo/_base/kernel"
             }else if (oString == "assetConfig") {//资产配置
             	deleteMailNavigation();
             	require(["rosten/app/AssetConfigManage"],function(){
-            		show_naviEntity("assetCategory");
+            		show_naviEntity(oRight);
             	});
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
-                	show_naviEntity("personInformation");
+                	show_naviEntity(oRight);
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();
             	require(["rosten/app/WorkFlowManage"],function(){
-//            		show_naviEntity("flowDefinedManage");
-            		show_naviEntity("flowDemo");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "public") {
             	deleteMailNavigation();
             	require(["rosten/app/PublicManage"],function(){
-//            		show_naviEntity("downloadFileManage");
-            		returnToMain();
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "bookKeeping") {//资产建账
             	deleteMailNavigation();
             	require(["rosten/app/BookKeeping"],function(){
-//            		rosten.readSync(url,function(data))
-            		show_naviEntity("deviceRegister");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "assetCards") {//资产卡片
             	deleteMailNavigation();
             	require(["rosten/app/AssetCards"],function(){
-//            		rosten.readSync(url,function(data))
-            		show_naviEntity("deviceCard");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "assetChange") {//资产变动
             	deleteMailNavigation();
@@ -164,12 +171,12 @@ define(["dojo/_base/kernel"
             }else if (oString == "zcsq") {//统计分析
             	deleteMailNavigation();
             	require(["rosten/app/AssetApply"],function(){
-            		show_naviEntity("zcsq");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "assetStatist") {//统计分析
             	deleteMailNavigation();
             	require(["rosten/app/StaticManage"],function(){
-            		show_naviEntity("static");
+            		show_naviEntity(oRight);
             	});
             }else{
             	deleteMailNavigation();
@@ -204,7 +211,8 @@ define(["dojo/_base/kernel"
 		rosten.kernel.addUserInfo(data);
 		
 		//增加页面失效控制
-		rosten.kernel.onDownloadError(refreshSystem);
+		rosten.kernel.onDownloadError= function(){
+		};
 		
 		//获取首页显示信息
 		var userId = data["idnumber"];
@@ -216,10 +224,13 @@ define(["dojo/_base/kernel"
         } else {
             returnToMain();
         }
-        //增加时获取后台session功能
-        //setInterval("session_checkTimeOut()",60000*120 + 2000);
     };
     excuteService = function(args){
+    	if(new general().isInArray(args,"http:")){
+            window.open(args);
+            return;
+        }
+    	
     	switch(args){
     	case "sms" :
     		require(["rosten/app/SmsManage"],function(){
@@ -723,6 +734,16 @@ define(["dojo/_base/kernel"
             rosten.kernel.refreshGrid();
         } else {
             rosten.alert("失败!");
+        }
+    };
+    main.commonCallback = function(data){
+		var sucessStr = "成功!";
+		var failureStr = "失败!";
+    	if (data.result == "true" || data.result == true) {
+            rosten.alert(sucessStr);
+            rosten.kernel.refreshGrid();
+        } else {
+            rosten.alert(failureStr);
         }
     };
     lang.mixin(rosten,main);

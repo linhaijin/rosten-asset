@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rosten.app.system
+package com.rosten.app.login
 
 import javax.servlet.http.HttpServletResponse
 

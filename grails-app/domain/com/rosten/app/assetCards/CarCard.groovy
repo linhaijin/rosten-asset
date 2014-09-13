@@ -1,4 +1,4 @@
-package com.rosten.app.bookKeeping
+package com.rosten.app.assetCards
 
 import com.rosten.app.annotation.GridColumn
 
@@ -7,13 +7,9 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.bookKeeping.CarRegister
 
-/**
- * 车辆登记
- * @author xucy
- *
- */
-class CarRegister {
+class CarCard {
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -22,12 +18,12 @@ class CarRegister {
 		return SeriesDate
 	}
 	//资产编号
-	@GridColumn(name="资产编号",colIdx=1,formatter="carRegister_formatTopic")
+	@GridColumn(name="资产编号",colIdx=1,formatter="carCard_formatTopic")
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
 	@GridColumn(name="资产分类",colIdx=2)
-	String assetCategory = "车辆"
+	String assetCategory
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -74,12 +70,12 @@ class CarRegister {
 		}
 	}
 	
-	//数量
-	int amount = 1
+	//采购组织形式
+	String organizationalType
 	
-	//总金额
-	@GridColumn(name="总金额",colIdx=7)
-	Double totalPrice = 0
+	//单价
+	@GridColumn(name="单价",colIdx=7)
+	Double onePrice = 0
 	
 	//事业收入
 	Double undertakingRevenue = 0
@@ -90,67 +86,21 @@ class CarRegister {
 	//其他资金
 	Double otherFund = 0
 	
-	//采购组织形式
-	String organizationalType
-	
 	//存放地点
 	String storagePosition
 	
 	//国别
 	String country = "中国"
+	@GridColumn(name="资产状态",colIdx=8)
+	String assetStatus = "新建"
 	
-	//车牌号-------------------必填项
-	String carplateNo
+	//资产卡片状态
 	
-	//车架号
-	String carframeNo
-	
-	//发动机号
-	String carengineNo
-	
-	//排气量
-	String gasDisplacement
-	
-	//规格
-	String specifications
-	
-	//型号
-	String modelNo
-	
-	//厂家
-	String produceFactory
-	
-	//供应商
-	String supplier
-	
-	//编制情况
-	String staffingStatus
-	
-	//车辆产地
-	String productionPlace
 	
 	//备注
 	String remark
 	
-	//创建时间
-	Date createDate = new Date()
-	@GridColumn(name="创建时间",width="106px",colIdx=8)
-	def getFormattedCreatedDate(){
-		if(createDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-			return sd.format(createDate)
-		}else{
-			return ""
-		}
-	}
-	
-	//资产状态
-	@GridColumn(name="资产状态",colIdx=9)
-	String assetStatus = "新建"
-	
-//	String seriesNo
-	
-	static belongsTo = [company:Company]
+	static belongsTo = [company:Company,carRegister:CarRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -161,32 +111,19 @@ class CarRegister {
 		assetSource nullable:false,blank:false
 		costCategory nullable:false,blank:false
 		buyDate nullable:false,blank:false
-		amount nullable:false,blank:false
-		totalPrice nullable:false,blank:false
+		onePrice nullable:false,blank:false
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
 		organizationalType nullable:true,blank:true
 		storagePosition nullable:true,blank:true
 		country nullable:true,blank:true
-		carplateNo nullable:false ,blank: false, unique: true
-		carframeNo nullable:true,blank:true
-		carengineNo nullable:true,blank:true
-		gasDisplacement nullable:true,blank:true
-		specifications nullable:true,blank:true
-		modelNo nullable:true,blank:true
-		produceFactory nullable:true,blank:true
-		supplier nullable:true,blank:true
-		staffingStatus nullable:true,blank:true
-		productionPlace nullable:true,blank:true
 		remark nullable:true,blank:true
-		assetStatus nullable:false,blank:false
-//		seriesNo nullable:true,blank:true
     }
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_CAR_REGISTER"
+		table "ROSTEN_CAR_CARD"
 		
 		remark sqlType:"text"
 	}

@@ -1,11 +1,15 @@
 package com.rosten.app.bookKeeping
 
 import grails.converters.JSON
+
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
+import com.rosten.app.assetCards.CarCard;
+
+import java.util.Date
 
 class CarController {
 
@@ -126,6 +130,8 @@ class CarController {
 		def ids = params.id.split(",")
 		def json
 		def assetStatus
+		def assetCount
+		def company = Company.get(params.companyId)
 		try{
 			ids.each{
 				def carRegister = CarRegister.get(it)
@@ -134,11 +140,43 @@ class CarController {
 					if(assetStatus=="新建"){
 						carRegister.assetStatus = "已入库"
 					}
-					//获取建账信息中的数量，创建相同数量的资产卡片
-					
 					/*
-					 * undo
+					 * 获取建账信息中的数量，创建相同数量的资产卡片
 					 */
+					assetCount = carRegister.amount
+					for(int i=0;i<assetCount;i++){
+						def carCard = new CarCard()
+						carCard.company = company
+						carCard.carRegister = carRegister
+						carCard.registerNum = getFormattedSeriesDate()
+						carCard.assetCategory = carRegister.assetCategory
+						carCard.assetName = carRegister.assetName
+						carCard.userDepart = carRegister.userDepart
+						carCard.userStatus = carRegister.userStatus
+						carCard.assetSource = carRegister.assetSource
+						carCard.costCategory = carRegister.costCategory
+						carCard.buyDate = carRegister.buyDate
+						carCard.organizationalType = carRegister.organizationalType
+						carCard.onePrice = carRegister.totalPrice/assetCount
+						if(carRegister.undertakingRevenue == 0){
+							carCard.undertakingRevenue = 0
+						}else{
+							carCard.undertakingRevenue = carRegister.undertakingRevenue/assetCount
+						}
+						if(carRegister.fiscalAppropriation == 0){
+							carCard.fiscalAppropriation = 0
+						}else{
+							carCard.fiscalAppropriation = carRegister.fiscalAppropriation/assetCount
+						}
+						if(carRegister.otherFund == 0){
+							carCard.otherFund = 0
+						}else{
+							carCard.otherFund = carRegister.otherFund/assetCount
+						}
+						carCard.storagePosition = carRegister.storagePosition
+						carCard.country = carRegister.country
+						carCard.save(flush: true)
+					}
 				}
 			}
 			json = [result:'true']
@@ -146,6 +184,12 @@ class CarController {
 			json = [result:'error']
 		}
 		render json as JSON
+	}
+	
+	def getFormattedSeriesDate(){
+		def nowDate= new Date()
+		def SeriesDate= "20"+nowDate.time
+		return SeriesDate
 	}
 	
 	def carRegisterGrid ={

@@ -153,7 +153,13 @@ class AssetConfigController {
 	def assetCategoryShow ={
 //		println params
 		def model =[:]
-		def categoryName = params.categoryName
+		def categoryName
+		if(params.categoryName && params.categoryName!=""){
+			categoryName = params.categoryName
+		}else{
+			assetCategory = AssetCategory.get(params.id)
+			categoryName = assetCategory.categoryName
+		}
 		def assetList = ['车辆','土地','房屋','设备','图书','家具']
 		def isRead = "no"
 		if(categoryName in assetList){

@@ -65,7 +65,9 @@
     </script>
 </head>
 <body>
-	<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'assetConfig',action:'assetCategoryForm')}"'></div>
+	<g:if test="${isRead=='no'}">
+		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'assetConfig',action:'assetCategoryForm')}"'></div>
+	</g:if>
 	<g:if test="${flash.message}">
 		<div class="message">${flash.message}</div>
 	</g:if>

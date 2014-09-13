@@ -24,6 +24,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	};
 	
 	carRegister_submit = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		var _1 = rosten.confirm("确认提交入库，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("multi");
@@ -31,6 +32,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			var content = {};
 			content.id = unids;
+			content.companyId = companyId;
 			rosten.read(rosten.webPath + "/car/carRegisterSubmit", content,rosten.submitCallback);
 		};
 	};

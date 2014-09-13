@@ -77,6 +77,40 @@ define(["dojo/dom",
             dom.byId("allowdepartsId").value = _data_1;
         };
     };
+    selectCategory = function(url) {
+        var id = "sys_assetCategoryDialog";
+
+        if (rosten[id] && registry.byId(id)) {
+            rosten[id].open();
+            rosten[id].refresh();
+        } else {
+            var args = {
+                url : url,
+                rootLabel : "资产分类",
+                showCheckBox : false,
+                folderClass : "departTree"
+            };
+            rosten[id] = new PickTreeDialog(args);
+            rosten[id].open();
+        }
+        rosten[id].callback = function(data) {
+            var _data = "";
+            var _data_1 = "";
+            for (var k = 0; k < data.length; k++) {
+                var item = data[k];
+                if (_data == "") {
+                    _data += item.name;
+                    _data_1 += item.id;
+                } else {
+                    _data += "," + item.name;
+                    _data_1 += "," + item.id;
+                }
+
+            }
+            registry.byId("assetCategory").attr("value", _data);
+            dom.byId("assetCategoryId").value = _data_1;
+        };
+    };
     selectUser = function(url,inputName) {
         var id = "sys_userDialog";
 

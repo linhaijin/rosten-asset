@@ -58,9 +58,7 @@ class AssetController {
 			resource.url = "sqsh"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
-			
 			model.save()
-			
 			
 			model = new Model(company:company)
 			model.modelName = "资产建账"
@@ -103,14 +101,56 @@ class AssetController {
 			resource.url = "furnitureRegister"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
+			model.save()
 			
+			model = new Model(company:company)
+			model.modelName = "资产卡片"
+			model.modelUrl = path + "/system/navigation"
+			model.modelCode = "assetCards"
+			model.serialNo = 7
+			
+			resource = new Resource()
+			resource.resourceName = "车辆资产"
+			resource.url = "carCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+					
+			resource = new Resource()
+			resource.resourceName = "土地资产"
+			resource.url = "landCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "房屋资产"
+			resource.url = "houseCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "设备资产"
+			resource.url = "deviceCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "图书资产"
+			resource.url = "bookCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "家具资产"
+			resource.url = "furnitureCard"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "资产变动"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetChange"
-			model.serialNo = 7
+			model.serialNo = 8
 			
 			resource = new Resource()
 			resource.resourceName = "报废报损"
@@ -147,7 +187,6 @@ class AssetController {
 //			resource.url = "assetQuit"
 //			resource.imgUrl = "images/rosten/navigation/rosten.png"
 //			model.addToResources(resource)
-			
 			model.save()
 			
 			model = new Model(company:company)
@@ -155,21 +194,20 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 //			model.modelCode = "maintain"
 			model.modelCode = "assetMaintain"
-			model.serialNo = 8
+			model.serialNo = 9
 			
 			resource = new Resource()
 			resource.resourceName = "资产报修"
 			resource.url = "assetRepair"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
-			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "资产核查"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetCheck"
-			model.serialNo = 9
+			model.serialNo = 10
 			
 			resource = new Resource()
 			resource.resourceName = "盘点任务发布"
@@ -182,21 +220,19 @@ class AssetController {
 			resource.url = "myPdrw"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
-			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "资产上报"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetReport"
-			model.serialNo = 10
+			model.serialNo = 11
 			
 			resource = new Resource()
 			resource.resourceName = "财政上报"
 			resource.url = "fiscalReport"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
-			
 			model.save()
 			
 			model = new Model(company:company)
@@ -204,7 +240,7 @@ class AssetController {
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "assetStatist"
 			model.description ="统计分析"
-			model.serialNo = 11
+			model.serialNo = 12
 			
 			resource = new Resource()
 			resource.resourceName = "报表设计"
@@ -217,7 +253,6 @@ class AssetController {
 			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
-			
 			model.save()
 			
 			//增加人事系统特有的服务列表信息

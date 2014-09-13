@@ -106,7 +106,6 @@
 				    	store: store, // the data store that this model connects to 
 				    	query: {parentId:null}, // filter multiple top level items 
 				    	rootLabel: "资产分类", 
-				    	showRoot:false,
 				    	childrenAttrs: ["children"] // children attributes used in data store. 
 					}); 
 					var tree = new Tree({
@@ -122,6 +121,7 @@
 						},
 						onLoad:treeOnLoad,
 						autoExpand:true,
+						showRoot:false,
 						openOnClick:false,openOnDblClick:true},div);
 					var p = registry.byId("assetCategoryTreePane");
 					p.domNode.appendChild(tree.domNode);

@@ -7,6 +7,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.assetConfig.AssetCategory
 
 /**
  * 车辆登记
@@ -26,8 +27,16 @@ class CarRegister {
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
+	AssetCategory userCategory
 	@GridColumn(name="资产分类",colIdx=2)
-	String assetCategory = "车辆"
+	def getCategoryName(){
+		if(userCategory){
+			return userCategory.categoryName
+		}else{
+			return "车辆"
+		}
+	}
+//	String assetCategory = "车辆"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -154,7 +163,7 @@ class CarRegister {
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
-		assetCategory nullable:false,blank:false
+		userCategory nullable:false,blank:false
 		assetName nullable:false,blank:false
 		userDepart nullable:false,blank:false
 		userStatus nullable:false,blank:false

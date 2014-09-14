@@ -1,5 +1,6 @@
 package com.rosten.app.assetconfig
 
+import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.util.GridUtil
 
 class AssetConfigService {

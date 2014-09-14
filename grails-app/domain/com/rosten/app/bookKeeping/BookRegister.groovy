@@ -4,8 +4,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.assetConfig.AssetCategory
+
 /**
  * 图书登记
  * @author ercjlo
@@ -24,8 +27,16 @@ class BookRegister {
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
+	AssetCategory userCategory
 	@GridColumn(name="资产分类",colIdx=2)
-	String assetCategory = "图书"
+	def getCategoryName(){
+		if(userCategory){
+			return userCategory.categoryName
+		}else{
+			return "图书"
+		}
+	}
+//	String assetCategory = "图书"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -120,13 +131,11 @@ class BookRegister {
 	@GridColumn(name="资产状态",colIdx=9)
 	String assetStatus = "新建"
 	
-	String seriesNo
-	
 	static belongsTo = [company:Company]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
-		assetCategory nullable:false,blank:false
+		userCategory nullable:false,blank:false
 		assetName nullable:false,blank:false
 		userDepart nullable:false,blank:false
 		userStatus nullable:false,blank:false
@@ -144,7 +153,6 @@ class BookRegister {
 		locatePosition nullable:true,blank:true
 		remark nullable:true,blank:true
 		assetStatus nullable:true,blank:true
-		seriesNo nullable:true,blank:true
     }
 	
 	static mapping = {

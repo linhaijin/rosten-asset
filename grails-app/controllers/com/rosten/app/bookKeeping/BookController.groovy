@@ -7,6 +7,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
+import com.rosten.app.assetConfig.AssetCategory
 
 class BookController {
 
@@ -89,6 +90,7 @@ class BookController {
 		bookRegister.clearErrors()
 		
 		//特殊字段信息处理
+		bookRegister.userCategory = AssetCategory.get(params.allowCategoryId)
 		bookRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		bookRegister.userDepart = Depart.get(params.allowdepartsId)
 		if(!params.registerNum_form.equals("")){

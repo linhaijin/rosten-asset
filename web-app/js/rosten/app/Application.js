@@ -172,6 +172,44 @@ define(["dojo/_base/lang",
             }
         };
     };
+    application.selectAssetCategory = function(url,type,inputName,inputId) {
+        var id = "sys_departDialog";
+
+        if (rosten[id] && registry.byId(id)) {
+            rosten[id].open();
+            rosten[id].refresh();
+        } else {
+            var args = {
+                url : url,
+                rootLabel : "资产分类",
+                showCheckBox : type,
+                folderClass : "departTree"
+            };
+            rosten[id] = new PickTreeDialog(args);
+            rosten[id].open();
+        }
+        rosten[id].callback = function(data) {
+            var _data = [];
+            var _data_1 = [];
+            for (var k = 0; k < data.length; k++) {
+                var item = data[k];
+                _data.push(item.name);
+                _data_1.push(item.id);
+
+            }
+            if( inputName !=undefined){
+            	registry.byId(inputName).attr("value", _data.join(","));
+            }
+            if( inputId !=undefined){
+            	if(registry.byId(inputId)){
+            		registry.byId(inputId).attr("value", _data_1.join(","));
+            	}else{
+            		dom.byId(inputId).value = _data_1.join(",");
+            	}
+            	
+            }
+        };
+    };
     
     lang.mixin(rosten,application);
     

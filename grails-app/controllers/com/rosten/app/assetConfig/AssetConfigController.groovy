@@ -1,9 +1,10 @@
-package com.rosten.app.assetconfig
+package com.rosten.app.assetConfig
 
 import grails.converters.JSON
 
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.Util
+import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 

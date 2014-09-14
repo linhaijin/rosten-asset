@@ -83,13 +83,15 @@
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
 					    <td width="250">
-					    	<input id="assetCategory" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetCategory",${fieldAcl.isReadOnly("assetCategory")},
+					    	<input id="allowCategoryName" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"allowCategoryName",${fieldAcl.isReadOnly("allowCategoryName")},
                                		trim:true,
                                		required:true,
-             						value:"${carRegister?.assetCategory}"
+             						value:"${carRegister?.getCategoryName()}"
                            	'/>
-			            </td>
+                           	<g:hiddenField name="allowCategoryId" value="${carRegister?.userCategory?.id }" />
+							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectAssetCategory("${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+			           	</td>
 					</tr>
 					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产名称：</div></td>

@@ -77,7 +77,7 @@ define(["dojo/dom",
             dom.byId("allowdepartsId").value = _data_1;
         };
     };
-    selectCategory = function(url) {
+    selectAssetCategory = function(url) {
         var id = "sys_assetCategoryDialog";
 
         if (rosten[id] && registry.byId(id)) {
@@ -88,6 +88,7 @@ define(["dojo/dom",
                 url : url,
                 rootLabel : "资产分类",
                 showCheckBox : false,
+                showRoot:false,
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -107,8 +108,8 @@ define(["dojo/dom",
                 }
 
             }
-            registry.byId("assetCategory").attr("value", _data);
-            dom.byId("assetCategoryId").value = _data_1;
+            registry.byId("allowCategoryName").attr("value", _data);
+            dom.byId("allowCategoryId").value = _data_1;
         };
     };
     selectUser = function(url,inputName) {

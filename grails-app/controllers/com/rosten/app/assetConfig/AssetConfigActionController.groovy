@@ -1,4 +1,4 @@
-package com.rosten.app.assetconfig
+package com.rosten.app.assetConfig
 
 import grails.converters.JSON
 import com.rosten.app.system.User

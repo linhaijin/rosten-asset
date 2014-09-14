@@ -1,8 +1,9 @@
-package com.rosten.app.assetconfig
+package com.rosten.app.assetConfig
 
 import java.util.Date;
 
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
 
 import java.text.SimpleDateFormat
@@ -74,9 +75,6 @@ class AssetCategory {
 		table "ROSTEN_ASSET_CATEGORY"
 		
 		description sqlType:"text"
-	}
-	
-	def beforeDelete(){
 	}
 	
 }

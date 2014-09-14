@@ -1,7 +1,6 @@
 package com.rosten.app.assetCards
 
-class CarCardController {
+class CarCardsController {
 
     def index() { }
-} 
- 
+}

@@ -7,7 +7,8 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
-import com.rosten.app.assetCards.CarCard;
+import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.assetCards.CarCard
 
 import java.util.Date
 
@@ -92,6 +93,7 @@ class CarController {
 		carRegister.clearErrors()
 		
 		//特殊字段信息处理
+		carRegister.userCategory = AssetCategory.get(params.allowCategoryId)
 		carRegister.buyDate = Util.convertToTimestamp(params.buyDate)
 		carRegister.userDepart = Depart.get(params.allowdepartsId)
 		if(!params.registerNum_form.equals("")){

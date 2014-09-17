@@ -9,16 +9,16 @@ import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 import com.rosten.app.assetConfig.AssetCategory
 
-class CarCardsController {
+class HouseCardsController {
 
     def assetCardsService
 	def springSecurityService
 	
 	def imgPath ="images/rosten/actionbar/"
 	
-	def carCardsForm ={
+	def houseCardsForm ={
 		def webPath = request.getContextPath() + "/"
-		def strname = "carCards"
+		def strname = "houseCards"
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
@@ -27,9 +27,9 @@ class CarCardsController {
 		render actionList as JSON
 	}
 	
-	def carCardsView ={
+	def houseCardsView ={
 		def actionList =[]
-		def strname = "carCards"
+		def strname = "houseCards"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 //		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
@@ -47,59 +47,59 @@ class CarCardsController {
 		return model
 	}
 	
-	def carCardsAdd ={
-		redirect(action:"carCardsShow",params:params)
+	def houseCardsAdd ={
+		redirect(action:"houseCardsShow",params:params)
 	}
 	
-	def carCardsShow ={
+	def houseCardsShow ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
 		
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		
-		def carCards = new CarCards()
+		def houseCards = new HouseCards()
 		if(params.id){
-			carCards = CarCards.get(params.id)
+			houseCards = HouseCards.get(params.id)
 		}
 		
 		model["user"] = user
 		model["company"] = company
-		model["carCards"] = carCards
+		model["houseCards"] = houseCards
 		
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){
 		}
 		model["fieldAcl"] = fa
 		
-		render(view:'/assetCards/carCards',model:model)
+		render(view:'/assetCards/houseCards',model:model)
 	}
 	
-	def carCardsSave ={
+	def houseCardsSave ={
 		def json=[:]
 		def company = Company.get(params.companyId)
 		
-		//车辆资产信息保存-------------------------------
-		def carCards = new CarCards()
+		//房屋资产信息保存-------------------------------
+		def houseCards = new HouseCards()
 		if(params.id && !"".equals(params.id)){
-			carCards = CarCards.get(params.id)
+			houseCards = HouseCards.get(params.id)
 		}else{
-			carCards.company = company
+			houseCards.company = company
 		}
-		carCards.properties = params
-		carCards.clearErrors()
+		houseCards.properties = params
+		houseCards.clearErrors()
 		
 		//特殊字段信息处理
-		carCards.buyDate = Util.convertToTimestamp(params.buyDate)
-		carCards.userDepart = Depart.get(params.allowdepartsId)
+		houseCards.buyDate = Util.convertToTimestamp(params.buyDate)
+		houseCards.userDepart = Depart.get(params.allowdepartsId)
 		if(!params.registerNum_form.equals("")){
-			carCards.registerNum = params.registerNum_form
+			houseCards.registerNum = params.registerNum_form
 		}
 		
-		if(carCards.save(flush:true)){
+		if(houseCards.save(flush:true)){
 			json["result"] = "true"
 		}else{
-			carCards.errors.each{
+			houseCards.errors.each{
 				println it
 			}
 			json["result"] = "false"
@@ -107,14 +107,14 @@ class CarCardsController {
 		render json as JSON
 	}
 	
-	def carCardsDelete ={
+	def houseCardsDelete ={
 		def ids = params.id.split(",")
 		def json
 		try{
 			ids.each{
-				def carCards = CarCards.get(it)
-				if(carCards){
-					carCards.delete(flush: true)
+				def houseCards = HouseCards.get(it)
+				if(houseCards){
+					houseCards.delete(flush: true)
 				}
 			}
 			json = [result:'true']
@@ -124,7 +124,7 @@ class CarCardsController {
 		render json as JSON
 	}
 	
-	def carCardsSubmit ={
+	def houseCardsSubmit ={
 		def ids = params.id.split(",")
 		def json
 		def assetStatus
@@ -132,11 +132,11 @@ class CarCardsController {
 		def company = Company.get(params.companyId)
 		try{
 			ids.each{
-				def carCards = CarCards.get(it)
-				if(carCards){
-					assetStatus = carCards.assetStatus
+				def houseCards = HouseCards.get(it)
+				if(houseCards){
+					assetStatus = houseCards.assetStatus
 					if(assetStatus=="新建"){
-						carCards.assetStatus = "已入库"
+						houseCards.assetStatus = "已入库"
 					}
 				}
 			}
@@ -153,11 +153,11 @@ class CarCardsController {
 		return SeriesDate
 	}
 	
-	def carCardsGrid ={
+	def houseCardsGrid ={
 		def json=[:]
 		def company = Company.get(params.companyId)
 		if(params.refreshHeader){
-			json["gridHeader"] = assetCardsService.getCarCardsListLayout()
+			json["gridHeader"] = assetCardsService.getHouseCardsListLayout()
 		}
 		if(params.refreshData){
 			def args =[:]
@@ -167,11 +167,11 @@ class CarCardsController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetCardsService.getCarCardsDataStore(args)
+			json["gridData"] = assetCardsService.getHouseCardsDataStore(args)
 			
 		}
 		if(params.refreshPageControl){
-			def total = assetCardsService.getCarCardsCount(company)
+			def total = assetCardsService.getHouseCardsCount(company)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

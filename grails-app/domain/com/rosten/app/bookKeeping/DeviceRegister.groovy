@@ -135,6 +135,7 @@ class DeviceRegister {
 	@GridColumn(name="资产状态",colIdx=9)
 	String assetStatus = "新建"
 	
+	//资产操作号
 	String seriesNo
 	
 	static belongsTo = [company:Company]
@@ -163,7 +164,7 @@ class DeviceRegister {
 		produceFactory nullable:true,blank:true
 		supplier nullable:true,blank:true
 		country nullable:true,blank:true
-		assetStatus nullable:true,blank:true
+		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
     }
 	

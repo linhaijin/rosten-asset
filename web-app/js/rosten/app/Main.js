@@ -145,7 +145,7 @@ define(["dojo/_base/kernel"
             }else if (oString == "assetCards") {//资产卡片
             	deleteMailNavigation();
             	require(["rosten/app/AssetCards"],function(){
-            		show_naviEntity(oRight);
+            		show_naviEntity("carCards");
             	});
             }else if (oString == "assetChange") {//资产变动
             	deleteMailNavigation();

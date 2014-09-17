@@ -145,6 +145,7 @@ class LandRegister {
 	@GridColumn(name="资产状态",colIdx=9)
 	String assetStatus = "新建"
 	
+	//资产操作号
 	String seriesNo
 	
 	static belongsTo = [company:Company]

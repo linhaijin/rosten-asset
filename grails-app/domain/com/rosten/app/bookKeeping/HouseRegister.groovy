@@ -138,6 +138,7 @@ class HouseRegister {
 	@GridColumn(name="资产状态",colIdx=9)
 	String assetStatus = "新建"
 	
+	//资产操作号
 	String seriesNo
 	
 	static belongsTo = [company:Company]
@@ -164,7 +165,7 @@ class HouseRegister {
 		ownershipNo nullable:true,blank:true
 		certificationDate nullable:true,blank:true
 		houseLocated nullable:false,blank:false
-		assetStatus nullable:true,blank:true
+		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
     }
 	

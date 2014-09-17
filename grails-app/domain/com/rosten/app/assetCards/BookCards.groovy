@@ -1,15 +1,17 @@
 package com.rosten.app.assetCards
 
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.assetConfig.AssetCategory;
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.CarRegister
+import com.rosten.app.bookKeeping.BookRegister
 
-class CarCard {
+class BookCards {
+
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -18,12 +20,20 @@ class CarCard {
 		return SeriesDate
 	}
 	//资产编号
-	@GridColumn(name="资产编号",colIdx=1,formatter="carCard_formatTopic")
+	@GridColumn(name="资产编号",colIdx=1,formatter="bookCards_formatTopic")
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
+	AssetCategory userCategory
 	@GridColumn(name="资产分类",colIdx=2)
-	String assetCategory
+	def getCategoryName(){
+		if(userCategory){
+			return userCategory.categoryName
+		}else{
+			return "图书"
+		}
+	}
+//	String assetCategory = "图书"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -31,7 +41,8 @@ class CarCard {
 	
 	//管理部门
 	Depart userDepart
-	@GridColumn(name="使用部门",colIdx=4)
+	
+	@GridColumn(name="管理部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName
@@ -52,7 +63,7 @@ class CarCard {
 	
 	//购置日期
 	Date buyDate = new Date()
-	@GridColumn(name="购买日期",width="106px",colIdx=6)
+	@GridColumn(name="购置日期",width="106px",colIdx=6)
 	def getFormattedBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -70,9 +81,6 @@ class CarCard {
 		}
 	}
 	
-	//采购组织形式
-	String organizationalType
-	
 	//单价
 	@GridColumn(name="单价",colIdx=7)
 	Double onePrice = 0
@@ -86,25 +94,44 @@ class CarCard {
 	//其他资金
 	Double otherFund = 0
 	
+	//文物等级
+	String antiqueRegistration
+	
+	//管理单位
+	String manageCompany
+	
 	//存放地点
 	String storagePosition
 	
-	//国别
-	String country = "中国"
+	//坐落位置
+	String locatePosition
+	
+	//创建时间
+	Date createDate = new Date()
+	def getFormattedCreatedDate(){
+		if(createDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			return sd.format(createDate)
+		}else{
+			return ""
+		}
+	}
+	
+	//资产状态
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
-	//资产卡片状态
-	
+	//资产操作号
+	String seriesNo
 	
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,carRegister:CarRegister]
+	static belongsTo = [company:Company,bookRegister:BookRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
-		assetCategory nullable:false,blank:false
+		userCategory nullable:false,blank:false
 		assetName nullable:false,blank:false
 		userDepart nullable:false,blank:false
 		userStatus nullable:false,blank:false
@@ -115,15 +142,18 @@ class CarCard {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		organizationalType nullable:true,blank:true
+		antiqueRegistration nullable:false,blank:false
+		manageCompany nullable:true ,blank: true
 		storagePosition nullable:true,blank:true
-		country nullable:true,blank:true
+		locatePosition nullable:true,blank:true
+		assetStatus nullable:false,blank:false
+		seriesNo nullable:true,blank:true
 		remark nullable:true,blank:true
     }
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_CAR_CARD"
+		table "ROSTEN_BOOK_CARDS"
 		
 		remark sqlType:"text"
 	}

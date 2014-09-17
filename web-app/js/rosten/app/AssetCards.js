@@ -10,7 +10,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("carCards", rosten.webPath + "/carCards/carCardsAdd?companyId=" + companyId + "&userid=" + userid);
 	};
 	
-	
 	carCards_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {

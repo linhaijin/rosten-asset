@@ -1,21 +1,18 @@
-package com.rosten.app.bookKeeping
+package com.rosten.app.assetCards
+
+import com.rosten.app.annotation.GridColumn
+import com.rosten.app.assetConfig.AssetCategory;
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import com.rosten.app.annotation.GridColumn
-import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.bookKeeping.FurnitureRegister
 
-/**
- * 图书登记
- * @author ercjlo
- *
- */
-class BookRegister {
-    String id
+class FurnitureCards {
+
+	String id
 	
 	def getFormattedSeriesDate(){
 		def nowDate= new Date()
@@ -23,7 +20,7 @@ class BookRegister {
 		return SeriesDate
 	}
 	//资产编号
-	@GridColumn(name="资产编号",colIdx=1,formatter="bookRegister_formatTopic")
+	@GridColumn(name="资产编号",colIdx=1,formatter="furnitureCards_formatTopic")
 	String registerNum = getFormattedSeriesDate()
 	
 	//资产分类名称
@@ -33,10 +30,9 @@ class BookRegister {
 		if(userCategory){
 			return userCategory.categoryName
 		}else{
-			return "图书"
+			return "家具"
 		}
 	}
-//	String assetCategory = "图书"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -75,6 +71,7 @@ class BookRegister {
 			return ""
 		}
 	}
+	
 	def getFormattedShowBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -84,12 +81,9 @@ class BookRegister {
 		}
 	}
 	
-	//数量
-	int amount = 0
-	
-	//总金额
-	@GridColumn(name="总金额",colIdx=7)
-	Double totalPrice = 0
+	//单价
+	@GridColumn(name="单价",colIdx=7)
+	Double onePrice = 0
 	
 	//事业收入
 	Double undertakingRevenue = 0
@@ -100,24 +94,20 @@ class BookRegister {
 	//其他资金
 	Double otherFund = 0
 	
-	//文物等级
-	String antiqueRegistration
-	
-	//管理单位
-	String manageCompany
+	//采购组织形式
+	String organizationalType
 	
 	//存放地点
 	String storagePosition
 	
-	//坐落位置
-	String locatePosition
+	//采购人
+	String purchaser
 	
-	//备注
-	String remark
+	//国别
+	String country
 	
 	//创建时间
 	Date createDate = new Date()
-	@GridColumn(name="创建时间",width="106px",colIdx=8)
 	def getFormattedCreatedDate(){
 		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -128,13 +118,16 @@ class BookRegister {
 	}
 	
 	//资产状态
-	@GridColumn(name="资产状态",colIdx=9)
+	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
 	//资产操作号
 	String seriesNo
 	
-	static belongsTo = [company:Company]
+	//备注
+	String remark
+	
+	static belongsTo = [company:Company,furnitureRegister:FurnitureRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -145,23 +138,22 @@ class BookRegister {
 		assetSource nullable:false,blank:false
 		costCategory nullable:false,blank:false
 		buyDate nullable:false,blank:false
-		amount nullable:false,blank:false
-		totalPrice nullable:false,blank:false
+		onePrice nullable:false,blank:false
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		antiqueRegistration nullable:false,blank:false
-		manageCompany nullable:true ,blank: true
-		storagePosition nullable:true,blank:true
-		locatePosition nullable:true,blank:true
-		remark nullable:true,blank:true
+		storagePosition nullable:false,blank:false
+		organizationalType nullable:true,blank:true
+		purchaser nullable:true ,blank: true
+		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
+		remark nullable:true,blank:true
     }
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_BOOK_REGISTER"
+		table "ROSTEN_FURNITURE_CARDS"
 		
 		remark sqlType:"text"
 	}

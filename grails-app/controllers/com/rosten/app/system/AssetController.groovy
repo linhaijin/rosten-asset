@@ -111,37 +111,37 @@ class AssetController {
 			
 			resource = new Resource()
 			resource.resourceName = "车辆资产"
-			resource.url = "carCard"
+			resource.url = "carCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 					
 			resource = new Resource()
 			resource.resourceName = "土地资产"
-			resource.url = "landCard"
+			resource.url = "landCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "房屋资产"
-			resource.url = "houseCard"
+			resource.url = "houseCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "设备资产"
-			resource.url = "deviceCard"
+			resource.url = "deviceCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "图书资产"
-			resource.url = "bookCard"
+			resource.url = "bookCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "家具资产"
-			resource.url = "furnitureCard"
+			resource.url = "furnitureCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			model.save()

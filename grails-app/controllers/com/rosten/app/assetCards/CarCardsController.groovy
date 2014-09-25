@@ -8,6 +8,7 @@ import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.assetApply.ApplyNotes
 
 class CarCardsController {
 
@@ -83,8 +84,16 @@ class CarCardsController {
 		def carCards = new CarCards()
 		if(params.id && !"".equals(params.id)){
 			carCards = CarCards.get(params.id)
+			//处理申请单金额
+			def applyNotesId =carCards.applyNotes.id
+			def applyNotes = ApplyNotes.get(applyNotesId)
+			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			carCards.company = company
+			//新资产卡片编号
+			if(!params.registerNum_form.equals("")){
+				carCards.registerNum = params.registerNum_form
+			}
 		}
 		carCards.properties = params
 		carCards.clearErrors()
@@ -92,9 +101,6 @@ class CarCardsController {
 		//特殊字段信息处理
 		carCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		carCards.userDepart = Depart.get(params.allowdepartsId)
-		if(!params.registerNum_form.equals("")){
-			carCards.registerNum = params.registerNum_form
-		}
 		
 		if(carCards.save(flush:true)){
 			json["result"] = "true"

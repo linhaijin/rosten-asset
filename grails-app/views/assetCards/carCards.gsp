@@ -162,7 +162,7 @@
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>单价（元）：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"onePrice",${fieldAcl.isReadOnly("onePrice")},

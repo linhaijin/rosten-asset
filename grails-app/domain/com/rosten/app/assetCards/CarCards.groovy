@@ -8,7 +8,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.CarRegister
+import com.rosten.app.assetApply.ApplyNotes
 
 class CarCards {
 	String id
@@ -81,8 +81,8 @@ class CarCards {
 	//采购组织形式
 	String organizationalType
 	
-	//单价
-	@GridColumn(name="单价",colIdx=7)
+	//价格
+	@GridColumn(name="价格",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -121,7 +121,9 @@ class CarCards {
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,carRegister:CarRegister]
+	//从资产建账创建卡片转为资产申请创建卡片
+	static belongsTo = [company:Company,applyNotes:ApplyNotes]
+//	static belongsTo = [company:Company,carRegister:CarRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true

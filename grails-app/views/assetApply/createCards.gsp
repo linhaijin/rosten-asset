@@ -1,27 +1,46 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="layout" content="rosten" />
     <title>创建资产卡片</title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <script type="text/javascript">
-
-    	require([],
+    <style type="text/css">
+    	.rosten .dsj_form table tr{
+    		height:30px;
+    	}
+    	body{
+			overflow:auto;
+		}
+    </style>
+	<script type="text/javascript">
+	require(["dojo/parser",
+	         "dojo/dom",
+		 		"dojo/_base/kernel",
+		 		"dijit/registry",
+		 		"dijit/layout/TabContainer",
+		 		"dijit/layout/ContentPane",
+		 		"dijit/form/ValidationTextBox",
+		 		"dijit/form/DateTextBox",
+		 		"dijit/form/SimpleTextarea",
+		 		"dijit/form/Button",
+		     	"rosten/widget/ActionBar",
+		     	"rosten/widget/TitlePane",
+		     	"rosten/app/Application",
+		     	"rosten/app/SystemApplication",
+		     	"rosten/kernel/behavior"],
 			function(parser,dom,kernel,registry){
 				kernel.addOnLoad(function(){
-					<g:if test="${createCards == 'true' }">
-						alert("资产卡片创建成功！");
-						window.open("","_self").close();
-					</g:if>
+					alert("11111");
 				});
 		});
-  	</script>
-  </head>
+    </script>
+</head>
   
 <body>
 	<div style="text-Align:center">
         <div class="rosten_form" style="width:600px;text-align:left">
             <fieldset class="fieldset-form">
-                <legend class="tableHeader">资产清单${createCards }</legend>
+                <legend class="tableHeader">资产卡片清单</legend>
                 
                 <table class="tableData">
                     <tbody>

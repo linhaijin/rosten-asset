@@ -80,7 +80,7 @@ class ApplyNotes {
 	String isCreatedCards = 0
 	@GridColumn(name="是否生产资产卡片",colIdx=10)
 	def getCardsCreatedLabel(){
-		return ["0":"未生成 ","1":"已生产"][isCreatedCards]
+		return ["0":"未生成 ","1":"已生成"][isCreatedCards]
 	} 
 	
 	//创建时间

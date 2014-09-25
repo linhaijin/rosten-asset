@@ -184,7 +184,6 @@ class ApplyManageController {
 			ids.each {  
 				def applyNotes = ApplyNotes.get(it)
 				def assetType = applyNotes.rootAssetCategory
-				println "assetType=="+assetType
 				if(assetType == "车辆"){
 					/*
 					 * 获取建账信息中的数量，创建相同数量的资产卡片

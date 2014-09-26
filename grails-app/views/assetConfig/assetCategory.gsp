@@ -121,7 +121,7 @@
 						},
 						onLoad:treeOnLoad,
 						autoExpand:true,
-						showRoot:false,
+						showRoot:true,
 						openOnClick:false,openOnDblClick:true},div);
 					var p = registry.byId("assetCategoryTreePane");
 					p.domNode.appendChild(tree.domNode);
@@ -152,7 +152,7 @@
 		
 		<div id="assetCategoryTreePane" data-dojo-type="dojox/layout/ContentPane" data-dojo-props="region:'leading',splitter:true,style:'width:280px'">
 			<div id="assetCategory_tree" data-dojo-type="dijit.Tree" data-dojo-props='store:treeDataStore, query:{parentId:null},
-				//label:"资产分类",
+				label:"资产分类",
 				autoExpand:true, 
 				showRoot:false,
 				onLoad:function(){treeOnLoad()}'>

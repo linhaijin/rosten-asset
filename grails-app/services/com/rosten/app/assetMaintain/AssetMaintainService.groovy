@@ -7,7 +7,7 @@ class AssetMaintainService {
     //资产报修
     def getAssetRepair_zuofeiListLayout ={
 		def gridUtil = new GridUtil()
-		return gridUtil.buildLayoutJSON(new AssetRepair_zuofei())
+		//return gridUtil.buildLayoutJSON(new AssetRepair_zuofei())
 	}
 	
 	def getAssetRepair_zuofeiDataStore ={params->

@@ -164,7 +164,8 @@ define(["dojo/_base/kernel"
             else if (oString == "assetCheck") {//资产核查
             	deleteMailNavigation();
             	require(["rosten/app/AssetCheck"],function(){
-            		show_naviEntity("myPdrw");
+//            		show_naviEntity("myPdrw");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "assetReport") {//资产上报
             	deleteMailNavigation();

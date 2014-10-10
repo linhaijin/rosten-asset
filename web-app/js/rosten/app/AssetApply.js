@@ -38,11 +38,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetCards_create = function(){//生产资产卡片
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		var unids = rosten.getGridUnid("multi");
-		rosten.kernel.createRostenShowDialog(rosten.webPath + "/applyManage/assetCardsCreate?companyId=" + companyId + "&applyIds=" + unids, {
-            onLoadFunction : function() {
-            	
-            }
-        });
+		content.companyId = companyId;
+		content.applyIds = unids;
+		rosten.read(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.submitCallback);
+//		rosten.kernel.createRostenShowDialog(rosten.webPath + "/applyManage/assetCardsCreate?companyId=" + companyId + "&applyIds=" + unids, {
+//            onLoadFunction : function() {
+//            	
+//            }
+//        });
 	};
 	
 	assetApply_formatTopic = function(value,rowIndex){

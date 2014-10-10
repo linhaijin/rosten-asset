@@ -98,11 +98,13 @@ class AssetScrapController {
 		
 		//特殊字段信息处理
 		assetScrap.applyDate = Util.convertToTimestamp(params.applyDate)
+		
 		if(params.allowdepartsId.equals("")){
 			assetScrap.applyDept = params.allowdepartsName
 		}else{
 			assetScrap.applyDept = Depart.get(params.allowdepartsId)
 		}
+		
 		if(!params.seriesNo_form.equals("")){
 			assetScrap.seriesNo = params.seriesNo_form
 		}

@@ -54,19 +54,19 @@
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'applyManage',action:'assetApplyForm',id:apply?.id,params:[userid:user?.id])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'applyManage',action:'assetApplyForm',id:applyNotes?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
 
 <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:130px;padding:0px">
+		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:160px;padding:0px">
 			<g:hiddenField name="registerNum_form" value="${applyNotes?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${applyNotes?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"120px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"160px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
@@ -79,7 +79,21 @@
              						value:"${applyNotes?.getFormattedUser()}"
                            	'/>
 			            </td>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
+			            <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
+					   	<td width="250">
+					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
+				               		trim:true,
+				               		required:true,
+									value:"${applyNotes?.getDepartName()}"
+				          	'/>
+				         	<g:hiddenField name="allowdepartsId" value="${applyNotes?.userDepart?.id }" />
+							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+			           	</td>
+					    
+					</tr>
+					<tr>
+						<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
 					    <td width="250">
 					    	<input id="allowCategoryName" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"allowCategoryName",${fieldAcl.isReadOnly("allowCategoryName")},
@@ -90,8 +104,6 @@
                            	<g:hiddenField name="allowCategoryId" value="${applyNotes?.userCategory?.id }" />
 							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectAssetCategory("${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
 			           	</td>
-					</tr>
-					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产名称：</div></td>
 					    <td>
 					    	<input id="assetName" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -101,17 +113,18 @@
              						value:"${applyNotes?.assetName}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>用途：</div></td>
-					   <td width="250">
+					    
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>用途：</div></td>
+					   	<td width="250">
 					    	<input id="usedBy" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"usedBy",${fieldAcl.isReadOnly("usedBy")},
                                		trim:true,
                                		required:true,
              						value:"${applyNotes?.usedBy}"
                            	'/>
-			           </td>
-					</tr>
-					<tr>
+			           	</td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>
 					    <td>
 					    	<input id="amount" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -121,8 +134,11 @@
                                		value:"${applyNotes?.amount}"
                            	'/>
 			            </td>
+						
+					</tr>
+					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>总金额（元）：</div></td>
-					    <td>
+					    <td colspans="3">
 					    	<input id="totalPrice" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                		trim:true,

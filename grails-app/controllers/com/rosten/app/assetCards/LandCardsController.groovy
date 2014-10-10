@@ -8,6 +8,7 @@ import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.assetApply.ApplyNotes
 
 class LandCardsController {
 
@@ -83,18 +84,24 @@ class LandCardsController {
 		def landCards = new LandCards()
 		if(params.id && !"".equals(params.id)){
 			landCards = LandCards.get(params.id)
+			//处理申请单金额
+			def applyNotesId =landCards.applyNotes.id
+			def applyNotes = ApplyNotes.get(applyNotesId)
+			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			landCards.company = company
+			//新资产卡片编号
+			if(!params.registerNum_form.equals("")){
+				landCards.registerNum = params.registerNum_form
+			}
 		}
+		
 		landCards.properties = params
 		landCards.clearErrors()
 		
 		//特殊字段信息处理
 		landCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		landCards.userDepart = Depart.get(params.allowdepartsId)
-		if(!params.registerNum_form.equals("")){
-			landCards.registerNum = params.registerNum_form
-		}
 		
 		if(landCards.save(flush:true)){
 			json["result"] = "true"

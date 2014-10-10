@@ -8,6 +8,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+//import com.rosten.app.bookKeeping.CarRegister
 import com.rosten.app.assetApply.ApplyNotes
 
 class CarCards {
@@ -60,7 +61,7 @@ class CarCards {
 	
 	//购置日期
 	Date buyDate = new Date()
-	@GridColumn(name="购买日期",width="106px",colIdx=6)
+	@GridColumn(name="购置日期",width="106px",colIdx=6)
 	def getFormattedBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -82,7 +83,7 @@ class CarCards {
 	String organizationalType
 	
 	//价格
-	@GridColumn(name="价格",colIdx=7)
+	@GridColumn(name="价格（元）",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -96,6 +97,9 @@ class CarCards {
 	
 	//存放地点
 	String storagePosition
+	
+	//采购人
+	String purchaser
 	
 	//国别
 	String country = "中国"
@@ -140,6 +144,7 @@ class CarCards {
 		otherFund nullable:true,blank:true
 		organizationalType nullable:true,blank:true
 		storagePosition nullable:true,blank:true
+		purchaser nullable:true,blank:true
 		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true

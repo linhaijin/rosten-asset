@@ -8,10 +8,10 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.BookRegister
+//import com.rosten.app.bookKeeping.BookRegister
+import com.rosten.app.assetApply.ApplyNotes
 
 class BookCards {
-
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -33,7 +33,6 @@ class BookCards {
 			return "图书"
 		}
 	}
-//	String assetCategory = "图书"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
@@ -41,8 +40,7 @@ class BookCards {
 	
 	//管理部门
 	Depart userDepart
-	
-	@GridColumn(name="管理部门",colIdx=4)
+	@GridColumn(name="使用部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName
@@ -81,8 +79,11 @@ class BookCards {
 		}
 	}
 	
-	//单价
-	@GridColumn(name="单价",colIdx=7)
+	//采购组织形式
+	String organizationalType
+	
+	//价格
+	@GridColumn(name="价格（元）",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -94,17 +95,14 @@ class BookCards {
 	//其他资金
 	Double otherFund = 0
 	
-	//文物等级
-	String antiqueRegistration
-	
-	//管理单位
-	String manageCompany
-	
 	//存放地点
 	String storagePosition
 	
-	//坐落位置
-	String locatePosition
+	//采购人
+	String purchaser
+	
+	//国别
+	String country = "中国"
 	
 	//创建时间
 	Date createDate = new Date()
@@ -117,7 +115,7 @@ class BookCards {
 		}
 	}
 	
-	//资产状态
+	//资产卡片状态
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
@@ -127,7 +125,9 @@ class BookCards {
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,bookRegister:BookRegister]
+	//从资产建账创建卡片转为资产申请创建卡片
+	static belongsTo = [company:Company,applyNotes:ApplyNotes]
+//	static belongsTo = [company:Company,bookRegister:BookRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -142,10 +142,10 @@ class BookCards {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		antiqueRegistration nullable:false,blank:false
-		manageCompany nullable:true ,blank: true
+		organizationalType nullable:true,blank:true
 		storagePosition nullable:true,blank:true
-		locatePosition nullable:true,blank:true
+		purchaser nullable:true,blank:true
+		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
 		remark nullable:true,blank:true

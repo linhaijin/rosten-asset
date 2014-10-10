@@ -8,10 +8,10 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.HouseRegister
+//import com.rosten.app.bookKeeping.HouseRegister
+import com.rosten.app.assetApply.ApplyNotes
 
 class HouseCards {
-
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -40,8 +40,7 @@ class HouseCards {
 	
 	//管理部门
 	Depart userDepart
-	
-	@GridColumn(name="管理部门",colIdx=4)
+	@GridColumn(name="使用部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName
@@ -71,7 +70,6 @@ class HouseCards {
 			return ""
 		}
 	}
-	
 	def getFormattedShowBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -81,8 +79,11 @@ class HouseCards {
 		}
 	}
 	
-	//单价
-	@GridColumn(name="单价",colIdx=7)
+	//采购组织形式
+	String organizationalType
+	
+	//价格
+	@GridColumn(name="价格（元）",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -94,14 +95,14 @@ class HouseCards {
 	//其他资金
 	Double otherFund = 0
 	
-	//建筑面积
-	Double houseArea
-	
-	//采购组织形式
-	String organizationalType
-	
 	//坐落位置
 	String houseLocated
+	
+	//采购人
+	String purchaser
+	
+	//国别
+	String country = "中国"
 	
 	//创建时间
 	Date createDate = new Date()
@@ -114,17 +115,22 @@ class HouseCards {
 		}
 	}
 	
-	//资产状态
+	//资产卡片状态
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
 	//资产操作号
 	String seriesNo
 	
+	//建筑面积
+	Double houseArea = 0
+	
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,houseRegister:HouseRegister]
+	//从资产建账创建卡片转为资产申请创建卡片
+	static belongsTo = [company:Company,applyNotes:ApplyNotes]
+//	static belongsTo = [company:Company,houseRegister:HouseRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -139,9 +145,11 @@ class HouseCards {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		houseArea nullable:true,blank:true
+		houseArea nullable:false,blank:false
 		organizationalType nullable:true,blank:true
-		houseLocated nullable:false,blank:false
+		houseLocated nullable:true,blank:true
+		purchaser nullable:true ,blank: true
+		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
 		remark nullable:true,blank:true

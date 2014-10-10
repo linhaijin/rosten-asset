@@ -8,10 +8,10 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.LandRegister
+//import com.rosten.app.bookKeeping.LandRegister
+import com.rosten.app.assetApply.ApplyNotes
 
 class LandCards {
-
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -40,7 +40,6 @@ class LandCards {
 	
 	//管理部门
 	Depart userDepart
-	
 	@GridColumn(name="管理部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
@@ -62,7 +61,6 @@ class LandCards {
 	
 	//购置日期
 	Date buyDate = new Date()
-	
 	@GridColumn(name="购置日期",width="106px",colIdx=6)
 	def getFormattedBuyDate(){
 		if(buyDate!=null){
@@ -72,7 +70,6 @@ class LandCards {
 			return ""
 		}
 	}
-	
 	def getFormattedShowBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -82,8 +79,11 @@ class LandCards {
 		}
 	}
 	
-	//单价
-	@GridColumn(name="单价",colIdx=7)
+	//采购组织形式
+	String organizationalType
+	
+	//价格
+	@GridColumn(name="价格（元）",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -96,13 +96,16 @@ class LandCards {
 	Double otherFund = 0
 	
 	//土地面积
-	Double landArea
-	
-	//采购组织形式
-	String organizationalType
+	Double landArea = 0
 	
 	//坐落位置
 	String landLocated
+	
+	//采购人
+	String purchaser
+	
+	//国别
+	String country = "中国"
 	
 	//创建时间
 	Date createDate = new Date()
@@ -115,7 +118,7 @@ class LandCards {
 		}
 	}
 	
-	//资产状态
+	//资产卡片状态
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
@@ -125,7 +128,9 @@ class LandCards {
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,landRegister:LandRegister]
+	//从资产建账创建卡片转为资产申请创建卡片
+	static belongsTo = [company:Company,applyNotes:ApplyNotes]
+//	static belongsTo = [company:Company,landRegister:LandRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -140,9 +145,11 @@ class LandCards {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		landArea nullable:true,blank:true
+		landArea nullable:false,blank:false
 		organizationalType nullable:true,blank:true
 		landLocated nullable:true,blank:true
+		purchaser nullable:true ,blank: true
+		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
 		remark nullable:true,blank:true

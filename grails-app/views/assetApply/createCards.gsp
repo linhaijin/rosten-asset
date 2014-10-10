@@ -50,7 +50,7 @@
                             </td>
                             <td width="250">
                             	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='value:"办公用品"' />
+                            	data-dojo-props='value:"资产"' />
                             	
                             </td>
                         </tr>
@@ -60,7 +60,7 @@
                             </td>
                             <td width="250">
                             	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='value:"笔记本电脑"' />
+                            	data-dojo-props='value:"资产"' />
                             	
                             	
                             </td>
@@ -81,18 +81,18 @@
                             </td>
                             <td width="250">
                             	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='value:"10"' />
+                            	data-dojo-props='value:"1"' />
                             	
                             	
                             </td>
                         </tr>
                         <tr>
                             <td width="80">
-                                <div align="right"><span style="color:red">*</span>总金额：</div>
+                                <div align="right"><span style="color:red">*</span>总金额（元）：</div>
                             </td>
                             <td width="250">
                             	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='value:"60万"' />
+                            	data-dojo-props='value:"600000"' />
                             	
                             	
                             </td>
@@ -103,7 +103,7 @@
                             </td>
                             <td width="250">
                             	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='value:"张三"' />
+                            	data-dojo-props='value:"Eric"' />
                             	
                             	
                             </td>

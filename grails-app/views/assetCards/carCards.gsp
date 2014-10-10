@@ -215,7 +215,18 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>国别：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>采购人：</div></td>
+					    <td>
+					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"purchaser",${fieldAcl.isReadOnly("purchaser")},
+                               		trim:true,
+                               		required:true,
+             						value:"${carCards?.purchaser}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>国别：</div></td>
 					    <td>
 					    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"country",${fieldAcl.isReadOnly("country")},
@@ -224,10 +235,8 @@
              						value:"${carCards?.country}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">存放地点：</div></td>
-					    <td colspan="3">
+					    <td>
 					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
                                		trim:true,

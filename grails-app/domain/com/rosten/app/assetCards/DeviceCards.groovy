@@ -8,10 +8,10 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.bookKeeping.DeviceRegister
+//import com.rosten.app.bookKeeping.DeviceRegister
+import com.rosten.app.assetApply.ApplyNotes
 
 class DeviceCards {
-
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -40,7 +40,7 @@ class DeviceCards {
 	
 	//管理部门
 	Depart userDepart
-	@GridColumn(name="管理部门",colIdx=4)
+	@GridColumn(name="使用部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName
@@ -70,7 +70,6 @@ class DeviceCards {
 			return ""
 		}
 	}
-	
 	def getFormattedShowBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -80,8 +79,11 @@ class DeviceCards {
 		}
 	}
 	
-	//单价
-	@GridColumn(name="单价",colIdx=7)
+	//采购组织形式
+	String organizationalType
+	
+	//价格
+	@GridColumn(name="价格（元）",colIdx=7)
 	Double onePrice = 0
 	
 	//事业收入
@@ -92,9 +94,6 @@ class DeviceCards {
 	
 	//其他资金
 	Double otherFund = 0
-	
-	//采购组织形式
-	String organizationalType
 	
 	//存放地点
 	String storagePosition
@@ -116,7 +115,7 @@ class DeviceCards {
 		}
 	}
 	
-	//资产状态
+	//资产卡片状态
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
@@ -126,7 +125,9 @@ class DeviceCards {
 	//备注
 	String remark
 	
-	static belongsTo = [company:Company,deviceRegister:DeviceRegister]
+	//从资产建账创建卡片转为资产申请创建卡片
+	static belongsTo = [company:Company,applyNotes:ApplyNotes]
+//	static belongsTo = [company:Company,deviceRegister:DeviceRegister]
 	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
@@ -141,7 +142,7 @@ class DeviceCards {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
-		storagePosition nullable:false,blank:false
+		storagePosition nullable:true,blank:true
 		organizationalType nullable:true,blank:true
 		purchaser nullable:true ,blank: true
 		country nullable:true,blank:true

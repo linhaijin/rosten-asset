@@ -284,7 +284,7 @@
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
-					   <td width="250">
+					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               		trim:true,

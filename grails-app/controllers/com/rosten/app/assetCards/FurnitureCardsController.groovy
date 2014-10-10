@@ -8,6 +8,7 @@ import com.rosten.app.system.User
 import com.rosten.app.util.Util
 import com.rosten.app.system.Depart
 import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.assetApply.ApplyNotes
 
 class FurnitureCardsController {
 
@@ -83,8 +84,16 @@ class FurnitureCardsController {
 		def furnitureCards = new FurnitureCards()
 		if(params.id && !"".equals(params.id)){
 			furnitureCards = FurnitureCards.get(params.id)
+			//处理申请单金额
+			def applyNotesId = furnitureCards.applyNotes.id
+			def applyNotes = ApplyNotes.get(applyNotesId)
+			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			furnitureCards.company = company
+			//新资产卡片编号
+			if(!params.registerNum_form.equals("")){
+				furnitureCards.registerNum = params.registerNum_form
+			}
 		}
 		furnitureCards.properties = params
 		furnitureCards.clearErrors()
@@ -92,9 +101,6 @@ class FurnitureCardsController {
 		//特殊字段信息处理
 		furnitureCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		furnitureCards.userDepart = Depart.get(params.allowdepartsId)
-		if(!params.registerNum_form.equals("")){
-			furnitureCards.registerNum = params.registerNum_form
-		}
 		
 		if(furnitureCards.save(flush:true)){
 			json["result"] = "true"

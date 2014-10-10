@@ -33,7 +33,11 @@
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
 				});
-				assetApply_save = function(){
+				assetApply_save = function(object){
+					//增加对多次单击的次数----2014-9-4
+					var buttonWidget = object.target;
+					rosten.toggleAction(buttonWidget,true);
+					
 					rosten.readSync(rosten.webPath + "/applyManage/assetApplySave",{},function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
@@ -43,7 +47,10 @@
 						}else{
 							rosten.alert("保存失败!");
 						}
-					},null,"rosten_form");
+					},function(error){
+						rosten.alert("系统错误，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
+					},"rosten_form");
 				};
 				page_quit = function(){
 					rosten.pagequit();
@@ -150,6 +157,17 @@
 				</table>
 			</div>
 		</form>
+		
+		<g:if test="${applyNotes?.id}">
+			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getCommentLog',id:applyNotes?.id)}"
+			'>	
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getFlowLog',id:applyNotes?.id,params:[processDefinitionId:applyNotes?.processDefinitionId,taskId:applyNotes?.taskId])}"
+			'>	
+			</div>
+		</g:if>
 	</div>
 </div>
 </body>

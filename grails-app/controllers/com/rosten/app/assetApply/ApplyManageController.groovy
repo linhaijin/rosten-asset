@@ -1,6 +1,7 @@
 package com.rosten.app.assetApply
 
 import grails.converters.JSON
+import org.activiti.engine.runtime.ProcessInstance
 import com.rosten.app.util.Util
 import com.rosten.app.assetApply.ApplyNotes
 import com.rosten.app.assetConfig.AssetCategory
@@ -15,6 +16,8 @@ import com.rosten.app.assetCards.DeviceCards
 import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
 
+import com.rosten.app.workflow.WorkFlowService
+
 class ApplyManageController {
 
 	def getFormattedSeriesDate(){
@@ -26,6 +29,7 @@ class ApplyManageController {
     def imgPath ="images/rosten/actionbar/"
 	def assetApplyService
 	def springSecurityService
+	def workFlowService
 	
 	def assetApplyForm ={
 		def webPath = request.getContextPath() + "/"
@@ -103,6 +107,7 @@ class ApplyManageController {
 	def assetApplySave ={
 		def json=[:]
 		def company = Company.get(params.companyId)
+		def currentUser = springSecurityService.getCurrentUser()
 		
 		//资产申请信息保存-------------------------------
 		def applyNotes = new ApplyNotes()
@@ -110,7 +115,7 @@ class ApplyManageController {
 			applyNotes = ApplyNotes.get(params.id)
 		}else{
 			applyNotes.company = company
-			applyNotes.applyUser = springSecurityService.getCurrentUser()
+			applyNotes.applyUser = currentUser
 		}
 		applyNotes.properties = params
 		applyNotes.clearErrors()
@@ -138,6 +143,44 @@ class ApplyManageController {
 		
 		if(!params.registerNum_form.equals("")){
 			applyNotes.registerNum = params.registerNum_form
+		}
+		
+		
+		//判断是否需要走流程
+		def _status
+		if(params.relationFlow){
+			//需要走流程
+			if(params.id){
+				_status = "old"
+			}else{
+				_status = "new"
+				applyNotes.currentUser = currentUser
+				applyNotes.currentDepart = currentUser.getDepartName()
+				applyNotes.currentDealDate = new Date()
+				
+				applyNotes.drafter = currentUser
+				applyNotes.drafterDepart = currentUser.getDepartName()
+			}
+			
+			//增加读者域
+			if(!applyNotes.readers.find{ it.id.equals(currentUser.id) }){
+				applyNotes.addToReaders(currentUser)
+			}
+			
+			//流程引擎相关信息处理-------------------------------------------------------------------------------------
+			if(!applyNotes.processInstanceId){
+				//启动流程实例
+				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,applyNotes.id, variables);
+				applyNotes.processInstanceId = processInstance.getProcessInstanceId()
+				applyNotes.processDefinitionId = processInstance.getProcessDefinitionId()
+				
+				//获取下一节点任务
+				def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+				applyNotes.taskId = task.getId()
+			}
+			//-------------------------------------------------------------------------------------------------
 		}
 		
 		if(applyNotes.save(flush:true)){

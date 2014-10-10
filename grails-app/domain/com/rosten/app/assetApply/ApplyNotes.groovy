@@ -99,6 +99,67 @@ class ApplyNotes {
 	
 	static belongsTo = [company:Company]
 	
+	//流程相关字段信息----------------------------------------------------------
+	//增加已阅读人员,读者
+	static hasMany=[hasReaders:User,readers:User]
+	
+	//当前处理人
+	User currentUser
+
+	def getCurrentUserName(){
+		if(currentUser!=null){
+			return currentUser.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//当前处理部门
+	String currentDepart
+
+	//当前处理时间
+	Date currentDealDate
+	
+	//缺省读者；*:允许所有人查看,[角色名称]:允许角色,user:普通人员查看
+	String defaultReaders="[应用管理员]"
+	def addDefaultReader(String userRole){
+		if(defaultReaders==null || "".equals(defaultReaders)){
+			defaultReaders = userRole
+		}else{
+			defaultReaders += "," + userRole
+		}
+	}
+	
+	//起草人
+	User drafter
+
+	def getFormattedDrafter(){
+		if(drafter!=null){
+			return drafter.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//起草部门
+	String drafterDepart
+
+	//流程定义id
+	String processDefinitionId
+	
+	//流程id
+	String processInstanceId
+	
+	//任务id
+	String taskId
+	
+	//状态
+	@GridColumn(name="状态",width="60px",colIdx=8)
+	String status = "新增"
+	
+	//--------------------------------------------------------------------------
+	
+	
     static constraints = {
 		registerNum nullable:false ,blank: false, unique: true
 		applyUser nullable:false,blank:false
@@ -110,6 +171,19 @@ class ApplyNotes {
 		usedBy nullable:false,blank:false
 		applyStatus nullable:false,blank:false
 		country nullable:true,blank:true
+		
+		//流程相关-------------------------------------------------------------
+		defaultReaders nullable:true,blank:true
+		currentUser nullable:true,blank:true
+		currentDepart nullable:true,blank:true
+		currentDealDate nullable:true,blank:true
+		drafter nullable:true,blank:true
+		drafterDepart nullable:true,blank:true
+		
+		processInstanceId nullable:true,blank:true
+		taskId nullable:true,blank:true
+		processDefinitionId nullable:true,blank:true
+		//--------------------------------------------------------------------
     }
 	
 	static mapping = {

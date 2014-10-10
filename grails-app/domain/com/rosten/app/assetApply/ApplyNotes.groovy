@@ -36,7 +36,7 @@ class ApplyNotes {
 		if(userDepart){
 			return userDepart.departName
 		}else{
-			return ""
+			return "协会本部"
 		}
 	}
 	
@@ -65,7 +65,7 @@ class ApplyNotes {
 	int amount = 1
 	
 	//总金额
-	@GridColumn(name="总金额（元）",colIdx=7,width="80px")
+	@GridColumn(name="金额（元）",colIdx=7,width="80px")
 	Double totalPrice = 0
 	
 	//用途

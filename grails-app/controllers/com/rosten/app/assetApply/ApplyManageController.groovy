@@ -17,6 +17,14 @@ import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
 
 import com.rosten.app.workflow.WorkFlowService
+import com.rosten.app.workflow.FlowBusiness
+import com.rosten.app.system.Model
+import com.rosten.app.system.SystemService
+import com.rosten.app.share.ShareService
+import com.rosten.app.share.FlowLog
+import com.rosten.app.start.StartService
+import com.rosten.app.gtask.Gtask
+import com.rosten.app.system.User
 
 class ApplyManageController {
 
@@ -30,6 +38,10 @@ class ApplyManageController {
 	def assetApplyService
 	def springSecurityService
 	def workFlowService
+	def taskService
+	def systemService
+	def shareService
+	def startService
 	
 	def assetApplyForm ={
 		def webPath = request.getContextPath() + "/"
@@ -78,7 +90,20 @@ class ApplyManageController {
 	}
 	
 	def assetApplyAdd ={
-		redirect(action:"assetApplyShow",params:params)
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"staffDepartChangeShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
+		}else{
+			redirect(action:"assetApplyShow",params:params)
+		}
 	}
 	
 	def assetApplyShow ={
@@ -100,6 +125,11 @@ class ApplyManageController {
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
 		
 		render(view:'/assetApply/applyShow',model:model)
 	}
@@ -451,6 +481,229 @@ class ApplyManageController {
 		if(params.refreshPageControl){
 			def total = assetApplyService.getAssetApplyCount(company)
 			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	def assetApplyFlowDeal ={
+		def json=[:]
+		
+		def applyNotes = ApplyNotes.get(params.id)
+		
+		//处理当前人的待办事项
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = applyNotes.status
+		def nextStatus,nextDepart,nextLogContent
+		def nextUsers=[]
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		
+		//结束当前任务，并开启下一节点任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(applyNotes.taskId,map)	//结束当前任务
+		
+		ProcessInstance processInstance = workFlowService.getProcessIntance(applyNotes.processInstanceId)
+		if(!processInstance || processInstance.isEnded()){
+			//流程已结束
+			nextStatus = "已结束"
+			applyNotes.currentUser = null
+			applyNotes.currentDepart = null
+			applyNotes.taskId = null
+		}else{
+			//获取下一节点任务，目前处理串行情况
+			def tasks = workFlowService.getTasksByFlow(applyNotes.processInstanceId)
+			def task = tasks[0]
+			if(task.getDescription() && !"".equals(task.getDescription())){
+				nextStatus = task.getDescription()
+			}else{
+				nextStatus = task.getName()
+			}
+			applyNotes.taskId = task.getId()
+		
+			if(params.dealUser){
+				//下一步相关信息处理
+				def dealUsers = params.dealUser.split(",")
+				if(dealUsers.size() >1){
+					//并发
+				}else{
+					//串行
+					def nextUser = User.get(Util.strLeft(params.dealUser,":"))
+					nextDepart = Util.strRight(params.dealUser, ":")
+					
+					//判断是否有公务授权------------------------------------------------------------
+					def _model = Model.findByModelCodeAndCompany("staffManage",currentUser.company)
+					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
+					if(authorize){
+						shareService.addFlowLog(applyNotes.id,"staffAdd",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						nextUser = authorize.beAuthorizer
+						nextDepart = authorize.beAuthorizerDepart
+					}
+					//-------------------------------------------------------------------------
+					
+					//任务指派给当前拟稿人
+					taskService.claim(applyNotes.taskId, nextUser.username)
+					
+					def args = [:]
+					args["type"] = "【员工调动】"
+					args["content"] = "请您审核编号为  【" + applyNotes.registerNum +  "】 的资产申请信息"
+					args["contentStatus"] = nextStatus
+					args["contentId"] = applyNotes.id
+					args["user"] = nextUser
+					args["company"] = nextUser.company
+					
+					startService.addGtask(args)
+					
+					applyNotes.currentUser = nextUser
+					applyNotes.currentDepart = nextDepart
+					
+					if(!applyNotes.readers.find{ item->
+						item.id.equals(nextUser.id)
+					}){
+						applyNotes.addToReaders(nextUser)
+					}
+					nextUsers << nextUser.getFormattedName()
+				}
+			}
+		}
+		applyNotes.status = nextStatus
+		applyNotes.currentDealDate = new Date()
+		
+		//判断下一处理人是否与当前处理人员为同一人
+		if(currentUser.equals(applyNotes.currentUser)){
+			json["refresh"] = true
+		}
+		
+		//----------------------------------------------------------------------------------------------------
+		
+		//修改代办事项状态
+		def gtask = Gtask.findWhere(
+			user:currentUser,
+			company:currentUser.company,
+			contentId:applyNotes.id,
+			contentStatus:frontStatus,
+			status:"0"
+		)
+		if(gtask!=null){
+			gtask.dealDate = new Date()
+			gtask.status = "1"
+			gtask.save(flush:true)
+		}
+		
+		if(applyNotes.save(flush:true)){
+			//添加日志
+			def logContent
+			switch (true){
+				case applyNotes.status.contains("已结束"):
+					logContent = "结束流程"
+					break
+				case applyNotes.status.contains("归档"):
+					logContent = "归档"
+					break
+				case applyNotes.status.contains("不同意"):
+					logContent = "不同意！"
+					break
+				default:
+					logContent = "提交" + applyNotes.status + "【" + nextUsers.join("、") + "】"
+					break
+			}
+			shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
+						
+			json["result"] = true
+		}else{
+			applyNotes.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def assetApplyFlowBack ={
+		def json=[:]
+		def applyNotes = ApplyNotes.get(params.id)
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = applyNotes.status
+		
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(applyNotes.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(applyNotes.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(applyNotes.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
+				}
+				applyNotes.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(applyNotes.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				//任务指派给当前拟稿人
+				taskService.claim(applyNotes.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【员工调动】"
+				args["content"] = "名称为  【" + applyNotes.registerNum +  "】 的入职人员信息被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = applyNotes.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改相关信息
+				applyNotes.currentUser = user
+				applyNotes.currentDepart = user.getDepartName()
+				applyNotes.currentDealDate = new Date()
+				applyNotes.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(applyNotes.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:applyNotes.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				applyNotes.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				
+				shareService.addFlowLog(applyNotes.id,"applyNotes",currentUser,logContent)
+			}
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
 		}
 		render json as JSON
 	}

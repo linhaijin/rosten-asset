@@ -7,7 +7,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetApply_add = function(){//新增资产申请
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=zcsq");
 	};
 	
 	assetApply_delete = function(){//删除资产申请

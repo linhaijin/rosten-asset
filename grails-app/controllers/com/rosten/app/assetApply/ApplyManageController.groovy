@@ -2,12 +2,12 @@ package com.rosten.app.assetApply
 
 import grails.converters.JSON
 import org.activiti.engine.runtime.ProcessInstance
+
+import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.Util
+
 import com.rosten.app.assetApply.ApplyNotes
 import com.rosten.app.assetConfig.AssetCategory
-import com.rosten.app.system.Company
-import com.rosten.app.system.Depart
-import com.rosten.app.util.FieldAcl
 
 import com.rosten.app.assetCards.CarCards
 import com.rosten.app.assetCards.LandCards
@@ -18,13 +18,17 @@ import com.rosten.app.assetCards.FurnitureCards
 
 import com.rosten.app.workflow.WorkFlowService
 import com.rosten.app.workflow.FlowBusiness
+
+import com.rosten.app.system.Company
+import com.rosten.app.system.Depart
 import com.rosten.app.system.Model
+import com.rosten.app.system.User
 import com.rosten.app.system.SystemService
+
 import com.rosten.app.share.ShareService
 import com.rosten.app.share.FlowLog
 import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
-import com.rosten.app.system.User
 
 class ApplyManageController {
 
@@ -50,7 +54,9 @@ class ApplyManageController {
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
 		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
-		
+		actionList << createAction("填写意见",webPath + imgPath + "submit.png",strname + "_addComment")
+		actionList << createAction("提交",webPath + imgPath + "submit.png",strname + "_submit")
+		actionList << createAction("退回",webPath + imgPath + "submit.png",strname + "_back")
 		render actionList as JSON
 	}
 	
@@ -96,7 +102,7 @@ class ApplyManageController {
 			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
 			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
 				params.relationFlow = flowBusiness.relationFlow
-				redirect(action:"staffDepartChangeShow",params:params)
+				redirect(action:"assetApplyShow",params:params)
 			}else{
 				//不存在流程引擎关联数据
 				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
@@ -431,7 +437,7 @@ class ApplyManageController {
 		if(params.refreshHeader){
 			def _gridHeader =[]
 			_gridHeader << ["name":"序号","width":"40px","colIdx":0,"field":"rowIndex"]
-			_gridHeader << ["name":"申请编号","width":"120px","colIdx":1,"field":"registerNum"]
+			_gridHeader << ["name":"申请编号","width":"120px","colIdx":1,"field":"registerNum","formatter":"assetApply_formatTopic"]
 			_gridHeader << ["name":"申请人","width":"100px","colIdx":2,"field":"getFormattedUser"]
 			_gridHeader << ["name":"申请部门","width":"100px","colIdx":3,"field":"getDepartName"]
 			_gridHeader << ["name":"资产分类","width":"100px","colIdx":4,"field":"getCategoryName"]
@@ -484,6 +490,7 @@ class ApplyManageController {
 		}
 		render json as JSON
 	}
+	
 	def assetApplyFlowDeal ={
 		def json=[:]
 		
@@ -533,10 +540,10 @@ class ApplyManageController {
 					nextDepart = Util.strRight(params.dealUser, ":")
 					
 					//判断是否有公务授权------------------------------------------------------------
-					def _model = Model.findByModelCodeAndCompany("staffManage",currentUser.company)
+					def _model = Model.findByModelCodeAndCompany("zcsq",currentUser.company)
 					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
 					if(authorize){
-						shareService.addFlowLog(applyNotes.id,"staffAdd",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						shareService.addFlowLog(applyNotes.id,"zcsq",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
 						nextUser = authorize.beAuthorizer
 						nextDepart = authorize.beAuthorizerDepart
 					}
@@ -546,8 +553,8 @@ class ApplyManageController {
 					taskService.claim(applyNotes.taskId, nextUser.username)
 					
 					def args = [:]
-					args["type"] = "【员工调动】"
-					args["content"] = "请您审核编号为  【" + applyNotes.registerNum +  "】 的资产申请信息"
+					args["type"] = "【资产申请】"
+					args["content"] = "请您审核编号为  【" + applyNotes.registerNum +  "】 的申请信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = applyNotes.id
 					args["user"] = nextUser
@@ -608,7 +615,7 @@ class ApplyManageController {
 					logContent = "提交" + applyNotes.status + "【" + nextUsers.join("、") + "】"
 					break
 			}
-			shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
+			shareService.addFlowLog(applyNotes.id,"zcsq",currentUser,logContent)
 						
 			json["result"] = true
 		}else{
@@ -619,6 +626,7 @@ class ApplyManageController {
 		}
 		render json as JSON
 	}
+	
 	def assetApplyFlowBack ={
 		def json=[:]
 		def applyNotes = ApplyNotes.get(params.id)
@@ -657,8 +665,8 @@ class ApplyManageController {
 				
 				//增加待办事项
 				def args = [:]
-				args["type"] = "【员工调动】"
-				args["content"] = "名称为  【" + applyNotes.registerNum +  "】 的入职人员信息被退回，请查看！"
+				args["type"] = "【资产申请】"
+				args["content"] = "编号为  【" + applyNotes.registerNum +  "】 的申请信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = applyNotes.id
 				args["user"] = user
@@ -698,7 +706,7 @@ class ApplyManageController {
 				//添加日志
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
-				shareService.addFlowLog(applyNotes.id,"applyNotes",currentUser,logContent)
+				shareService.addFlowLog(applyNotes.id,"zcsq",currentUser,logContent)
 			}
 				
 			json["result"] = true

@@ -67,8 +67,8 @@
 					//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 					var commentDialog = rosten.addCommentDialog({type:"assetApply"});
 					commentDialog.callback = function(_data){
-						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetApply?.status}",flowCode:"${flowCode}"};
-						rosten.readSync(rosten.webPath + "/share/addComment/${assetApply?.id}",content,function(data){
+						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${applyNotes?.status}",flowCode:"${flowCode}"};
+						rosten.readSync(rosten.webPath + "/share/addComment/${applyNotes?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
 								rosten.alert("成功！");
 							}else{
@@ -91,7 +91,7 @@
 					if(conditionObj){
 						lang.mixin(content,conditionObj);
 					}
-					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:assetApply?.taskId,drafterUsername:assetApply?.drafter?.username])}",content,function(data){
+					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:applyNotes?.taskId,drafterUsername:applyNotes?.drafter?.username])}",content,function(data){
 						if(data.dealFlow==false){
 							//流程无下一节点
 							assetApply_deal("submit",null,buttonWidget,conditionObj);
@@ -155,7 +155,7 @@
 				};
 				assetApply_deal = function(type,readArray,buttonWidget,conditionObj){
 					var content = {};
-					content.id = "${assetApply?.id}";
+					content.id = "${applyNotes?.id}";
 					content.deal = type;
 					if(readArray){
 						content.dealUser = readArray.join(",");
@@ -190,7 +190,7 @@
 					rosten.toggleAction(buttonWidget,true);
 					
 					var content = {};
-					rosten.readSync("${createLink(controller:'applyManage',action:'assetApplyFlowBack',params:[id:assetApply?.id])}",content,function(data){
+					rosten.readSync("${createLink(controller:'applyManage',action:'assetApplyFlowBack',params:[id:applyNotes?.id])}",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("成功！").queryDlgClose= function(){
 								//刷新待办事项内容
@@ -235,7 +235,7 @@
 
 <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:160px;padding:0px">
+		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:450px;padding:0px">
 			<g:hiddenField name="registerNum_form" value="${applyNotes?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${applyNotes?.id }"' />
@@ -326,7 +326,8 @@
 			</div>
 		</form>
 		
-		<g:if test="${applyNotes?.id}">
+	</div>
+	<g:if test="${applyNotes?.id}">
 			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 				href:"${createLink(controller:'share',action:'getCommentLog',id:applyNotes?.id)}"
 			'>	
@@ -336,6 +337,5 @@
 			'>	
 			</div>
 		</g:if>
-	</div>
 </div>
 </body>

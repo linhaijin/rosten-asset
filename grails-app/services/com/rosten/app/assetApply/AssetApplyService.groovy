@@ -21,7 +21,7 @@ class AssetApplyService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			eq("applyUser",user)
+//			eq("applyUser",user)
 		}
 		return c.list(pa,query)
 	}
@@ -31,7 +31,7 @@ class AssetApplyService {
 		def c = ApplyNotes.createCriteria()
 		def query = {
 			eq("company",company)
-			eq("applyUser",user)
+//			eq("applyUser",user)
 		}
 		return c.count(query)
 	}

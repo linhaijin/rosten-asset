@@ -15,6 +15,7 @@
 	<script type="text/javascript">
 	require(["dojo/parser",
 	         "dojo/dom",
+	         "dojo/_base/lang",
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
 		 		"dijit/layout/TabContainer",
@@ -28,7 +29,7 @@
 		     	"rosten/app/Application",
 		     	"rosten/app/SystemApplication",
 		     	"rosten/kernel/behavior"],
-			function(parser,dom,kernel,registry){
+			function(parser,dom,lang,kernel,registry){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
@@ -87,6 +88,15 @@
 					
 					var content = {};
 
+					//增加对应节点上的金额控制
+					if("${applyNotes?.status}" == "分管领导审核" || "${applyNotes?.status}" == "秘书长审核"){
+						if(!conditionObj){
+							conditionObj = {};
+						}
+						conditionObj.conditionName = "money";
+						conditionObj.conditionValue = ${applyNotes?.totalPrice};
+					}
+					
 					//增加对排他分支的控制
 					if(conditionObj){
 						lang.mixin(content,conditionObj);

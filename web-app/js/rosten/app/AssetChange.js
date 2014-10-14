@@ -4,6 +4,30 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	//导出
+	assetScrap_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		 /*
+		 var content = {};
+			
+			var username = registry.byId("s_username");
+			if(username.get("value")!=""){
+				content.username = username.get("value");
+			}
+			
+			var chinaName = registry.byId("s_chinaName");
+			if(chinaName.get("value")!=""){
+				content.chinaName = chinaName.get("value");
+			}
+			
+			var departName = registry.byId("s_departName");
+			if(departName.get("value")!=""){
+				content.departName = departName.get("value");
+			}
+		 */
+		rosten.openNewWindow("export", rosten.webPath + "/assetScrap/exportAssetScrap?companyId="+companyId);
+	};
+	
 	//报废报损
 	assetScrap_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");

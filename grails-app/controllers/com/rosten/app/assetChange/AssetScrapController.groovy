@@ -28,6 +28,9 @@ import com.rosten.app.share.FlowLog
 import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
 
+import com.rosten.app.export.ExcelExport
+import com.rosten.app.export.WordExport;
+
 class AssetScrapController {
 
 //	def bookKeepingService
@@ -80,6 +83,8 @@ class AssetScrapController {
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		actionList << createAction("导出",imgPath + "read.gif",strname + "_export")
 		
 		render actionList as JSON
 	}
@@ -981,4 +986,14 @@ class AssetScrapController {
 		}
 		render json as JSON
 	}
+	
+	def exportAssetScrap ={
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("员工信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		
+		def excel = new ExcelExport()
+		excel.mbxz(os)
+	} 
 }

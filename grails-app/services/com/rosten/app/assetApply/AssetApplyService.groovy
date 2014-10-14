@@ -21,7 +21,8 @@ class AssetApplyService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-//			eq("applyUser",user)
+			eq("currentUser",user)
+			//ne("applyStatus","新建")不等于
 		}
 		return c.list(pa,query)
 	}
@@ -31,7 +32,7 @@ class AssetApplyService {
 		def c = ApplyNotes.createCriteria()
 		def query = {
 			eq("company",company)
-//			eq("applyUser",user)
+			eq("currentUser",user)
 		}
 		return c.count(query)
 	}
@@ -56,8 +57,7 @@ class AssetApplyService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			eq("applyUser",user)
-			ne("applyStatus","新建")
+			eq("applyStatus","已完成")
 		}
 		return c.list(pa,query)
 	}
@@ -67,7 +67,7 @@ class AssetApplyService {
 		def c = ApplyNotes.createCriteria()
 		def query = { 
 			eq("company",company) 
-			eq("applyUser",user)
+			eq("applyStatus","已完成")
 		}
 		return c.count(query)
 	}

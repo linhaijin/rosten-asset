@@ -29,7 +29,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetCheck_run = function(){//启动盘点任务
 		var _1 = rosten.confirm("确认启动盘点任务，是否继续?");
 		_1.callback = function() {
-			var unids = rosten.getGridUnid("multi");
+			var runStatus = rosten.getGridSelectedValue("getRunStatusLabel");
+			if(runStatus == "已启动"){
+				alert("注意：该任务已经启动！");
+				return;
+			}
+			var unids = rosten.getGridUnid("single");
 			if (unids == "")
 				return;
 			var content = {runStatus:"1"};
@@ -39,18 +44,30 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		};
 	};
 	
+	assetCheck_delete = function(){//删除盘点任务
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/inventoryTask/assetCheckDelete", content,rosten.deleteCallback);
+		};
+	};
+	
 	assetCheck_start = function(){//开始盘点任务
 		var unids = rosten.getGridUnid("single");
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         var taskStatus = "2";
-        rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckStart?companyId=" + companyId + "&userid=" + userid + "&taskId=" +uuids + "&taskStatus=" + taskStatus);
+        rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckStart?companyId=" + companyId + "&userid=" + userid + "&taskId=" +unids + "&taskStatus=" + taskStatus);
 	};
 	
 	assetCheck_complete = function(){//完成盘点任务
 		var _1 = rosten.confirm("确认完成盘点任务，是否继续?");
 		_1.callback = function() {
-			var unids = rosten.getGridUnid("multi");
+			var unids = rosten.getGridUnid("single");
 			if (unids == "")
 				return;
 			var content = {completeStatus:"1"};

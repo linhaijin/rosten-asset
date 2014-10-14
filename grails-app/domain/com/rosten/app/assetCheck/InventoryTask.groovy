@@ -33,14 +33,6 @@ class InventoryTask {
 			return ""
 		}
 	}
-	def getFormattedShowMakeDate(){
-		if(makeDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-			return sd.format(makeDate)
-		}else{
-			return ""
-		}
-	}
 	
 	//盘点部门
 	Depart inventoryDepart
@@ -113,7 +105,7 @@ class InventoryTask {
 	//任务状态
 	String taskStatus = 0
 	def getTaskStatusLabel(){
-		return ["0":"新建","1":"启动未盘点","2":"盘点中","3":"已完成"][taskStatus]
+		return ["0":"新建","1":"已启动","2":"盘点中","3":"已完成"][taskStatus]
 	}
 	
 	//创建时间

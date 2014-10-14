@@ -85,7 +85,7 @@
 		                 		data-dojo-props='name:"makeDate",${fieldAcl.isReadOnly("makeDate")},
 		                 		trim:true,
 		                 		required:true,
-								value:"${inventoryTask?.getFormattedShowMakeDate()}"
+								value:"${inventoryTask?.getFormattedMakeDate()}"
 		                	'/>
 		                </td>
 					</tr>

@@ -39,9 +39,10 @@ class InventoryTaskController {
 		def actionList =[]
 		def strname = "assetCheck"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("新建任务",imgPath + "add.png",strname + "_add")
-		actionList << createAction("启动任务",imgPath + "add.png",strname + "_run")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		actionList << createAction("新建",imgPath + "add.png",strname + "_add")
+		actionList << createAction("启动",imgPath + "config.png",strname + "_run")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		
 		render actionList as JSON
 	}
@@ -50,9 +51,19 @@ class InventoryTaskController {
 		def actionList =[]
 		def strname = "assetCheck"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("开始盘点",imgPath + "add.png",strname + "_start")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		actionList << createAction("开始盘点",imgPath + "flow.png",strname + "_start")
+		render actionList as JSON
+	}
+	
+	def startPdAction ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
 		
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("数据导入盘点",webPath + imgPath + "word_open.png","pddr")
+		actionList << createAction("扫描枪盘点",webPath + imgPath + "changeStatus.gif","zdpd")
+		actionList << createAction("结束盘点",webPath + imgPath + "qx.png","zdpd_ok")
 		render actionList as JSON
 	}
 	
@@ -144,8 +155,26 @@ class InventoryTaskController {
 		render json as JSON
 	}
 	
+	def assetCheckDelete = {
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def inventoryTask = InventoryTask.get(it)
+				if(inventoryTask){
+					inventoryTask.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
 	def assetCheckStart = {
-		
+		def model=[:]
+		render(view:'/demo/startPd',model:model)
 	}
 	
 	def assetCheckComplete ={

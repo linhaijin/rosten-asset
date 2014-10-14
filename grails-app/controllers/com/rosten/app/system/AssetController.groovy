@@ -1,6 +1,7 @@
 package com.rosten.app.system
 
 import grails.converters.JSON;
+import com.rosten.app.workflow.FlowBusiness
 
 class AssetController {
 	def systemService
@@ -20,6 +21,10 @@ class AssetController {
 			def modelCodes = ["system","workflow","public","sms","question","personconfig"]
 			Model.findAllByCompany(company).each{
 				if(!modelCodes.contains(it.modelCode)){
+					FlowBusiness.findAllByModel(it).each{item->
+						item.model = null
+						item.save()
+					}
 					it.delete()
 				}
 			}
@@ -51,13 +56,13 @@ class AssetController {
 			model.serialNo = 8
 			
 			resource = new Resource()
-			resource.resourceName = "我的申请"
+			resource.resourceName = "资产申请"
 			resource.url = "mineApply"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "申请审核"
+			resource.resourceName = "生成卡片"
 			resource.url = "applyApproval"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)

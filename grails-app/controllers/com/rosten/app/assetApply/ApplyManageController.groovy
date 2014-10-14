@@ -54,9 +54,9 @@ class ApplyManageController {
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
 		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
-		actionList << createAction("填写意见",webPath + imgPath + "submit.png",strname + "_addComment")
+		actionList << createAction("填写意见",webPath + imgPath + "sign.png",strname + "_addComment")
 		actionList << createAction("提交",webPath + imgPath + "submit.png",strname + "_submit")
-		actionList << createAction("退回",webPath + imgPath + "submit.png",strname + "_back")
+		actionList << createAction("回退",webPath + imgPath + "back.png",strname + "_back")
 		render actionList as JSON
 	}
 	
@@ -65,10 +65,10 @@ class ApplyManageController {
 		def strname = "assetApply"
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("提交",imgPath + "add.png",strname + "_submit")
-		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+//		actionList << createAction("提交",imgPath + "submit.png",strname + "_submit")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		
 		render actionList as JSON
 	}
@@ -78,11 +78,11 @@ class ApplyManageController {
 		def strname = "assetApply"
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("同意",imgPath + "add.png",strname + "_agree")
-		actionList << createAction("生成资产卡片",imgPath + "add.png","assetCards_create")
-		actionList << createAction("财务对接",imgPath + "add.png",strname + "_delete")
-		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+//		actionList << createAction("同意",imgPath + "ok.png",strname + "_agree")
+		actionList << createAction("生成资产卡片",imgPath + "init.gif","assetCards_create")
+		actionList << createAction("财务对接",imgPath + "s_open.png",strname + "_delete")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		
 		render actionList as JSON
 	}
@@ -226,6 +226,23 @@ class ApplyManageController {
 				println it
 			}
 			json["result"] = "false"
+		}
+		render json as JSON
+	}
+	
+	def assetApplyDelete = {
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def applyNotes = ApplyNotes.get(it)
+				if(applyNotes){
+					applyNotes.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
 		}
 		render json as JSON
 	}
@@ -444,8 +461,8 @@ class ApplyManageController {
 			_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"assetName"]
 			_gridHeader << ["name":"数量","width":"80px","colIdx":6,"field":"amount"]
 			_gridHeader << ["name":"金额（元）","width":"80px","colIdx":7,"field":"totalPrice"]
-			_gridHeader << ["name":"用途","width":"100px","colIdx":8,"field":"usedBy"]
-			_gridHeader << ["name":"状态","width":"80px","colIdx":9,"field":"applyStatus"]
+			_gridHeader << ["name":"当前处理人","width":"100px","colIdx":8,"field":"getCurrentUserName"]
+			_gridHeader << ["name":"流程状态","width":"80px","colIdx":9,"field":"status"]
 			json["gridHeader"] = _gridHeader
 //			json["gridHeader"] = assetApplyService.getAssetApplyListLayout()
 		}
@@ -495,6 +512,12 @@ class ApplyManageController {
 		def json=[:]
 		
 		def applyNotes = ApplyNotes.get(params.id)
+		//处理资产申请状态
+		if(params.status.equals("已签发") || params.status.equals("打印盖章")){
+			applyNotes.applyStatus = "已完成"
+		}else{
+			applyNotes.applyStatus = params.status
+		}
 		
 		//处理当前人的待办事项
 		def currentUser = springSecurityService.getCurrentUser()

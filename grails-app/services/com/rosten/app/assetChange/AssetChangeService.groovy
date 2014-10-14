@@ -3,6 +3,7 @@ package com.rosten.app.assetChange
 import com.rosten.app.util.GridUtil
 
 class AssetChangeService {
+	def springSecurityService
 	//报废报损
     def getAssetScrapListLayout ={
 		def gridUtil = new GridUtil()
@@ -19,17 +20,31 @@ class AssetChangeService {
 	}
 	
 	def getAllAssetScrap ={offset,max,company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetScrap.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
+//			eq("currentUser",user)
 		}
 		return c.list(pa,query)
 	}
 	
 	def getAssetScrapCount ={company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetScrap.createCriteria()
-		def query = { eq("company",company) }
+		def query = { 
+			eq("company",company)
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
+//			eq("currentUser",user)
+		}
 		return c.count(query)
 	}
 	

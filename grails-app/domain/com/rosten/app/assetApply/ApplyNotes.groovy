@@ -10,7 +10,6 @@ import com.rosten.app.system.User
 import com.rosten.app.assetConfig.AssetCategory
 
 class ApplyNotes {
-
 	String id
 	
 	def getFormattedSeriesDate(){
@@ -24,7 +23,7 @@ class ApplyNotes {
 	
 	//申请人
 	User applyUser
-	@GridColumn(name="申请人",colIdx=2,width="100px")
+	@GridColumn(name="申请人",colIdx=2,width="60px")
 	def getFormattedUser(){
 		return applyUser.getFormattedName()
 	}
@@ -61,7 +60,7 @@ class ApplyNotes {
 	String assetName
 	
 	//数量
-	@GridColumn(name="数量",colIdx=6,width="80px")
+	@GridColumn(name="数量",colIdx=6,width="50px")
 	int amount = 1
 	
 	//总金额
@@ -73,12 +72,11 @@ class ApplyNotes {
 	String usedBy = "办公"
 	
 	//申请状态
-	@GridColumn(name="状态",colIdx=9,width="80px")
 	String applyStatus = "新建"
 	
 	//是否生产资产卡片
 	String isCreatedCards = 0
-	@GridColumn(name="是否生产资产卡片",colIdx=10)
+	@GridColumn(name="是否生产资产卡片",colIdx=11,width="100px")
 	def getCardsCreatedLabel(){
 		return ["0":"未生成 ","1":"已生成"][isCreatedCards]
 	} 
@@ -106,6 +104,7 @@ class ApplyNotes {
 	//当前处理人
 	User currentUser
 
+	@GridColumn(name="当前处理人",colIdx=10,width="70px")
 	def getCurrentUserName(){
 		if(currentUser!=null){
 			return currentUser.getFormattedName()
@@ -153,9 +152,9 @@ class ApplyNotes {
 	//任务id
 	String taskId
 	
-	//状态
-	@GridColumn(name="状态",width="60px",colIdx=8)
-	String status = "新增"
+	//流程状态
+	@GridColumn(name="流程状态",colIdx=9,width="70px")
+	String status = "新建"
 	
 	//--------------------------------------------------------------------------
 	

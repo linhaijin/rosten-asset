@@ -16,24 +16,25 @@
 	require(["dojo/parser",
 	         "dojo/dom",
 	         "dojo/_base/lang",
-		 		"dojo/_base/kernel",
-		 		"dijit/registry",
-		 		"dijit/layout/TabContainer",
-		 		"dijit/layout/ContentPane",
-		 		"dijit/form/ValidationTextBox",
-		 		"dijit/form/DateTextBox",
-		 		"dijit/form/SimpleTextarea",
-		 		"dijit/form/Button",
-		     	"rosten/widget/ActionBar",
-		     	"rosten/widget/TitlePane",
-		     	"rosten/app/Application",
-		     	"rosten/app/SystemApplication",
-		     	"rosten/kernel/behavior"],
+	 		"dojo/_base/kernel",
+	 		"dijit/registry",
+	 		"dijit/layout/TabContainer",
+	 		"dijit/layout/ContentPane",
+	 		"dijit/form/ValidationTextBox",
+	 		"dijit/form/DateTextBox",
+	 		"dijit/form/SimpleTextarea",
+	 		"dijit/form/Button",
+	     	"rosten/widget/ActionBar",
+	     	"rosten/widget/TitlePane",
+	     	"rosten/app/Application",
+	     	"rosten/app/SystemApplication",
+	     	"rosten/kernel/behavior"],
 			function(parser,dom,lang,kernel,registry){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
 				});
+				
 				assetApply_save = function(object){
 					//增加对多次单击的次数----2014-9-4
 					var buttonWidget = object.target;
@@ -49,8 +50,16 @@
 					rosten.readSync(rosten.webPath + "/applyManage/assetApplySave",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
-								page_quit();
-								//window.location.reload();
+								<g:if test='${flowCode}'>
+									if(window.location.href.indexOf(data.id)==-1){
+										window.location.replace(window.location.href + "&id=" + data.id);
+									}else{
+										window.location.reload();
+									}
+								</g:if>
+								<g:else>
+									page_quit();
+								</g:else>
 							};
 						}else{
 							rosten.alert("保存失败!");
@@ -78,6 +87,7 @@
 						});
 					};
 				};
+				
 				assetApply_submit = function(object,conditionObj){
 					/*
 					 * 从后台获取下一处理人;conditionObj为流程中排他分支使用
@@ -134,6 +144,7 @@
 						rosten.toggleAction(buttonWidget,false);
 					});
 				};
+				
 				assetApply_select = function(url,buttonWidget,conditionObj){
 					var rostenShowDialog = rosten.selectFlowUser(url,"single");
 		            rostenShowDialog.callback = function(data) {
@@ -163,9 +174,11 @@
 						rosten.toggleAction(buttonWidget,false);
 					};	
 				};
+				
 				assetApply_deal = function(type,readArray,buttonWidget,conditionObj){
 					var content = {};
 					content.id = "${applyNotes?.id}";
+					content.status = "${applyNotes?.status}";
 					content.deal = type;
 					if(readArray){
 						content.dealUser = readArray.join(",");
@@ -194,6 +207,7 @@
 						rosten.toggleAction(buttonWidget,false);
 					});
 				};
+				
 				assetApply_back = function(object,conditionObj){
 					//增加对多次单击的控制
 					var buttonWidget = object.target;
@@ -222,17 +236,6 @@
 						rosten.toggleAction(buttonWidget,false);
 					});
 				};
-
-
-
-
-
-
-
-
-
-
-				
 		});
     </script>
 </head>

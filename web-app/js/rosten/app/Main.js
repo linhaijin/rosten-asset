@@ -68,7 +68,7 @@ define(["dojo/_base/kernel"
 			
 			idArgs = new general().implodeArray(unids,",");
 		}
-       
+       console.log(item);
 		return idArgs;
 	};
 	main.getGridUnid = function(type){

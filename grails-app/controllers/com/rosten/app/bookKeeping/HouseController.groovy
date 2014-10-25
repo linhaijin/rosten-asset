@@ -31,8 +31,8 @@ class HouseController {
 		def strname = "houseRegister"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
-		actionList << createAction("提交",imgPath + "hf.gif",strname + "_submit")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("提交",imgPath + "submit.png",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON

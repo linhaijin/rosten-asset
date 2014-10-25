@@ -89,10 +89,27 @@ class ApplyManageController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
-		actionList << createAction("填写意见",webPath + imgPath + "sign.png",strname + "_addComment")
-		actionList << createAction("提交",webPath + imgPath + "submit.png",strname + "_submit")
-		actionList << createAction("回退",webPath + imgPath + "back.png",strname + "_back")
+		if(params.id){
+			def entity = ApplyNotes.get(params.id)
+			def user = User.get(params.userid)
+			if(user.equals(entity.currentUser)){
+				//当前处理人
+				switch (true){
+					case entity.status.contains("审核") || entity.status.contains("审批"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+		}
 		render actionList as JSON
 	}
 	
@@ -101,10 +118,9 @@ class ApplyManageController {
 		def strname = "assetApply"
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-//		actionList << createAction("提交",imgPath + "submit.png",strname + "_submit")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -114,11 +130,10 @@ class ApplyManageController {
 		def strname = "assetApply"
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
-//		actionList << createAction("同意",imgPath + "ok.png",strname + "_agree")
 		actionList << createAction("生成资产卡片",imgPath + "init.gif","assetCards_create")
 		actionList << createAction("财务对接",imgPath + "s_open.png",strname + "_delete")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -269,15 +284,27 @@ class ApplyManageController {
 	
 	def assetApplyDelete = {
 		def ids = params.id.split(",")
+		def currentUser = springSecurityService.getCurrentUser()
 		def json
 		try{
 			ids.each{
 				def applyNotes = ApplyNotes.get(it)
 				if(applyNotes){
-					applyNotes.delete(flush: true)
+					if(currentUser.getAllRolesValue().contains("系统管理员")){
+						applyNotes.delete(flush: true)
+						json = [result:'true']
+					}else{
+						if(applyNotes.isCreatedCards==0){
+							applyNotes.delete(flush: true)
+							json = [result:'true']
+						}else{
+							json = [result:'已生产资产卡片的申请单无法删除，请联系系统管理员！']
+						}
+					}
+					
 				}
 			}
-			json = [result:'true']
+//			json = [result:'true']
 		}catch(Exception e){
 			json = [result:'error']
 		}
@@ -382,7 +409,7 @@ class ApplyManageController {
 							deviceCard.userDepart = applyNotes.userDepart
 							deviceCard.onePrice = onePrice
 							deviceCard.country = applyNotes.country
-							deviceCard.assetStatus = "新建"
+							deviceCard.assetStatus = "已入库"
 							deviceCard.save(flush: true)
 						}
 					}else if(assetType == "车辆"){
@@ -421,7 +448,7 @@ class ApplyManageController {
 	//						}
 	//						carCard.storagePosition = applyNotes.storagePosition
 							carCard.country = applyNotes.country
-							carCard.assetStatus = "新建"
+							carCard.assetStatus = "已入库"
 							carCard.save(flush: true)
 						}
 						
@@ -440,7 +467,7 @@ class ApplyManageController {
 							houseCard.userDepart = applyNotes.userDepart
 							houseCard.onePrice = onePrice
 							houseCard.country = applyNotes.country
-							houseCard.assetStatus = "新建"
+							houseCard.assetStatus = "已入库"
 							houseCard.save(flush: true)
 						}
 					}else if(assetType == "土地"){
@@ -458,7 +485,7 @@ class ApplyManageController {
 							landCard.userDepart = applyNotes.userDepart
 							landCard.onePrice = onePrice
 							landCard.country = applyNotes.country
-							landCard.assetStatus = "新建"
+							landCard.assetStatus = "已入库"
 							landCard.save(flush: true)
 						}
 					}else if(assetType == "图书"){
@@ -476,7 +503,7 @@ class ApplyManageController {
 							bookCard.userDepart = applyNotes.userDepart
 							bookCard.onePrice = onePrice
 							bookCard.country = applyNotes.country
-							bookCard.assetStatus = "新建"
+							bookCard.assetStatus = "已入库"
 							bookCard.save(flush: true)
 						}
 					}else if(assetType == "家具"){
@@ -494,7 +521,7 @@ class ApplyManageController {
 							furnitureCard.userDepart = applyNotes.userDepart
 							furnitureCard.onePrice = onePrice
 							furnitureCard.country = applyNotes.country
-							furnitureCard.assetStatus = "新建"
+							furnitureCard.assetStatus = "已入库"
 							furnitureCard.save(flush: true)
 						}
 					}
@@ -530,10 +557,11 @@ class ApplyManageController {
 			_gridHeader << ["name":"申请部门","width":"100px","colIdx":3,"field":"getDepartName"]
 			_gridHeader << ["name":"资产分类","width":"100px","colIdx":4,"field":"getCategoryName"]
 			_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"assetName"]
-			_gridHeader << ["name":"数量","width":"80px","colIdx":6,"field":"amount"]
-			_gridHeader << ["name":"金额（元）","width":"80px","colIdx":7,"field":"totalPrice"]
-			_gridHeader << ["name":"当前处理人","width":"100px","colIdx":8,"field":"getCurrentUserName"]
-			_gridHeader << ["name":"流程状态","width":"80px","colIdx":9,"field":"status"]
+			_gridHeader << ["name":"使用人","width":"100px","colIdx":6,"field":"userName"]
+			_gridHeader << ["name":"数量","width":"80px","colIdx":7,"field":"amount"]
+			_gridHeader << ["name":"金额（元）","width":"80px","colIdx":8,"field":"totalPrice"]
+			_gridHeader << ["name":"当前处理人","width":"100px","colIdx":9,"field":"getCurrentUserName"]
+			_gridHeader << ["name":"流程状态","width":"80px","colIdx":10,"field":"status"]
 			json["gridHeader"] = _gridHeader
 //			json["gridHeader"] = assetApplyService.getAssetApplyListLayout()
 		}
@@ -584,8 +612,8 @@ class ApplyManageController {
 		
 		def applyNotes = ApplyNotes.get(params.id)
 		//处理资产申请状态
-		if(params.status.equals("已签发") || params.status.equals("打印盖章")){
-			applyNotes.applyStatus = "已完成"
+		if(params.status.equals("资产报备") || params.status.equals("打印盖章")){
+			applyNotes.applyStatus = "已结束"
 		}else{
 			applyNotes.applyStatus = params.status
 		}
@@ -634,10 +662,10 @@ class ApplyManageController {
 					nextDepart = Util.strRight(params.dealUser, ":")
 					
 					//判断是否有公务授权------------------------------------------------------------
-					def _model = Model.findByModelCodeAndCompany("zcsq",currentUser.company)
+					def _model = Model.findByModelCodeAndCompany("assetApply",currentUser.company)
 					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
 					if(authorize){
-						shareService.addFlowLog(applyNotes.id,"zcsq",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						shareService.addFlowLog(applyNotes.id,"assetApply",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
 						nextUser = authorize.beAuthorizer
 						nextDepart = authorize.beAuthorizerDepart
 					}
@@ -709,7 +737,7 @@ class ApplyManageController {
 					logContent = "提交" + applyNotes.status + "【" + nextUsers.join("、") + "】"
 					break
 			}
-			shareService.addFlowLog(applyNotes.id,"zcsq",currentUser,logContent)
+			shareService.addFlowLog(applyNotes.id,"assetApply",currentUser,logContent)
 						
 			json["result"] = true
 		}else{
@@ -800,7 +828,7 @@ class ApplyManageController {
 				//添加日志
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
-				shareService.addFlowLog(applyNotes.id,"zcsq",currentUser,logContent)
+				shareService.addFlowLog(applyNotes.id,"assetApply",currentUser,logContent)
 			}
 				
 			json["result"] = true

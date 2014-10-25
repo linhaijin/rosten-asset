@@ -11,12 +11,13 @@ import com.rosten.app.assetCards.FurnitureCards
 import com.rosten.app.assetChange.AssetScrap
 
 import com.rosten.app.util.FieldAcl
+import com.rosten.app.util.GridUtil
 import com.rosten.app.util.Util
+
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
 
-import com.rosten.app.util.GridUtil
 import org.activiti.engine.runtime.ProcessInstance
 import com.rosten.app.system.Model
 import com.rosten.app.system.SystemService
@@ -49,7 +50,6 @@ class AssetScrapController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		
 		if(params.id){
 			def entity = AssetScrap.get(params.id)
 			def user = User.get(params.userid)
@@ -59,7 +59,7 @@ class AssetScrapController {
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
-						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
@@ -78,10 +78,10 @@ class AssetScrapController {
 		def actionList =[]
 		def strname = "assetScrap"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
-		actionList << createAction("导出",imgPath + "read.gif",strname + "_export")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -143,7 +143,7 @@ class AssetScrapController {
 		def company = Company.get(params.companyId)
 		def currentUser = springSecurityService.getCurrentUser()
 		
-		//报废报损申请信息保存-------------------------------
+		//资产报损申请信息保存-------------------------------
 		def assetScrap = new AssetScrap()
 		if(params.id && !"".equals(params.id)){
 			assetScrap = AssetScrap.get(params.id)
@@ -1008,7 +1008,7 @@ class AssetScrapController {
 		
 		def c = AssetScrap.createCriteria()
 
-		def scrapList = c.list{
+		def assetScrapList = c.list{
 			
 			eq("company",company)
 			eq("status","已结束")
@@ -1037,6 +1037,6 @@ class AssetScrapController {
 			
 		}
 		def excel = new ExcelExport()
-		excel.scrapDc(os,scrapList)
+		excel.assetScrapDc(os,assetScrapList)
 	}
 }

@@ -7,10 +7,10 @@ import java.util.Date
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-import com.rosten.app.system.User;
+import com.rosten.app.system.User
 
 /**
- * 报废报损
+ * 资产报损
  * @author ercjlo
  *
  */
@@ -32,7 +32,7 @@ class AssetScrap {
 	@GridColumn(name="申请日期",width="106px",colIdx=2)
 	def getFormattedApplyDate(){
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -41,7 +41,7 @@ class AssetScrap {
 	//详细视图展示
 	def getFormattedShowApplyDate(){
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -67,8 +67,8 @@ class AssetScrap {
 	@GridColumn(name="资产总和（元）",width="120px",colIdx=5)
 	Double assetTotal = 0
 	
-	//申请描述
-	@GridColumn(name="申请描述",colIdx=6)
+	//报损
+	@GridColumn(name="报损原因",colIdx=6)
 	String applyDesc
 	
 	//审批状态

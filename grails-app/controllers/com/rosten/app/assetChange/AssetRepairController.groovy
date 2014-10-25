@@ -8,18 +8,39 @@ import com.rosten.app.assetCards.HouseCards
 import com.rosten.app.assetCards.DeviceCards
 import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
+
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.GridUtil
 import com.rosten.app.util.Util
+
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
+
+import org.activiti.engine.runtime.ProcessInstance
+import com.rosten.app.system.Model
+import com.rosten.app.system.SystemService
+import com.rosten.app.workflow.WorkFlowService
+import com.rosten.app.workflow.FlowBusiness
+
+import com.rosten.app.share.ShareService
+import com.rosten.app.share.FlowLog
+import com.rosten.app.start.StartService
+import com.rosten.app.gtask.Gtask
+
+import com.rosten.app.export.ExcelExport
+import com.rosten.app.export.WordExport
 
 class AssetRepairController {
 
     def assetCardsService
     def assetChangeService
 	def springSecurityService
+	def workFlowService
+	def taskService
+	def systemService
+	def shareService
+	def startService
 
 	def imgPath ="images/rosten/actionbar/"
 	
@@ -29,8 +50,27 @@ class AssetRepairController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
-		
+		if(params.id){
+			def entity = AssetRepair.get(params.id)
+			def user = User.get(params.userid)
+			if(user.equals(entity.currentUser)){
+				//当前处理人
+				switch (true){
+					case entity.status.contains("审核") || entity.status.contains("审批"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+		}
 		render actionList as JSON
 	}
 	
@@ -39,7 +79,8 @@ class AssetRepairController {
 		def strname = "assetRepair"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -54,7 +95,20 @@ class AssetRepairController {
 	}
 	
 	def assetRepairAdd = {
-		redirect(action:"assetRepairShow",params:params)
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"assetRepairShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
+		}else{
+			redirect(action:"assetRepairShow",params:params)
+		}
 	}
 	
 	def assetRepairShow = {
@@ -74,9 +128,12 @@ class AssetRepairController {
 		model["assetRepair"] = assetRepair
 		
 		FieldAcl fa = new FieldAcl()
-		if("normal".equals(user.getUserType())){
-		}
 		model["fieldAcl"] = fa
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
 		
 		render(view:'/assetChange/assetRepair',model:model)
 	}
@@ -84,6 +141,7 @@ class AssetRepairController {
 	def assetRepairSave = {
 		def json=[:]
 		def company = Company.get(params.companyId)
+		def currentUser = springSecurityService.getCurrentUser()
 		
 		//资产报修申请信息保存-------------------------------
 		def assetRepair = new AssetRepair()
@@ -106,8 +164,46 @@ class AssetRepairController {
 			assetRepair.seriesNo = params.seriesNo_form
 		}
 		
+		//判断是否需要走流程
+		def _status
+		if(params.relationFlow){
+			//需要走流程
+			if(params.id){
+				_status = "old"
+			}else{
+				_status = "new"
+				assetRepair.currentUser = currentUser
+				assetRepair.currentDepart = currentUser.getDepartName()
+				assetRepair.currentDealDate = new Date()
+				
+				assetRepair.drafter = currentUser
+				assetRepair.drafterDepart = currentUser.getDepartName()
+			}
+			
+			//增加读者域
+			if(!assetRepair.readers.find{ it.id.equals(currentUser.id) }){
+				assetRepair.addToReaders(currentUser)
+			}
+			
+			//流程引擎相关信息处理-------------------------------------------------------------------------------------
+			if(!assetRepair.processInstanceId){
+				//启动流程实例
+				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,assetRepair.id, variables);
+				assetRepair.processInstanceId = processInstance.getProcessInstanceId()
+				assetRepair.processDefinitionId = processInstance.getProcessDefinitionId()
+				
+				//获取下一节点任务
+				def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+				assetRepair.taskId = task.getId()
+			}
+			//-------------------------------------------------------------------------------------------------
+		}
+		
 		if(assetRepair.save(flush:true)){
 			json["result"] = "true"
+			json["id"] = assetRepair.id
 		}else{
 			assetRepair.errors.each{
 				println it
@@ -655,5 +751,257 @@ class AssetRepairController {
 //			json = [result:'error',assetTotal:assetTotal,message:message]
 		}
 		render json as JSON
+	}
+	
+	def assetRepairFlowDeal ={
+		def json=[:]
+		
+		def assetRepair = AssetRepair.get(params.id)
+		//处理资产报修状态
+		assetRepair.dataStatus = params.status
+//		if(params.status.equals("已归档")){
+//			assetRepair.dataStatus = params.status
+//		}
+		
+		//处理当前人的待办事项
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = assetRepair.status
+		def nextStatus,nextDepart,nextLogContent
+		def nextUsers=[]
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		
+		//结束当前任务，并开启下一节点任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(assetRepair.taskId,map)	//结束当前任务
+		
+		ProcessInstance processInstance = workFlowService.getProcessIntance(assetRepair.processInstanceId)
+		if(!processInstance || processInstance.isEnded()){
+			//流程已结束
+			nextStatus = "已结束"
+			assetRepair.currentUser = null
+			assetRepair.currentDepart = null
+			assetRepair.taskId = null
+		}else{
+			//获取下一节点任务，目前处理串行情况
+			def tasks = workFlowService.getTasksByFlow(assetRepair.processInstanceId)
+			def task = tasks[0]
+			if(task.getDescription() && !"".equals(task.getDescription())){
+				nextStatus = task.getDescription()
+			}else{
+				nextStatus = task.getName()
+			}
+			assetRepair.taskId = task.getId()
+		
+			if(params.dealUser){
+				//下一步相关信息处理
+				def dealUsers = params.dealUser.split(",")
+				if(dealUsers.size() >1){
+					//并发
+				}else{
+					//串行
+					def nextUser = User.get(Util.strLeft(params.dealUser,":"))
+					nextDepart = Util.strRight(params.dealUser, ":")
+					
+					//判断是否有公务授权------------------------------------------------------------
+					def _model = Model.findByModelCodeAndCompany("assetRepair",currentUser.company)
+					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
+					if(authorize){
+						shareService.addFlowLog(assetRepair.id,"assetRepair",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						nextUser = authorize.beAuthorizer
+						nextDepart = authorize.beAuthorizerDepart
+					}
+					//-------------------------------------------------------------------------
+					
+					//任务指派给当前拟稿人
+					taskService.claim(assetRepair.taskId, nextUser.username)
+					
+					def args = [:]
+					args["type"] = "【资产报修】"
+					args["content"] = "请您审核编号为  【" + assetRepair.seriesNo +  "】 的资产报修信息"
+					args["contentStatus"] = nextStatus
+					args["contentId"] = assetRepair.id
+					args["user"] = nextUser
+					args["company"] = nextUser.company
+					
+					startService.addGtask(args)
+					
+					assetRepair.currentUser = nextUser
+					assetRepair.currentDepart = nextDepart
+					
+					if(!assetRepair.readers.find{ item->
+						item.id.equals(nextUser.id)
+					}){
+						assetRepair.addToReaders(nextUser)
+					}
+					nextUsers << nextUser.getFormattedName()
+				}
+			}
+		}
+		assetRepair.status = nextStatus
+		assetRepair.currentDealDate = new Date()
+		
+		//判断下一处理人是否与当前处理人员为同一人
+		if(currentUser.equals(assetRepair.currentUser)){
+			json["refresh"] = true
+		}
+		
+		//----------------------------------------------------------------------------------------------------
+		
+		//修改代办事项状态
+		def gtask = Gtask.findWhere(
+			user:currentUser,
+			company:currentUser.company,
+			contentId:assetRepair.id,
+			contentStatus:frontStatus,
+			status:"0"
+		)
+		if(gtask!=null){
+			gtask.dealDate = new Date()
+			gtask.status = "1"
+			gtask.save(flush:true)
+		}
+		
+		if(assetRepair.save(flush:true)){
+			//添加日志
+			def logContent
+			switch (true){
+				case assetRepair.status.contains("已结束"):
+					logContent = "结束流程"
+					break
+				case assetRepair.status.contains("归档"):
+					logContent = "归档"
+					break
+				case assetRepair.status.contains("不同意"):
+					logContent = "不同意！"
+					break
+				default:
+					logContent = "提交" + assetRepair.status + "【" + nextUsers.join("、") + "】"
+					break
+			}
+			shareService.addFlowLog(assetRepair.id,"assetRepair",currentUser,logContent)
+						
+			json["result"] = true
+		}else{
+			assetRepair.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	
+	def assetRepairFlowBack ={
+		def json=[:]
+		def assetRepair = AssetRepair.get(params.id)
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = assetRepair.status
+		
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(assetRepair.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(assetRepair.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(assetRepair.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
+				}
+				assetRepair.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(assetRepair.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				//任务指派给当前拟稿人
+				taskService.claim(assetRepair.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【资产报修】"
+				args["content"] = "编号为  【" + assetRepair.seriesNo +  "】 的资产报修信息被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = assetRepair.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改相关信息
+				assetRepair.currentUser = user
+				assetRepair.currentDepart = user.getDepartName()
+				assetRepair.currentDealDate = new Date()
+				assetRepair.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(assetRepair.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:assetRepair.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				assetRepair.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				
+				shareService.addFlowLog(assetRepair.id,"assetRepair",currentUser,logContent)
+			}
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	
+	def assetRepairExport = {
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报修信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		
+		//查询条件
+//		def searchArgs =[:]
+//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
+		def c = AssetRepair.createCriteria()
+
+		def assetRepairList = c.list{
+			eq("company",company)
+			eq("status","已结束")
+		}
+		def excel = new ExcelExport()
+		excel.assetRepairDc(os,assetRepairList)
 	}
 }

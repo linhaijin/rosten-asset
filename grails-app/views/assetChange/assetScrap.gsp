@@ -106,13 +106,13 @@
 					var content = {};
 	
 					//增加对应节点上的金额控制
-					//if("${assetScrap?.status}" == "后勤分管领导审核" || "${assetScrap?.status}" == "秘书长审批"){
+					if("${assetScrap?.status}" == "后勤分管领导审核" || "${assetScrap?.status}" == "秘书长审批"){
 						if(!conditionObj){
 							conditionObj = {};
 						}
 						conditionObj.conditionName = "money";
 						conditionObj.conditionValue = ${assetScrap?.assetTotal};
-					//}
+					}
 					
 					//增加对排他分支的控制
 					if(conditionObj){

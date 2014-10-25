@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.rosten.app.assetChange.AssetScrap;
 import com.rosten.app.assetChange.AssetAllocate;
+import com.rosten.app.assetChange.AssetLose;
+import com.rosten.app.assetChange.AssetRepair;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -21,7 +23,7 @@ import jxl.write.WritableWorkbook;
 
 public class ExcelExport {
 	//资产报损导出
-	public String scrapDc(OutputStream os,List<AssetScrap> scrapList){
+	public String assetScrapDc(OutputStream os,List<AssetScrap> assetScrapList){
 		WritableWorkbook wwb = null;
 		WritableSheet ws = null;
 		try {
@@ -51,15 +53,15 @@ public class ExcelExport {
 			ws.addCell(new Label(5, 1, "申请描述"));
 			ws.addCell(new Label(6, 1, "申请状态"));
 
-			if(scrapList != null && scrapList.size() > 0){
-				for(int i=0;i<scrapList.size();i++){
-					ws.addCell(new Label(0, i+2, scrapList.get(i).getSeriesNo()));
-					ws.addCell(new Label(1, i+2, (String)scrapList.get(i).getFormattedShowApplyDate()));
-					ws.addCell(new Label(2, i+2, (String)scrapList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)scrapList.get(i).getDepartName()));
-					ws.addCell(new Label(4, i+2, scrapList.get(i).getAssetTotal().toString()));
-					ws.addCell(new Label(5, i+2, scrapList.get(i).getApplyDesc()));
-					ws.addCell(new Label(6, i+2, scrapList.get(i).getStatus()));
+			if(assetScrapList != null && assetScrapList.size() > 0){
+				for(int i=0;i<assetScrapList.size();i++){
+					ws.addCell(new Label(0, i+2, assetScrapList.get(i).getSeriesNo()));
+					ws.addCell(new Label(1, i+2, (String)assetScrapList.get(i).getFormattedShowApplyDate()));
+					ws.addCell(new Label(2, i+2, (String)assetScrapList.get(i).getApplyMan()));
+					ws.addCell(new Label(3, i+2, (String)assetScrapList.get(i).getDepartName()));
+					ws.addCell(new Label(4, i+2, assetScrapList.get(i).getAssetTotal().toString()));
+					ws.addCell(new Label(5, i+2, assetScrapList.get(i).getApplyDesc()));
+					ws.addCell(new Label(6, i+2, assetScrapList.get(i).getStatus()));
 				}
 			}
 			
@@ -78,7 +80,7 @@ public class ExcelExport {
 	}
 	
 	//资产调拨导出
-	public String allocateDc(OutputStream os,List<AssetAllocate> allocateList){
+	public String assetAllocateDc(OutputStream os,List<AssetAllocate> assetAllocateList){
 		WritableWorkbook wwb = null;
 		WritableSheet ws = null;
 		try {
@@ -109,16 +111,130 @@ public class ExcelExport {
 			ws.addCell(new Label(6, 1, "申请描述"));
 			ws.addCell(new Label(7, 1, "申请状态"));
 
-			if(allocateList != null && allocateList.size() > 0){
-				for(int i=0;i<allocateList.size();i++){
-					ws.addCell(new Label(0, i+2, allocateList.get(i).getSeriesNo()));
-					ws.addCell(new Label(1, i+2, (String)allocateList.get(i).getFormattedShowApplyDate()));
-					ws.addCell(new Label(2, i+2, (String)allocateList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)allocateList.get(i).getOutDepartName()));
-					ws.addCell(new Label(4, i+2, (String)allocateList.get(i).getInDepartName()));
-					ws.addCell(new Label(5, i+2, allocateList.get(i).getAssetTotal().toString()));
-					ws.addCell(new Label(6, i+2, allocateList.get(i).getApplyDesc()));
-					ws.addCell(new Label(7, i+2, allocateList.get(i).getStatus()));
+			if(assetAllocateList != null && assetAllocateList.size() > 0){
+				for(int i=0;i<assetAllocateList.size();i++){
+					ws.addCell(new Label(0, i+2, assetAllocateList.get(i).getSeriesNo()));
+					ws.addCell(new Label(1, i+2, (String)assetAllocateList.get(i).getFormattedShowApplyDate()));
+					ws.addCell(new Label(2, i+2, (String)assetAllocateList.get(i).getApplyMan()));
+					ws.addCell(new Label(3, i+2, (String)assetAllocateList.get(i).getOutDepartName()));
+					ws.addCell(new Label(4, i+2, (String)assetAllocateList.get(i).getInDepartName()));
+					ws.addCell(new Label(5, i+2, assetAllocateList.get(i).getAssetTotal().toString()));
+					ws.addCell(new Label(6, i+2, assetAllocateList.get(i).getApplyDesc()));
+					ws.addCell(new Label(7, i+2, assetAllocateList.get(i).getStatus()));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	//资产报失导出
+	public String assetLoseDc(OutputStream os,List<AssetLose> assetLoseList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0, 0, 6, 0);
+			ws.addCell(new Label(0 , 0, "资产报失列表",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "申请编号"));
+			ws.addCell(new Label(1, 1, "申请日期"));
+			ws.addCell(new Label(2, 1, "申请人"));
+			ws.addCell(new Label(3, 1, "申请部门"));
+			ws.addCell(new Label(4, 1, "资产总和（元）"));
+			ws.addCell(new Label(5, 1, "申请描述"));
+			ws.addCell(new Label(6, 1, "申请状态"));
+
+			if(assetLoseList != null && assetLoseList.size() > 0){
+				for(int i=0;i<assetLoseList.size();i++){
+					ws.addCell(new Label(0, i+2, assetLoseList.get(i).getSeriesNo()));
+					ws.addCell(new Label(1, i+2, (String)assetLoseList.get(i).getFormattedShowApplyDate()));
+					ws.addCell(new Label(2, i+2, (String)assetLoseList.get(i).getApplyMan()));
+					ws.addCell(new Label(3, i+2, (String)assetLoseList.get(i).getDepartName()));
+					ws.addCell(new Label(4, i+2, assetLoseList.get(i).getAssetTotal().toString()));
+					ws.addCell(new Label(5, i+2, assetLoseList.get(i).getApplyDesc()));
+					ws.addCell(new Label(6, i+2, assetLoseList.get(i).getStatus()));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	//资产报修导出
+	public String assetRepairDc(OutputStream os,List<AssetRepair> assetRepairList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0, 0, 6, 0);
+			ws.addCell(new Label(0 , 0, "资产报修列表",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "申请编号"));
+			ws.addCell(new Label(1, 1, "申请日期"));
+			ws.addCell(new Label(2, 1, "申请人"));
+			ws.addCell(new Label(3, 1, "申请部门"));
+			ws.addCell(new Label(4, 1, "维修人"));
+			ws.addCell(new Label(5, 1, "维修时间"));
+			ws.addCell(new Label(6, 1, "申请状态"));
+
+			if(assetRepairList != null && assetRepairList.size() > 0){
+				for(int i=0;i<assetRepairList.size();i++){
+					ws.addCell(new Label(0, i+2, assetRepairList.get(i).getSeriesNo()));
+					ws.addCell(new Label(1, i+2, (String)assetRepairList.get(i).getFormattedShowApplyDate()));
+					ws.addCell(new Label(2, i+2, (String)assetRepairList.get(i).getApplyMan()));
+					ws.addCell(new Label(3, i+2, (String)assetRepairList.get(i).getDepartName()));
+					ws.addCell(new Label(4, i+2, assetRepairList.get(i).getMaintenanceMan()));
+					ws.addCell(new Label(5, i+2, (String)assetRepairList.get(i).getFormattedShowMaintenanceDate()));
+					ws.addCell(new Label(6, i+2, assetRepairList.get(i).getStatus()));
 				}
 			}
 			

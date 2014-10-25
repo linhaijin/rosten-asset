@@ -4,7 +4,11 @@ import com.rosten.app.annotation.GridColumn
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
+/**
+ * 资产盘点任务与卡片关联
+ * @author ercjlo
+ *
+ */
 class TaskCards {
 	String id
 	

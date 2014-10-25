@@ -1,13 +1,20 @@
 package com.rosten.app.assetApply
 
 import java.text.SimpleDateFormat
-import java.util.Date;
+import java.util.Date
 
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
-import com.rosten.app.system.Depart;
+import com.rosten.app.system.Depart
 import com.rosten.app.system.User
 import com.rosten.app.assetConfig.AssetCategory
+
+import com.rosten.app.assetCards.CarCards
+import com.rosten.app.assetCards.LandCards
+import com.rosten.app.assetCards.HouseCards
+import com.rosten.app.assetCards.DeviceCards
+import com.rosten.app.assetCards.BookCards
+import com.rosten.app.assetCards.FurnitureCards
 
 class ApplyNotes {
 	String id
@@ -58,6 +65,9 @@ class ApplyNotes {
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=5)
 	String assetName
+	
+	//使用人
+	String userName
 	
 	//数量
 	@GridColumn(name="数量",colIdx=6,width="50px")
@@ -176,6 +186,7 @@ class ApplyNotes {
 		userCategory nullable:false,blank:false
 		rootAssetCategory nullable:false,blank:false
 		assetName nullable:false,blank:false
+		userName nullable:false,blank:false
 		amount nullable:false,blank:false
 		totalPrice nullable:false,blank:false
 		usedBy nullable:false,blank:false
@@ -199,5 +210,28 @@ class ApplyNotes {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_APPLY_NOTES"
+	}
+	def beforeDelete(){
+		ApplyNotes.withNewSession{session ->
+			CarCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			LandCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			HouseCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			DeviceCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			BookCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			FurnitureCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			session.flush()
+		}
 	}
 }

@@ -4,7 +4,14 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
-	//资产报损导出
+	//资产报损
+	assetScrap_add = function(){
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetScrap");
+//      rosten.kernel.setHref(rosten.webPath + "/assetScrap/assetScrapAdd?companyId=" + companyId+ "&userid=" + userid, "test");
+	};
+
 	assetScrap_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		 /*
@@ -25,20 +32,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				content.departName = departName.get("value");
 			}
 		 */
-		rosten.openNewWindow("export", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId);
-	};
-	//资产调拨导出
-	assetAllocate_export = function(){
-		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("export", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId);
-	};
-	
-	//报废报损
-	assetScrap_add = function(){
-		var userid = rosten.kernel.getUserInforByKey("idnumber");
-        var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetScrap");
-//        rosten.kernel.setHref(rosten.webPath + "/assetScrap/assetScrapAdd?companyId=" + companyId+ "&userid=" + userid, "test");
+		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId);
 	};
 	
 	assetScrap_delete = function(){
@@ -72,6 +66,11 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetAllocate");
 	};
 	
+	assetAllocate_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId);
+	};
+	
 	assetAllocate_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
@@ -100,7 +99,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetLose_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetLose");
+	};
+	
+	assetLose_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseExport?companyId="+companyId);
 	};
 	
 	assetLose_delete = function(){
@@ -131,7 +135,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetRepair_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetRepair");
+	};
+	
+	assetRepair_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairExport?companyId="+companyId);
 	};
 	
 	assetRepair_delete = function(){

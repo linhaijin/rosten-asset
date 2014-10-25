@@ -30,7 +30,7 @@ class AssetConfigController {
 		def strname = "assetCategory"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("新增大类",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除大类",imgPath + "read.gif",strname + "_delete")
+		actionList << createAction("删除大类",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON

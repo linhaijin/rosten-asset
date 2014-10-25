@@ -40,7 +40,7 @@ class DeviceController {
 			actionList << createAction("生成条形码",imgPath + "hf.gif",strname + "_kp")
 			actionList << createAction("批量打印条形码",imgPath + "hf.gif",strname + "_print")
 		}else{
-			actionList << createAction("提交审核",imgPath + "hf.gif",strname + "_submit")
+			actionList << createAction("提交审核",imgPath + "submit.png",strname + "_submit")
 		}
 		
 		actionList << createAction("批量导入",imgPath + "add.png",strname + "_import")

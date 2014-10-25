@@ -78,10 +78,10 @@ class AssetAllocateController {
 		def actionList =[]
 		def strname = "assetAllocate"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "read.gif",strname + "_delete")
-		actionList << createAction("导出",imgPath + "read.gif",strname + "_export")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -171,7 +171,7 @@ class AssetAllocateController {
 			assetAllocate.seriesNo = params.seriesNo_form
 		}
 		
-		/**
+		
 		//判断是否需要走流程
 		def _status
 		if(params.relationFlow){
@@ -208,7 +208,7 @@ class AssetAllocateController {
 			}
 			//-------------------------------------------------------------------------------------------------
 		}
-		*/
+		
 		
 		if(assetAllocate.save(flush:true)){
 			json["result"] = "true"
@@ -387,7 +387,7 @@ class AssetAllocateController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
 		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
@@ -506,7 +506,7 @@ class AssetAllocateController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
 		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
@@ -992,35 +992,12 @@ class AssetAllocateController {
 		
 		def c = AssetAllocate.createCriteria()
 
-		def allocateList = c.list{
+		def assetAllocateList = c.list{
 			
 			eq("company",company)
 			eq("status","已结束")
-			
-//			searchArgs.each{k,v->
-//				if(k.equals("departName")){
-//					departs{
-//						like(k,"%" + v + "%")
-//					}
-//				}else if(k.equals("username")){
-//					createAlias('user', 'a')
-//					like("a.username","%" + v + "%")
-//
-//				}else{
-//					like(k,"%" + v + "%")
-//				}
-//			}
-			
-//			if("staffAdd".equals(params.type)){
-//				not {'in'("status",["在职","退休","离职"])}
-//				order("createDate", "desc")
-//			}else{
-//				'in'("status",["在职","退休","离职"])
-//				order("createDate", "desc")
-//			}
-			
 		}
 		def excel = new ExcelExport()
-		excel.allocateDc(os,allocateList)
+		excel.assetAllocateDc(os,assetAllocateList)
 	}
 }

@@ -8,13 +8,11 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User;
-
 /**
  * 资产调拨
  * @author ercjlo
  *
  */
-
 class AssetAllocate {
     String id
 	
@@ -77,8 +75,8 @@ class AssetAllocate {
 	@GridColumn(name="资产总和",width="100px",colIdx=5)
 	Double assetTotal = 0
 	
-	//申请描述
-	@GridColumn(name="申请描述",colIdx=6)
+	//调拨原因
+	@GridColumn(name="调拨原因",colIdx=6)
 	String applyDesc
 	
 	//审批状态

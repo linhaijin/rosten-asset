@@ -4,7 +4,7 @@ import com.rosten.app.util.GridUtil
 
 class AssetChangeService {
 	def springSecurityService
-	//报废报损
+	//资产报损
     def getAssetScrapListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new AssetScrap())
@@ -69,10 +69,10 @@ class AssetChangeService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-//			or{
-//				eq("currentUser",user)
-//				eq("status","已结束")
-//			}
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
 		}
 		return c.list(pa,query)
 	}
@@ -82,10 +82,10 @@ class AssetChangeService {
 		def c = AssetAllocate.createCriteria()
 		def query = { 
 			eq("company",company) 
-//			or{
-//				eq("currentUser",user)
-//				eq("status","已结束")
-//			}
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
 		}
 		return c.count(query)
 	}
@@ -106,17 +106,29 @@ class AssetChangeService {
 	}
 	
 	def getAllAssetLose ={offset,max,company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetLose.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
 		}
 		return c.list(pa,query)
 	}
 	
 	def getAssetLoseCount ={company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetLose.createCriteria()
-		def query = { eq("company",company) }
+		def query = { 
+			eq("company",company) 
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
+		}
 		return c.count(query)
 	}
 	

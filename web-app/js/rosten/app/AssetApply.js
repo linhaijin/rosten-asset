@@ -7,18 +7,28 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetApply_add = function(){//新增资产申请
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=zcsq");
+        rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetApply");
 	};
 	
 	assetApply_delete = function(){//删除资产申请
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("multi");
-			if (unids == "")
-				return;
 			var content = {};
-			content.id = unids;
-			rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,rosten.deleteCallback);
+			if (unids == ""){
+				rosten.alert("错误：请选择操作数据！");
+				return;
+			}else{
+				content.id = unids;
+			}
+			rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
+				if(data.result == true || data.result == "true"){
+					rosten.alert("操作成功！");
+					rosten.kernel.refreshGrid();
+				}else{
+					rosten.alert(data.result);
+				}
+			});
 		};
 	};
 	

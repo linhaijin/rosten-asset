@@ -8,7 +8,11 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
-
+/**
+ * 资产盘点任务
+ * @author ercjlo
+ *
+ */
 class InventoryTask {
 	String id
 	

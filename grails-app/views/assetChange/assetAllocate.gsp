@@ -57,7 +57,6 @@
 					rosten.readSync(rosten.webPath + "/assetAllocate/assetAllocateSave",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
-								<!--
 								<g:if test='${flowCode}'>
 									if(window.location.href.indexOf(data.id)==-1){
 										window.location.replace(window.location.href + "&id=" + data.id);
@@ -68,13 +67,14 @@
 								<g:else>
 									page_quit();
 								</g:else>
-								-->
-								page_quit();
 							};
 						}else{
 							rosten.alert("保存失败!");
 						}
-					},null,"rosten_form");
+					},function(error){
+						rosten.alert("系统错误，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
+					},"rosten_form");
 				};
 				page_quit = function(){
 					rosten.pagequit();
@@ -106,17 +106,13 @@
 					var content = {};
 	
 					//增加对应节点上的金额控制
-					//if("${assetAllocate?.status}" == "协会资产申请"){
+					if("${assetAllocate?.status}" == "资产调拨申请"){
 						if(!conditionObj){
 							conditionObj = {};
 						}
-						conditionObj.conditionName = "Depart";
-						if("${currentDepart}"!=""){
-							conditionObj.conditionValue = "${currentDepart}";
-						}else{
-							conditionObj.conditionValue = "";
-						}
-					//}
+						conditionObj.conditionName = "IsSubDepart";
+						conditionObj.conditionValue = "${currentDepart.isSubDepart}";
+					}
 					
 					//增加对排他分支的控制
 					if(conditionObj){

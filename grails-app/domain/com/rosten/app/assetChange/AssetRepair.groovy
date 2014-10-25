@@ -7,6 +7,7 @@ import java.util.Date
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.system.User
 /**
  * 资产报修
  * @author ercjlo
@@ -30,7 +31,7 @@ class AssetRepair {
 	@GridColumn(name="申请日期",width="120px",colIdx=2)
 	def getFormattedApplyDate(){//数据列表展示
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -38,7 +39,7 @@ class AssetRepair {
 	}
 	def getFormattedShowApplyDate(){//详细视图展示
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -61,7 +62,7 @@ class AssetRepair {
 	}
 	
 	//	审批状态
-	@GridColumn(name="审批状态",width="100px",colIdx=5)
+//	@GridColumn(name="审批状态",width="100px",colIdx=5)
 	String dataStatus = "未审批"
 	
 	//报修原因
@@ -88,16 +89,16 @@ class AssetRepair {
 	String contactPhone
 	
 	//维修人
-	@GridColumn(name="维修人",width="120px",colIdx=6)
+	@GridColumn(name="维修人",width="120px",colIdx=5)
 	String maintenanceMan
 	
 	//维修联系电话
-	@GridColumn(name="维修联系电话",width="120px",colIdx=7)
+	@GridColumn(name="维修联系电话",width="120px",colIdx=6)
 	String maintenancePhone
 	
 	//维修时间
 	Date maintenanceDate = new Date()
-	@GridColumn(name="维修时间",width="120px",colIdx=8)
+	@GridColumn(name="维修时间",width="120px",colIdx=7)
 	def getFormattedShowMaintenanceDate(){//详细视图展示
 		if(maintenanceDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -127,6 +128,67 @@ class AssetRepair {
 		}
 	}
 	
+	//流程相关字段信息----------------------------------------------------------
+	//增加已阅读人员,读者
+	static hasMany=[hasReaders:User,readers:User]
+	
+	//当前处理人
+	User currentUser
+
+	@GridColumn(name="当前处理人",colIdx=9,width="70px")
+	def getCurrentUserName(){
+		if(currentUser!=null){
+			return currentUser.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//当前处理部门
+	String currentDepart
+
+	//当前处理时间
+	Date currentDealDate
+	
+	//缺省读者；*:允许所有人查看,[角色名称]:允许角色,user:普通人员查看
+	String defaultReaders="[应用管理员]"
+	def addDefaultReader(String userRole){
+		if(defaultReaders==null || "".equals(defaultReaders)){
+			defaultReaders = userRole
+		}else{
+			defaultReaders += "," + userRole
+		}
+	}
+	
+	//起草人
+	User drafter
+
+	def getFormattedDrafter(){
+		if(drafter!=null){
+			return drafter.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//起草部门
+	String drafterDepart
+
+	//流程定义id
+	String processDefinitionId
+	
+	//流程id
+	String processInstanceId
+	
+	//任务id
+	String taskId
+	
+	//流程状态
+	@GridColumn(name="流程状态",colIdx=8,width="110px")
+	String status = "新建"
+	
+	//--------------------------------------------------------------------------
+	
     static constraints = {
 		seriesNo nullable:false ,blank: false, unique: true
 		applyDate nullable:false,blank:false
@@ -146,6 +208,19 @@ class AssetRepair {
 		feedback nullable:true,blank:true
 		
 		dataStatus nullable:false,blank:false
+		
+		//流程相关-------------------------------------------------------------
+		defaultReaders nullable:true,blank:true
+		currentUser nullable:true,blank:true
+		currentDepart nullable:true,blank:true
+		currentDealDate nullable:true,blank:true
+		drafter nullable:true,blank:true
+		drafterDepart nullable:true,blank:true
+		
+		processInstanceId nullable:true,blank:true
+		taskId nullable:true,blank:true
+		processDefinitionId nullable:true,blank:true
+		//--------------------------------------------------------------------
     }
 	
 	static belongsTo = [company:Company]

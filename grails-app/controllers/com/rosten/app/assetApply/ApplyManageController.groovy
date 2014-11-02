@@ -367,6 +367,8 @@ class ApplyManageController {
 					def onePrice = totalPrice/assetCount
 //					if(onePrice>2000){
 //						regNo_A = "1"
+//					}else{
+//						regNo_A = "2"
 //					}
 //					//获取资产编号BC代码
 //					def regNo_BC
@@ -391,7 +393,6 @@ class ApplyManageController {
 //					println "regNo_BC=="+regNo_BC
 //					println "regNo_DE=="+regNo_DE
 //					println "regNo=="+regNo_A+regNo_BC+regNo_DE
-//					println "year=="+year
 //					return
 					
 					if(assetType.equals("设备")){

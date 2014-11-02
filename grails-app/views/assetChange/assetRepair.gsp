@@ -42,6 +42,12 @@
 				rosten.cssinit();
 			});
 			assetRepair_save = function(object){
+				var repairReason = dojo.byId("repairReason").value;
+				if(repairReason=="" || repairReason==null){
+					alert("注意：请填写报修原因！");
+					document.getElementById("repairReason").focus();
+					return;
+				}
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -475,11 +481,12 @@
 			           </td>
 					</tr>
 					<tr>
-						<td><div align="right">报修原因：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>报修原因：</div></td>
 					    <td>
 					    	<input id="repairReason" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
+                               	data-dojo-props='id:"repairReason",name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
                                		trim:true,
+                               		required:true,
              						value:"${assetRepair?.repairReason}"
                            	'/>
 			            </td>

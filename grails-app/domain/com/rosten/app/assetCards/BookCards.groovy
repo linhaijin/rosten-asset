@@ -8,6 +8,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.util.SystemUtil
 //import com.rosten.app.bookKeeping.BookRegister
 import com.rosten.app.assetApply.ApplyNotes
 
@@ -155,6 +156,12 @@ class BookCards {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_BOOK_CARDS"
 		
-		remark sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			remark sqlType:"clob"
+		}else{
+			remark sqlType:"text"
+		}
 	}
 }

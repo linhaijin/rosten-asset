@@ -1,4 +1,4 @@
-package com.rosten.app.assetconfig
+package com.rosten.app.assetConfig
 
 import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.util.GridUtil

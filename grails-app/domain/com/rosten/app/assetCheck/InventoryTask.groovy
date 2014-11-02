@@ -8,6 +8,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.util.SystemUtil
 /**
  * 资产盘点任务
  * @author ercjlo
@@ -144,8 +145,14 @@ class InventoryTask {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_INVENTORY_TASK"
+		table "ROSTEN_INV_TASK"
 		
-		taskDesc sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			taskDesc sqlType:"clob"
+		}else{
+			taskDesc sqlType:"text"
+		}
 	}
 }

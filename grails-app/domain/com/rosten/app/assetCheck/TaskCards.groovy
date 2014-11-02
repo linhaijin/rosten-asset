@@ -1,6 +1,7 @@
 package com.rosten.app.assetCheck
 
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.util.SystemUtil
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,6 +36,12 @@ class TaskCards {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_TASK_CARDS"
 		
-		remark sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			remark sqlType:"clob"
+		}else{
+			remark sqlType:"text"
+		}
 	}
 }

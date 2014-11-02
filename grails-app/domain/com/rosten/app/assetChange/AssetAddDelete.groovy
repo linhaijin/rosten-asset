@@ -7,6 +7,7 @@ import java.util.Date
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.util.SystemUtil
 
 /**
  * 增值减值
@@ -110,8 +111,14 @@ class AssetAddDelete {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_ASSET_Adddelete"
+		table "ROSTEN_AS_Adddelete"
 		
-		applyDesc sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			applyDesc sqlType:"clob"
+		}else{
+			applyDesc sqlType:"text"
+		}
 	}
 }

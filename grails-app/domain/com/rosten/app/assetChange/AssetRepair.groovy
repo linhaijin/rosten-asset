@@ -8,6 +8,7 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User
+import com.rosten.app.util.SystemUtil
 /**
  * 资产报修
  * @author ercjlo
@@ -227,9 +228,16 @@ class AssetRepair {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_ASSET_REPAIR"
+		table "ROSTEN_AS_REPAIR"
 		
-		repairReason sqlType:"text"
-		feedback sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			repairReason sqlType:"clob"
+			feedback sqlType:"clob"
+		}else{
+			repairReason sqlType:"text"
+			feedback sqlType:"text"
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
+import com.rosten.app.util.SystemUtil
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,9 +73,15 @@ class AssetCategory {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_ASSET_CATEGORY"
+		table "ROSTEN_AS_CATEGORY"
 		
-		description sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			description sqlType:"clob"
+		}else{
+			description sqlType:"text"
+		}
 	}
 	
 }

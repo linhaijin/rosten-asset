@@ -43,6 +43,16 @@
 				});
 				
 				assetLose_save = function(object){
+					var assetTotal = dojo.byId("assetTotal").value;
+					if(assetTotal==0){
+						alert("注意：请选择资产！");
+						return;
+					}
+					var applyDesc = dojo.byId("applyDesc").value;
+					if(applyDesc=="" || applyDesc==null){
+						alert("注意：请填写申请描述！");
+						return;
+					}
 					//增加对多次单击的次数----2014-9-4
 					var buttonWidget = object.target;
 					rosten.toggleAction(buttonWidget,true);
@@ -376,9 +386,9 @@
 
 			var loseId = "${assetLose?.id}";
 			var seriesNo = "${assetLose?.seriesNo}";
-			
+			var assetTotal = dojo.byId("assetTotal").value;
 			var url = "${createLink(controller:'assetLose',action:'assetChooseDelete')}";
-			url += "?assetId="+encodeURI(assetId)+"&loseId="+loseId;
+			url += "?assetId="+encodeURI(assetId)+"&loseId="+loseId+"&assetTotal="+assetTotal;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
@@ -481,7 +491,7 @@
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
 					    <td>
 					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
+                               	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
              						value:"${assetLose?.assetTotal}"
@@ -490,7 +500,7 @@
 			            <td ><div align="right"><span style="color:red">*&nbsp;</span>申请描述：</div></td>
 						<td>
 						    <input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
-	    						data-dojo-props='name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
+	    						data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
 	                               	trim:true,
 	                               	required:true,
 	                               	value:"${assetLose?.applyDesc}"

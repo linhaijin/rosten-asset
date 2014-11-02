@@ -8,6 +8,7 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User;
+import com.rosten.app.util.SystemUtil
 /**
  * 资产调拨
  * @author ercjlo
@@ -183,8 +184,14 @@ class AssetAllocate {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_ASSET_ALLOCATE"
+		table "ROSTEN_AS_ALLOCATE"
 		
-		applyDesc sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			applyDesc sqlType:"clob"
+		}else{
+			applyDesc sqlType:"text"
+		}
 	}
 }

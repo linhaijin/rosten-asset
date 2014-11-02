@@ -100,7 +100,7 @@
 				var content = {};
 
 				//增加对应节点上的金额控制
-				if("${applyNotes?.status}" == "分管领导审核" || "${applyNotes?.status}" == "秘书长审核"){
+				if("${applyNotes?.status}" == "分管领导审核" || "${applyNotes?.status}" == "秘书长审批"){
 					if(!conditionObj){
 						conditionObj = {};
 					}

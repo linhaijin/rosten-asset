@@ -8,6 +8,7 @@ import java.util.Date
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.util.SystemUtil
 //import com.rosten.app.bookKeeping.LandRegister
 import com.rosten.app.assetApply.ApplyNotes
 
@@ -159,6 +160,12 @@ class LandCards {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_LAND_CARDS"
 		
-		remark sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			remark sqlType:"clob"
+		}else{
+			remark sqlType:"text"
+		}
 	}
 }

@@ -687,12 +687,16 @@ class AssetRepairController {
 		def bookCards
 		def furnitureCards
 		
-//		double totalPrice = 0
 //		double assetTotal = 0
-//		
+//		double cardsPrice = 0
+		
 //		if(params.repairId && !"".equals(params.repairId)){
 //			assetRepair = AssetRepair.get(params.repairId)
-//			assetTotal = assetRepair.assetTotal
+////			assetTotal = assetRepair.assetTotal
+//		}
+		
+//		if(params.assetTotal && params.assetTotal !=0){
+//			assetTotal = params.assetTotal.toDouble()
 //		}
 		
 		def assetId
@@ -708,39 +712,39 @@ class AssetRepairController {
 				if(carCards){
 					carCards.assetStatus = "已入库"
 					carCards.seriesNo = null
-//					totalPrice = carCards.onePrice
+//					cardsPrice = carCards.onePrice
 				}
 				landCards = LandCards.get(it)
 				if(landCards){
 					landCards.assetStatus = "已入库"
 					landCards.seriesNo = null
-//					totalPrice = landCards.onePrice
+//					cardsPrice = landCards.onePrice
 				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					houseCards.assetStatus = "已入库"
 					houseCards.seriesNo = null
-//					totalPrice = houseCards.onePrice
+//					cardsPrice = houseCards.onePrice
 				}
 				deviceCards = DeviceCards.get(it)
 				if(deviceCards){
 					deviceCards.assetStatus = "已入库"
 					deviceCards.seriesNo = null
-//					totalPrice = deviceCards.onePrice
+//					cardsPrice = deviceCards.onePrice
 				}
 				bookCards = BookCards.get(it)
 				if(bookCards){
 					bookCards.assetStatus = "已入库"
 					bookCards.seriesNo = null
-//					totalPrice = bookCards.onePrice
+//					cardsPrice = bookCards.onePrice
 				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					furnitureCards.assetStatus = "已入库"
 					furnitureCards.seriesNo = null
-//					totalPrice = furnitureCards.onePrice
+//					cardsPrice = furnitureCards.onePrice
 				}
-//				assetTotal -= totalPrice
+//				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
 			json = [result:'true',message:message]

@@ -43,38 +43,89 @@
 				});
 			
 				assetScrap_save = function(object){
-					//增加对多次单击的次数----2014-9-4
-					var buttonWidget = object.target;
-					rosten.toggleAction(buttonWidget,true);
+					var assetTotal = dojo.byId("assetTotal").value;
+					if(assetTotal==0){
+						alert("注意：请选择资产！");
+						return;
+					}
+					var applyDesc = dojo.byId("applyDesc").value;
+					if(applyDesc=="" || applyDesc==null){
+						alert("注意：请填写申请描述！");
+						return;
+					}
 
-					//流程相关信息
-					var content = {};
-					<g:if test='${flowCode}'>
-						content.flowCode = "${flowCode}";
-						content.relationFlow = "${relationFlow}";
-					</g:if>
-					
-					rosten.readSync(rosten.webPath + "/assetScrap/assetScrapSave",content,function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("保存成功！").queryDlgClose= function(){
+					var searchQuery = {id:"*"};
+					var categoryId = "";
+					var grid = dijit.byId("assetScrapListGrid");
+					var store = grid.store;
+					store.fetch({
+						query:searchQuery,onComplete:function(items){
+							for(var i=0;i < items.length;i++){
+								var _item = items[i];
+								categoryId += store.getValue(_item, "id") + ",";
+							}
+						},queryOptions:{deep:true}
+					});
+					categoryId = categoryId.substring(0,categoryId.length-1) 
+
+					var url = "${createLink(controller:'assetScrap',action:'assetScrapSaveCheck')}";
+					url += "?categoryId="+encodeURI(categoryId);
+					var ioArgs = {
+						url : url,
+						handleAs : "json",
+						load : function(response,args) {
+							if(response.result=="false"){//rensult为false，资产列表为不同类型资产
+								alert("注意：资产列表只能为同类型资产！");
+								return;
+							}else{//rensult为true，资产列表为同类型资产，继续
+								//新增是否同类型资产变更start--2014-10-31
+								
+								//增加对多次单击的次数----2014-9-4
+								var buttonWidget = object.target;
+								rosten.toggleAction(buttonWidget,true);
+
+								//流程相关信息
+								var content = {};
 								<g:if test='${flowCode}'>
-									if(window.location.href.indexOf(data.id)==-1){
-										window.location.replace(window.location.href + "&id=" + data.id);
-									}else{
-										window.location.reload();
-									}
+									content.flowCode = "${flowCode}";
+									content.relationFlow = "${relationFlow}";
 								</g:if>
-								<g:else>
-									page_quit();
-								</g:else>
-							};
-						}else{
-							rosten.alert("保存失败!");
+								
+								rosten.readSync(rosten.webPath + "/assetScrap/assetScrapSave",content,function(data){
+									if(data.result=="true" || data.result == true){
+										rosten.alert("保存成功！").queryDlgClose= function(){
+											<g:if test='${flowCode}'>
+												if(window.location.href.indexOf(data.id)==-1){
+													window.location.replace(window.location.href + "&id=" + data.id);
+												}else{
+													window.location.reload();
+												}
+											</g:if>
+											<g:else>
+												page_quit();
+											</g:else>
+										};
+									}else{
+										rosten.alert("保存失败!");
+									}
+								},function(error){
+									rosten.alert("系统错误，请通知管理员！");
+									rosten.toggleAction(buttonWidget,false);
+								},"rosten_form");
+								//新增是否同类型资产变更end
+							}
+						},
+						error : function(response,args) {
+							alert(response.message);
+							return;
 						}
-					},function(error){
-						rosten.alert("系统错误，请通知管理员！");
-						rosten.toggleAction(buttonWidget,false);
-					},"rosten_form");
+					};
+					dojo.xhrPost(ioArgs);
+
+					
+					//新增是否同类型资产变更
+					
+					
 				};
 				page_quit = function(){
 					rosten.pagequit();
@@ -104,9 +155,18 @@
 					rosten.toggleAction(buttonWidget,true);
 					
 					var content = {};
-	
+
+					//增加对应节点上的设备类型控制
+					if("${assetScrap?.status}" == "部门领导审核"){
+						if(!conditionObj){
+							conditionObj = {};
+						}
+						conditionObj.conditionName = "assetType";
+						conditionObj.conditionValue = "${assetType}";
+					}
+					
 					//增加对应节点上的金额控制
-					if("${assetScrap?.status}" == "后勤分管领导审核" || "${assetScrap?.status}" == "秘书长审批"){
+					if("${assetScrap?.status}" == "后勤分管领导审核"){
 						if(!conditionObj){
 							conditionObj = {};
 						}
@@ -382,9 +442,9 @@
 	
 				var scrapId = "${assetScrap?.id}";
 				var seriesNo = "${assetScrap?.seriesNo}";
-				
+				var assetTotal = dojo.byId("assetTotal").value;
 				var url = "${createLink(controller:'assetScrap',action:'assetChooseDelete')}";
-				url += "?assetId="+encodeURI(assetId)+"&scrapId="+scrapId;
+				url += "?assetId="+encodeURI(assetId)+"&scrapId="+scrapId+"&assetTotal="+assetTotal;
 				var ioArgs = {
 					url : url,
 					handleAs : "json",
@@ -487,7 +547,7 @@
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
 					    <td>
 					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
+                               	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
              						value:"${assetScrap?.assetTotal}"
@@ -496,7 +556,7 @@
 			            <td ><div align="right"><span style="color:red">*&nbsp;</span>申请描述：</div></td>
 						<td>
 						    <input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
-	    						data-dojo-props='name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
+	    						data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
 	                               	trim:true,
 	                               	required:true,
 	                               	value:"${assetScrap?.applyDesc}"

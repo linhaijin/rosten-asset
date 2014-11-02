@@ -148,17 +148,29 @@ class AssetChangeService {
 	}
 	
 	def getAllAssetRepair ={offset,max,company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetRepair.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
 		}
 		return c.list(pa,query)
 	}
 	
 	def getAssetRepairCount ={company->
+		def user = springSecurityService.getCurrentUser()
 		def c = AssetRepair.createCriteria()
-		def query = { eq("company",company) }
+		def query = { 
+			eq("company",company) 
+			or{
+				eq("currentUser",user)
+				eq("status","已结束")
+			}
+		}
 		return c.count(query)
 	}
 	

@@ -43,6 +43,16 @@
 				});
 			
 				assetAllocate_save = function(object){
+					var assetTotal = dojo.byId("assetTotal").value;
+					if(assetTotal==0){
+						alert("注意：请选择资产！");
+						return;
+					}
+					var applyDesc = dojo.byId("applyDesc").value;
+					if(applyDesc=="" || applyDesc==null){
+						alert("注意：请填写申请描述！");
+						return;
+					}
 					//增加对多次单击的次数----2014-9-4
 					var buttonWidget = object.target;
 					rosten.toggleAction(buttonWidget,true);
@@ -106,14 +116,15 @@
 					var content = {};
 	
 					//增加对应节点上的金额控制
-					if("${assetAllocate?.status}" == "资产调拨申请"){
+					if("${assetAllocate?.status}" == "新建"){
+						content.selectDepart = registry.byId("callInDeptName").get("value");
 						if(!conditionObj){
 							conditionObj = {};
 						}
 						conditionObj.conditionName = "IsSubDepart";
-						conditionObj.conditionValue = "${currentDepart.isSubDepart}";
+						conditionObj.conditionValue = "${isSubDepart}";
 					}
-					
+
 					//增加对排他分支的控制
 					if(conditionObj){
 						lang.mixin(content,conditionObj);
@@ -382,9 +393,9 @@
 
 			var allocateId = "${assetAllocate?.id}";
 			var seriesNo = "${assetAllocate?.seriesNo}";
-			
+			var assetTotal = dojo.byId("assetTotal").value;
 			var url = "${createLink(controller:'assetAllocate',action:'assetChooseDelete')}";
-			url += "?assetId="+encodeURI(assetId)+"&allocateId="+allocateId;
+			url += "?assetId="+encodeURI(assetId)+"&allocateId="+allocateId+"&assetTotal="+assetTotal;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
@@ -498,7 +509,7 @@
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
 					    <td>
 					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
+                               	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
              						value:"${assetAllocate?.assetTotal}"
@@ -509,7 +520,7 @@
 					 	<td ><div align="right"><span style="color:red">*&nbsp;</span>申请描述：</div></td>
 					  	<td colspan="3">
 					    	<input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
-    							data-dojo-props='name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
+    							data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
                                		trim:true,
                                		required:true,
                                		value:"${assetAllocate?.applyDesc}"

@@ -690,12 +690,16 @@ class AssetLoseController {
 		def bookCards
 		def furnitureCards
 		
-		double totalPrice = 0
 		double assetTotal = 0
+		double cardsPrice = 0
 		
 		if(params.LoseId && !"".equals(params.LoseId)){
 			assetLose = AssetLose.get(params.LoseId)
-			assetTotal = assetLose.assetTotal
+//			assetTotal = assetLose.assetTotal
+		}
+		
+		if(params.assetTotal && params.assetTotal !=0){
+			assetTotal = params.assetTotal.toDouble()
 		}
 		
 		def assetId
@@ -711,39 +715,39 @@ class AssetLoseController {
 				if(carCards){
 					carCards.assetStatus = "已入库"
 					carCards.seriesNo = null
-					totalPrice = carCards.onePrice
+					cardsPrice = carCards.onePrice
 				}
 				landCards = LandCards.get(it)
 				if(landCards){
 					landCards.assetStatus = "已入库"
 					landCards.seriesNo = null
-					totalPrice = landCards.totalPrice
+					cardsPrice = landCards.onePrice
 				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					houseCards.assetStatus = "已入库"
 					houseCards.seriesNo = null
-					totalPrice = houseCards.totalPrice
+					cardsPrice = houseCards.onePrice
 				}
 				deviceCards = DeviceCards.get(it)
 				if(deviceCards){
 					deviceCards.assetStatus = "已入库"
 					deviceCards.seriesNo = null
-					totalPrice = deviceCards.totalPrice
+					cardsPrice = deviceCards.onePrice
 				}
 				bookCards = BookCards.get(it)
 				if(bookCards){
 					bookCards.assetStatus = "已入库"
 					bookCards.seriesNo = null
-					totalPrice = bookCards.totalPrice
+					cardsPrice = bookCards.onePrice
 				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					furnitureCards.assetStatus = "已入库"
 					furnitureCards.seriesNo = null
-					totalPrice = furnitureCards.totalPrice
+					cardsPrice = furnitureCards.onePrice
 				}
-				assetTotal -= totalPrice
+				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
 			json = [result:'true',assetTotal:assetTotal,message:message]

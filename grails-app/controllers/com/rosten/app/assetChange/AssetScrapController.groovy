@@ -118,13 +118,31 @@ class AssetScrapController {
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		
+		def money
 		def assetScrap = new AssetScrap()
+		def assetType
 		if(params.id){
 			assetScrap = AssetScrap.get(params.id)
+			money = assetScrap.assetTotal
+			def seriesNo = assetScrap.seriesNo
+			def carCards = CarCards.findAllBySeriesNo(seriesNo)
+			if(carCards != null){assetType = "car"}
+			def landCards = LandCards.findAllBySeriesNo(seriesNo)
+			if(landCards != null){assetType = "land"}
+			def houseCards = HouseCards.findAllBySeriesNo(seriesNo)
+			if(houseCards != null){assetType = "house"}
+			def deviceCards = DeviceCards.findAllBySeriesNo(seriesNo)
+			if(deviceCards != null){assetType = "device"}
+			def bookCards = BookCards.findAllBySeriesNo(seriesNo)
+			if(bookCards != null){assetType = "book"}
+			def furnitureCards = FurnitureCards.findAllBySeriesNo(seriesNo)
+			if(furnitureCards != null){assetType = "furniture"}
 		}
 		
+		model["assetType"] = assetType
 		model["user"] = currentUser
 		model["company"] = company
+		model["money"] = money
 		model["assetScrap"] = assetScrap
 		
 		FieldAcl fa = new FieldAcl()
@@ -690,12 +708,16 @@ class AssetScrapController {
 		def bookCards
 		def furnitureCards
 		
-		double totalPrice = 0
 		double assetTotal = 0
+		double cardsPrice = 0
 		
 		if(params.scrapId && !"".equals(params.scrapId)){
 			assetScrap = AssetScrap.get(params.scrapId)
-			assetTotal = assetScrap.assetTotal
+//			assetTotal = assetScrap.assetTotal
+		}
+		
+		if(params.assetTotal && params.assetTotal !=0){
+			assetTotal = params.assetTotal.toDouble()
 		}
 		
 		def assetId
@@ -711,45 +733,104 @@ class AssetScrapController {
 				if(carCards){
 					carCards.assetStatus = "已入库"
 					carCards.seriesNo = null
-					totalPrice = carCards.onePrice
+					cardsPrice = carCards.onePrice
 				}
 				landCards = LandCards.get(it)
 				if(landCards){
 					landCards.assetStatus = "已入库"
 					landCards.seriesNo = null
-					totalPrice = landCards.totalPrice
+					cardsPrice = landCards.onePrice
 				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					houseCards.assetStatus = "已入库"
 					houseCards.seriesNo = null
-					totalPrice = houseCards.totalPrice
+					cardsPrice = houseCards.onePrice
 				}
 				deviceCards = DeviceCards.get(it)
 				if(deviceCards){
 					deviceCards.assetStatus = "已入库"
 					deviceCards.seriesNo = null
-					totalPrice = deviceCards.totalPrice
+					cardsPrice = deviceCards.onePrice
 				}
 				bookCards = BookCards.get(it)
 				if(bookCards){
 					bookCards.assetStatus = "已入库"
 					bookCards.seriesNo = null
-					totalPrice = bookCards.totalPrice
+					cardsPrice = bookCards.onePrice
 				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					furnitureCards.assetStatus = "已入库"
 					furnitureCards.seriesNo = null
-					totalPrice = furnitureCards.totalPrice
+					cardsPrice = furnitureCards.onePrice
 				}
-				assetTotal -= totalPrice
+				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
 			json = [result:'true',assetTotal:assetTotal,message:message]
 		}else{
 			message = "操作失败！"
 			json = [result:'error',assetTotal:assetTotal,message:message]
+		}
+		render json as JSON
+	}
+	
+	def assetScrapSaveCheck = {
+		def json,message
+		def categoryId
+		def categoryIds = []
+		if(params.categoryId && params.categoryId !=null){
+			categoryId = params.categoryId
+			categoryIds = categoryId.split(",")
+		}
+		def carCards
+		def landCards
+		def houseCards
+		def deviceCards
+		def bookCards
+		def furnitureCards
+
+		def typeArr = []
+		if(categoryIds.size()>0){
+			categoryIds.each{
+				//通过资产Id获取资产类型
+				carCards = CarCards.get(it)
+				if(carCards){
+					typeArr<<"car"
+				}
+				landCards = LandCards.get(it)
+				if(landCards){
+					typeArr<<"land"
+				}
+				houseCards = HouseCards.get(it)
+				if(houseCards){
+					typeArr<<"house"
+				}
+				deviceCards = DeviceCards.get(it)
+				if(deviceCards){
+					typeArr<<"device"
+				}
+				bookCards = BookCards.get(it)
+				if(bookCards){
+					typeArr<<"book"
+				}
+				furnitureCards = FurnitureCards.get(it)
+				if(furnitureCards){
+					typeArr<<"furniture"
+				}
+			}
+			typeArr = typeArr.unique()
+			if(typeArr.size()==1){
+				message = "操作成功！"
+				json = [result:'true',message:message]
+			}else{
+				message = "注意：资产列表只能为同类型资产！！"
+				json = [result:'false',message:message]
+			}
+		}else{
+			message = "操作失败，请联系管理员！"
+			json = [result:'error',message:message]
 		}
 		render json as JSON
 	}

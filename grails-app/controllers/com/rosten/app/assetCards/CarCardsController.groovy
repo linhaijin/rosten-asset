@@ -23,7 +23,7 @@ class CarCardsController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+//		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
 		
 		render actionList as JSON
 	}

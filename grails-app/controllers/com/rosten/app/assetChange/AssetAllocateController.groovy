@@ -176,7 +176,7 @@ class AssetAllocateController {
 		if(!params.seriesNo_form.equals("")){
 			assetAllocate.seriesNo = params.seriesNo_form
 		}
-		
+		assetAllocate.dataStatus = assetAllocate.status
 		
 		//判断是否需要走流程
 		def _status
@@ -787,6 +787,7 @@ class AssetAllocateController {
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
 			nextStatus = "已结束"
+			assetAllocate.dataStatus = nextStatus
 			assetAllocate.currentUser = null
 			assetAllocate.currentDepart = null
 			assetAllocate.taskId = null

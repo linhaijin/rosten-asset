@@ -163,6 +163,7 @@ class AssetRepairController {
 		if(!params.seriesNo_form.equals("")){
 			assetRepair.seriesNo = params.seriesNo_form
 		}
+		assetRepair.dataStatus = assetRepair.status
 		
 		//判断是否需要走流程
 		def _status
@@ -687,17 +688,17 @@ class AssetRepairController {
 		def bookCards
 		def furnitureCards
 		
-//		double assetTotal = 0
-//		double cardsPrice = 0
+		double assetTotal = 0
+		double cardsPrice = 0
 		
-//		if(params.repairId && !"".equals(params.repairId)){
-//			assetRepair = AssetRepair.get(params.repairId)
-////			assetTotal = assetRepair.assetTotal
-//		}
+		if(params.repairId && !"".equals(params.repairId)){
+			assetRepair = AssetRepair.get(params.repairId)
+//			assetTotal = assetRepair.assetTotal
+		}
 		
-//		if(params.assetTotal && params.assetTotal !=0){
-//			assetTotal = params.assetTotal.toDouble()
-//		}
+		if(params.assetTotal && params.assetTotal !=0){
+			assetTotal = params.assetTotal.toDouble()
+		}
 		
 		def assetId
 		def assetIds
@@ -707,52 +708,52 @@ class AssetRepairController {
 		}
 		if(assetIds.size()>0){
 			assetIds.each{
-				//变更资产建账信息中的申请单号和资产变更类型，同时计算总金额
+				//变更资产卡片信息中的申请单号和资产变更类型，同时计算总金额
 				carCards = CarCards.get(it)
 				if(carCards){
 					carCards.assetStatus = "已入库"
 					carCards.seriesNo = null
-//					cardsPrice = carCards.onePrice
+					cardsPrice = carCards.onePrice
 				}
 				landCards = LandCards.get(it)
 				if(landCards){
 					landCards.assetStatus = "已入库"
 					landCards.seriesNo = null
-//					cardsPrice = landCards.onePrice
+					cardsPrice = landCards.onePrice
 				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					houseCards.assetStatus = "已入库"
 					houseCards.seriesNo = null
-//					cardsPrice = houseCards.onePrice
+					cardsPrice = houseCards.onePrice
 				}
 				deviceCards = DeviceCards.get(it)
 				if(deviceCards){
 					deviceCards.assetStatus = "已入库"
 					deviceCards.seriesNo = null
-//					cardsPrice = deviceCards.onePrice
+					cardsPrice = deviceCards.onePrice
 				}
 				bookCards = BookCards.get(it)
 				if(bookCards){
 					bookCards.assetStatus = "已入库"
 					bookCards.seriesNo = null
-//					cardsPrice = bookCards.onePrice
+					cardsPrice = bookCards.onePrice
 				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					furnitureCards.assetStatus = "已入库"
 					furnitureCards.seriesNo = null
-//					cardsPrice = furnitureCards.onePrice
+					cardsPrice = furnitureCards.onePrice
 				}
-//				assetTotal -= cardsPrice
+				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
-			json = [result:'true',message:message]
-//			json = [result:'true',assetTotal:assetTotal,message:message]
+//			json = [result:'true',message:message]
+			json = [result:'true',assetTotal:assetTotal,message:message]
 		}else{
 			message = "操作失败！"
-			json = [result:'error',message:message]
-//			json = [result:'error',assetTotal:assetTotal,message:message]
+//			json = [result:'error',message:message]
+			json = [result:'error',assetTotal:assetTotal,message:message]
 		}
 		render json as JSON
 	}
@@ -786,6 +787,7 @@ class AssetRepairController {
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
 			nextStatus = "已结束"
+			assetRepair.dataStatus = nextStatus
 			assetRepair.currentUser = null
 			assetRepair.currentDepart = null
 			assetRepair.taskId = null

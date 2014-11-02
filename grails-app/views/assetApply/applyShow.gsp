@@ -36,6 +36,7 @@
 			});
 			
 			assetApply_save = function(object){
+				
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -310,7 +311,7 @@
                                	data-dojo-props='name:"userName",${fieldAcl.isReadOnly("userName")},
                                	trim:true,
                                	required:true,
-             					value:"${applyNotes?.userName}"
+             					value:"${applyNotes?.getFormattedUser()}"
                            	'/>
 			           	</td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>

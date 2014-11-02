@@ -20,7 +20,7 @@ class AssetRepair {
 	
 	def getFormattedSeriesDate(){
 		def nowDate= new Date()
-		def SeriesDate= nowDate.time
+		def SeriesDate= "20"+nowDate.time
 		return SeriesDate
 	}
 	//申请单号
@@ -40,7 +40,7 @@ class AssetRepair {
 	}
 	def getFormattedShowApplyDate(){//详细视图展示
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -61,6 +61,10 @@ class AssetRepair {
 			return ""
 		}
 	}
+	
+	//资产总和
+//	@GridColumn(name="资产总和",width="100px",colIdx=5)
+	Double assetTotal = 0
 	
 	//	审批状态
 //	@GridColumn(name="审批状态",width="100px",colIdx=5)

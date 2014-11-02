@@ -16,14 +16,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var unids = rosten.getGridUnid("multi");
 			var content = {};
 			if (unids == ""){
-				rosten.alert("错误：请选择操作数据！");
+				rosten.alert("注意：请在列表中选择数据！");
 				return;
 			}else{
 				content.id = unids;
 			}
 			rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
 				if(data.result == true || data.result == "true"){
-					rosten.alert("操作成功！");
+					rosten.alert("成功：资产申请单已删除！");
 					rosten.kernel.refreshGrid();
 				}else{
 					rosten.alert(data.result);
@@ -57,19 +57,20 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetCards_create = function(){//生产资产卡片
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		var isCreatedCards = rosten.getGridSelectedValue("getCardsCreatedLabel");
-		if(isCreatedCards == "已生成"){
-			alert("注意：该申请已生成资产卡片，请不要重复生成！");
-			return;
-		}
 		var unids = rosten.getGridUnid("multi");
 		if (unids == ""){
-			alert("注意：您未选择任何数据！")
+			alert("注意：请在列表中选择数据！")
 			return;
 		}
+		var isCreatedCards = rosten.getGridSelectedValue("getCardsCreatedLabel");
+		if(isCreatedCards == "已生成"){
+			alert("注意：该申请已生成资产卡片，请勿重复生成！");
+			return;
+		}
+		
 		content.companyId = companyId;
 		content.applyIds = unids;
-		rosten.read(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.submitCallback);
+		rosten.read(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.assetApplyCallback);
 //		rosten.kernel.createRostenShowDialog(rosten.webPath + "/applyManage/assetCardsCreate?companyId=" + companyId + "&applyIds=" + unids, {
 //            onLoadFunction : function() {
 //            	
@@ -85,7 +86,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=assetApply");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	

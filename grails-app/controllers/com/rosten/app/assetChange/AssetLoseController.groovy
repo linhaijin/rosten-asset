@@ -165,6 +165,7 @@ class AssetLoseController {
 		if(!params.seriesNo_form.equals("")){
 			assetLose.seriesNo = params.seriesNo_form
 		}
+		assetLose.dataStatus = assetLose.status
 		
 		//判断是否需要走流程
 		def _status
@@ -787,6 +788,7 @@ class AssetLoseController {
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
 			nextStatus = "已结束"
+			assetLose.dataStatus = nextStatus
 			assetLose.currentUser = null
 			assetLose.currentDepart = null
 			assetLose.taskId = null

@@ -727,10 +727,10 @@ define(["dojo/_base/kernel"
     };
     main.deleteCallback = function(data){
     	if (data.result == "true" || data.result == true) {
-            rosten.alert("成功删除!");
+            rosten.alert("成功：数据已删除!");
             rosten.kernel.refreshGrid();
         } else {
-            rosten.alert("删除失败!");
+            rosten.alert("删除：数据未删除!");
         }
     };
     main.submitCallback = function(data){
@@ -741,6 +741,16 @@ define(["dojo/_base/kernel"
             rosten.alert("失败!");
         }
     };
+    
+    main.assetApplyCallback = function(data){
+    	if (data.result == "true" || data.result == true) {
+            rosten.alert("成功：资产卡片已生成!");
+            rosten.kernel.refreshGrid();
+        } else {
+            rosten.alert("失败：资产卡片未生成!");
+        }
+    };
+    
     main.commonCallback = function(data){
 		var sucessStr = "成功!";
 		var failureStr = "失败!";

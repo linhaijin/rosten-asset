@@ -31,7 +31,7 @@ class AssetAllocate {
 	@GridColumn(name="申请日期",width="106px",colIdx=2)
 	def getFormattedApplyDate(){//数据列表展示
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(applyDate)
 		}else{
 			return ""
@@ -57,7 +57,7 @@ class AssetAllocate {
 		if(callInDept){
 			return callInDept.departName
 		}else{
-			return "协会本部"
+			return ""
 		}
 	}
 	
@@ -68,7 +68,7 @@ class AssetAllocate {
 		if(callOutDept){
 			return callOutDept.departName
 		}else{
-			return "协会本部"
+			return ""
 		}
 	}
 	

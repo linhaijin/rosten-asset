@@ -42,7 +42,7 @@ class AssetScrap {
 	//详细视图展示
 	def getFormattedShowApplyDate(){
 		if(applyDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(applyDate)
 		}else{
 			return ""

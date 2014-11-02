@@ -35,11 +35,15 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			}
 			var unids = rosten.getGridUnid("single");
-			if (unids == "")
+			var content = {};
+			if (unids == ""){
+				rosten.alert("注意：请在列表中选择数据！");
 				return;
-			var content = {runStatus:"1"};
-			content.taskStatus = "1";
-			content.id = unids;
+			}else{
+				content.runStatus = "1";
+				content.taskStatus = "1";
+				content.id = unids;
+			}
 			rosten.read(rosten.webPath + "/inventoryTask/assetCheckRun", content,rosten.submitCallback);
 		};
 	};
@@ -48,10 +52,13 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("multi");
-			if (unids == "")
-				return;
 			var content = {};
-			content.id = unids;
+			if (unids == ""){
+				rosten.alert("注意：请在列表中选择数据！");
+				return;
+			}else{
+				content.id = unids;
+			}
 			rosten.read(rosten.webPath + "/inventoryTask/assetCheckDelete", content,rosten.deleteCallback);
 		};
 	};
@@ -68,11 +75,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var _1 = rosten.confirm("确认完成盘点任务，是否继续?");
 		_1.callback = function() {
 			var unids = rosten.getGridUnid("single");
-			if (unids == "")
+			
+			var content = {};
+			if (unids == ""){
+				rosten.alert("注意：请在列表中选择数据！");
 				return;
-			var content = {completeStatus:"1"};
-			content.taskStatus = "3";
-			content.id = unids;
+			}else{
+				content.completeStatus = "1";
+				content.taskStatus = "3";
+				content.id = unids;
+			}
 			rosten.read(rosten.webPath + "/inventoryTask/assetCheckComplete", content,rosten.submitCallback);
 		};
 	};

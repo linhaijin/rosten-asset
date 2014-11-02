@@ -45,12 +45,14 @@
 				assetScrap_save = function(object){
 					var assetTotal = dojo.byId("assetTotal").value;
 					if(assetTotal==0){
-						alert("注意：请选择资产！");
+						alert("注意：请添加资产信息！");
+						document.getElementById("assetTotal").focus();
 						return;
 					}
 					var applyDesc = dojo.byId("applyDesc").value;
 					if(applyDesc=="" || applyDesc==null){
-						alert("注意：请填写申请描述！");
+						alert("注意：请填写申请理由！");
+						document.getElementById("applyDesc").focus();
 						return;
 					}
 
@@ -138,10 +140,10 @@
 						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetScrap?.status}",flowCode:"${flowCode}"};
 						rosten.readSync(rosten.webPath + "/share/addComment/${assetScrap?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
-								rosten.alert("成功！");
+								rosten.alert("意见已填写！");
 							}else{
-								rosten.alert("失败!");
-							}	
+								rosten.alert("意见填写失败!");
+							}		
 						});
 					};
 				};
@@ -409,7 +411,7 @@
 							grid_twice.url = url_twice;
 							grid_twice.refresh();
 						}else{//rensult为false，处理失败
-							alert("操作失败!");
+							alert("操作失败，请联系管理员!");
 							return;
 						}
 					},
@@ -472,7 +474,7 @@
 							grid_twice.url = url_twice;
 							grid_twice.refresh();
 						}else{//rensult为false，处理失败
-							alert("操作失败!");
+							alert("操作失败，请联系管理员!");
 							return;
 						}
 					},
@@ -553,7 +555,7 @@
              						value:"${assetScrap?.assetTotal}"
                            	'/>
 			            </td>
-			            <td ><div align="right"><span style="color:red">*&nbsp;</span>申请描述：</div></td>
+			            <td ><div align="right"><span style="color:red">*&nbsp;</span>申请理由：</div></td>
 						<td>
 						    <input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
 	    						data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
@@ -565,6 +567,7 @@
 					</tr>
 				</table>
 			</div>
+			<g:if test="${assetScrap?.dataStatus=='未审批'}">
 			<button data-dojo-type='dijit.form.Button' 
 				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
 				<script type="dojo/method" data-dojo-event="onClick">
@@ -578,7 +581,7 @@
 				</script>
 			</button>
 			<div style="height:5px;"></div>
-	
+			</g:if>
 			<div id="assetScrapList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetScrapListGrid" data-dojo-id="assetScrapListGrid"
 					data-dojo-props='url:"${createLink(controller:'assetScrap',action:'assetScrapListDataStore',params:[companyId:company?.id,seriesNo:assetScrap?.seriesNo])}"'></div>

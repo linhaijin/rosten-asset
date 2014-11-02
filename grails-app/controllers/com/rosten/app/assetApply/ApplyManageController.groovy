@@ -101,6 +101,7 @@ class ApplyManageController {
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
+					
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
@@ -290,15 +291,15 @@ class ApplyManageController {
 			ids.each{
 				def applyNotes = ApplyNotes.get(it)
 				if(applyNotes){
-					if(currentUser.getAllRolesValue().contains("系统管理员")){
+					if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
 						applyNotes.delete(flush: true)
 						json = [result:'true']
 					}else{
-						if(applyNotes.isCreatedCards==0){
+						if(applyNotes.isCreatedCards=="0"){
 							applyNotes.delete(flush: true)
 							json = [result:'true']
 						}else{
-							json = [result:'已生产资产卡片的申请单无法删除，请联系系统管理员！']
+							json = [result:'已生产资产卡片的申请单无法删除，请联系管理员！']
 						}
 					}
 					
@@ -396,10 +397,7 @@ class ApplyManageController {
 //					return
 					
 					if(assetType.equals("设备")){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
-						
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 						for(int i=0;i<assetCount;i++){
 							def deviceCard = new DeviceCards()
 							deviceCard.company = company
@@ -414,9 +412,7 @@ class ApplyManageController {
 							deviceCard.save(flush: true)
 						}
 					}else if(assetType == "车辆"){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 //						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def carCard = new CarCards()
@@ -454,9 +450,7 @@ class ApplyManageController {
 						}
 						
 					}else if(assetType == "房屋"){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 //						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def houseCard = new HouseCards()
@@ -472,9 +466,7 @@ class ApplyManageController {
 							houseCard.save(flush: true)
 						}
 					}else if(assetType == "土地"){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 //						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def landCard = new LandCards()
@@ -490,9 +482,7 @@ class ApplyManageController {
 							landCard.save(flush: true)
 						}
 					}else if(assetType == "图书"){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 //						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def bookCard = new BookCards()
@@ -508,9 +498,7 @@ class ApplyManageController {
 							bookCard.save(flush: true)
 						}
 					}else if(assetType == "家具"){
-						/*
-						 * 获取申请信息中的数量，创建相同数量的资产卡片
-						 */
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 //						def assetCount = applyNotes.amount
 						for(int i=0;i<assetCount;i++){
 							def furnitureCard = new FurnitureCards()

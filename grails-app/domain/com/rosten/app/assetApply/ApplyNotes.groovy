@@ -85,7 +85,7 @@ class ApplyNotes {
 	String applyStatus = "新建"
 	
 	//是否生产资产卡片
-	String isCreatedCards = 0
+	String isCreatedCards = "0"
 	@GridColumn(name="是否生产资产卡片",colIdx=11,width="100px")
 	def getCardsCreatedLabel(){
 		return ["0":"未生成 ","1":"已生成"][isCreatedCards]

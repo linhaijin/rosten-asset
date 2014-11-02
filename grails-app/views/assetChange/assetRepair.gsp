@@ -42,10 +42,28 @@
 				rosten.cssinit();
 			});
 			assetRepair_save = function(object){
+				
+				var allowdepartsName = dojo.byId("allowdepartsName").value;
+				if(allowdepartsName == "" || allowdepartsName == null){
+					alert("注意：请选择申请部门！");
+					document.getElementById("allowdepartsName").focus();
+					return;
+				}
 				var repairReason = dojo.byId("repairReason").value;
-				if(repairReason=="" || repairReason==null){
+				if(repairReason == "" || repairReason == null){
 					alert("注意：请填写报修原因！");
 					document.getElementById("repairReason").focus();
+					return;
+				}
+				var contactPhone = dojo.byId("contactPhone").value;
+				if(contactPhone == "" || contactPhone == null){
+					alert("注意：请填写联系电话！");
+					document.getElementById("contactPhone").focus();
+					return;
+				}
+				var assetTotal = dojo.byId("assetTotal").value;
+				if(assetTotal==0){
+					alert("注意：请添加资产信息！");
 					return;
 				}
 				//增加对多次单击的次数----2014-9-4
@@ -92,9 +110,9 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetRepair?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${assetRepair?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！");
+							rosten.alert("意见已填写！");
 						}else{
-							rosten.alert("失败!");
+							rosten.alert("意见填写失败!");
 						}	
 					});
 				};
@@ -297,7 +315,7 @@
 					assetType = assetSel.attr("value");
 				}
 			}
-			/*
+			
 			var assetTotal;
 			var assetTotalSel = dijit.byId("assetTotal");
 			if(assetTotalSel){
@@ -305,17 +323,17 @@
 					assetTotal = assetTotalSel.attr("value").replace(".","-");
 				}
 			}
-			*/
+			
 			//异步处理所选资产数据
 			var url = "${createLink(controller:'assetRepair',action:'assetChooseOperate')}";
-			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo;
+			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
 				load : function(response,args) {
 					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						//var assetTotal = response.assetTotal;
-						//dojo.byId("assetTotal").value = assetTotal;
+						var assetTotal = response.assetTotal;
+						dojo.byId("assetTotal").value = assetTotal;
 	
 						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
 						var qs;
@@ -346,7 +364,7 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败!");
+						alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
@@ -379,16 +397,16 @@
 
 			var repairId = "${assetRepair?.id}";
 			var seriesNo = "${assetRepair?.seriesNo}";
-			
+			var assetTotal = dojo.byId("assetTotal").value;
 			var url = "${createLink(controller:'assetRepair',action:'assetChooseDelete')}";
-			url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId;
+			url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId+"&assetTotal="+assetTotal;
 			var ioArgs = {
 				url : url,
 				handleAs : "json",
 				load : function(response,args) {
 					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						//var assetTotal = response.assetTotal;
-						//dojo.byId("assetTotal").value = assetTotal;
+						var assetTotal = response.assetTotal;
+						dojo.byId("assetTotal").value = assetTotal;
 	
 						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
 						var qs;
@@ -409,7 +427,7 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败!");
+						alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
@@ -434,6 +452,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
+			<g:hiddenField id="assetTotal" name="assetTotal" value="${assetRepair?.assetTotal}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -501,23 +520,13 @@
 						</td>
 					</tr>
 					<tr>
-						<td><div align="right">存放地点：</div></td>
-					    <td colspan="3">
-					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
-                               		trim:true,
-             						value:"${assetRepair?.storagePosition}"
-                           	'/>
-			            </td>
-					</tr>
-					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>联系人：</div></td>
 					    <td>
 					    	<input id="contacts" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"contacts",${fieldAcl.isReadOnly("contacts")},
                                		trim:true,
                                		required:true,
-             						value:"${assetRepair?.contacts}"
+             						value:"${user?.chinaName}"
                            	'/>
 			            </td>
 			            <td ><div align="right"><span style="color:red">*&nbsp;</span>联系电话：</div></td>
@@ -529,6 +538,16 @@
 	                               	value:"${assetRepair?.contactPhone}"
 	                         '/>
 						</td>
+					</tr>
+					<tr>
+						<td><div align="right">存放地点：</div></td>
+					    <td colspan="3">
+					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
+                               		trim:true,
+             						value:"${assetRepair?.storagePosition}"
+                           	'/>
+			            </td>
 					</tr>
 				</table>
 			</div>
@@ -595,6 +614,7 @@
 					</tr>
 				</table>
 			</div>
+			<g:if test="${assetRepair?.dataStatus=='未审批'}">
 			<button data-dojo-type='dijit.form.Button' 
 				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
 				<script type="dojo/method" data-dojo-event="onClick">
@@ -608,7 +628,7 @@
 				</script>
 			</button>
 			<div style="height:5px;"></div>
-	
+			</g:if>
 			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetRepairListGrid" data-dojo-id="assetRepairListGrid"
 					data-dojo-props='url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>

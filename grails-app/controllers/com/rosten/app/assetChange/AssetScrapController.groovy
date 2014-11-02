@@ -183,6 +183,7 @@ class AssetScrapController {
 		if(!params.seriesNo_form.equals("")){
 			assetScrap.seriesNo = params.seriesNo_form
 		}
+		assetScrap.dataStatus = assetScrap.status
 		
 		//判断是否需要走流程
 		def _status
@@ -864,6 +865,7 @@ class AssetScrapController {
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
 			nextStatus = "已结束"
+			assetScrap.dataStatus = nextStatus
 			assetScrap.currentUser = null
 			assetScrap.currentDepart = null
 			assetScrap.taskId = null

@@ -18,12 +18,15 @@ class HouseCardsController {
 	def imgPath ="images/rosten/actionbar/"
 	
 	def houseCardsForm ={
+		def currentUser = springSecurityService.getCurrentUser()
 		def webPath = request.getContextPath() + "/"
 		def strname = "houseCards"
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-//		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
+			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		}
 		
 		render actionList as JSON
 	}

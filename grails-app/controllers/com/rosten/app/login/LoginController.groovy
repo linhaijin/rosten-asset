@@ -179,6 +179,10 @@ class LoginController {
 					model["usertype"] = "[普通人员]"
 				}
 				//获取所有角色
+				def roleStr = user.getAllRolesValue()
+				if(!"".equals(roleStr)){
+					model["usertype"] = "[" + roleStr + "]"
+				}
 			}
 			model["userinfor"] = userinfor as JSON
 			

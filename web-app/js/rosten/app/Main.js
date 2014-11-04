@@ -104,7 +104,7 @@ define(["dojo/_base/kernel"
     		var oString = obj.naviMenu;
     		var oRight = "";
     		if(obj.naviRight) oRight = obj.naviRight;
-            console.log("loadjs file is :" + oString);
+            console.log("loadjs file is :" + oString + ";oRight:" + oRight);
             
             if (oString == "plat" || oString == "system") {
             	deleteMailNavigation();
@@ -196,6 +196,7 @@ define(["dojo/_base/kernel"
         		domStyle.set(registry.byId("modelMain").domNode,"display","none");
         		registry.byId("home").resize();
         		rosten.kernel.navigationMenu = "";
+        		rosten.kernel.navigationEntity ="";
         		break;
         	case "sms":
         	    require(["rosten/app/SmsManage"],function(){
@@ -307,9 +308,9 @@ define(["dojo/_base/kernel"
     		companyId = rosten.kernel.getUserInforByKey("companyid");
     	}
     	//showStartBbs(userId,companyId);
-    	//showStartGtask(userId,companyId);
+    	showStartGtask(userId,companyId);
     	//showStartMail(userId,companyId);
-    	//showStartDownloadFile(userId,companyId);
+    	showStartDownloadFile(userId,companyId);
     };
     showStartGtask = function(userId,companyId){
     	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(data) {
@@ -354,16 +355,22 @@ define(["dojo/_base/kernel"
         	node.appendChild(ul);
         });
     };
-    more_gtask = function(){
+    more_worklog = function(){
     	var key = rosten.kernel.getMenuKeyByCode("personconfig");
     	if(key!=null){
-    		rosten.kernel._naviMenuShow(key);
-    		require(["rosten/app/SmsManage"],function(){
-    			//show_bbsNaviEntity("gtaskManage");
-    		});
+    		rosten.kernel._naviMenuShow(key,"personWorkLog");
     	}else{
     		rosten.alert("未找到相对应的模块,请通知管理员");
     	}
+    };
+    more_gtask = function(){
+    	var key = rosten.kernel.getMenuKeyByCode("personconfig");
+    	if(key!=null){
+    		rosten.kernel._naviMenuShow(key,"gtaskManage");
+    	}else{
+    		rosten.alert("未找到相对应的模块,请通知管理员");
+    	}
+    	
     };
     openGtask = function(type,id,gtaskId){
     	var userid = rosten.kernel.getUserInforByKey("idnumber");

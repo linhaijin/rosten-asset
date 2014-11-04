@@ -3,11 +3,13 @@
  */
 define(["dojo/_base/lang",
         "dojo/dom",
+        "dojo/has",
+        "dojo/json",
 		"dijit/registry",
 		"rosten/widget/MultiSelectDialog",
 		"rosten/widget/PickTreeDialog",
 		"rosten/widget/DepartUserDialog",
-		"rosten/kernel/_kernel"], function(lang,dom,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog) {
+		"rosten/kernel/_kernel"], function(lang,dom,has,json,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog) {
 			
 	var application = {};
     application.cssinitcommon = function() {
@@ -210,7 +212,48 @@ define(["dojo/_base/lang",
             }
         };
     };
-    
+    application.addAttachShowNew = function(node,jsonObj){
+		var div = document.createElement("div");
+		div.setAttribute("style","height:30px;width:50%;float:left");
+		div.setAttribute("id",jsonObj.fileId);
+		
+		var a = document.createElement("a");
+		if (has("ie")) {
+			a.href = rosten.webPath + "/system/downloadFile/" + jsonObj.fileId;
+		}else{
+			a.setAttribute("href", rosten.webPath + "/system/downloadFile/" + jsonObj.fileId);
+		}
+		a.setAttribute("style","margin-right:20px");
+		a.setAttribute("dealId",jsonObj.fileId);
+		a.innerHTML = jsonObj.fileName;
+		div.appendChild(a);
+		
+		var deleteA = document.createElement("a");
+		deleteA.setAttribute("style","color:green");
+		if (has("ie")) {
+			deleteA.href = "javascript:rosten.deleteFile('" + node.getAttribute("id") + "','" + jsonObj.fileId + "')";
+		}else{
+			deleteA.setAttribute("href", "javascript:rosten.deleteFile('" + node.getAttribute("id")+"','" + jsonObj.fileId + "')");
+		}
+		deleteA.innerHTML = "删除";
+		div.appendChild(deleteA);
+		
+		node.appendChild(div);
+		
+	};
+	application.deleteFile = function(objId,attachmentId){
+		
+		rosten.readNoTime(rosten.webPath + "/share/deleteAttachmentFile/"+attachmentId, {},function(data){
+			if(data.result==true || data.result=="true"){
+				var node = dom.byId(objId);
+				var item = dom.byId(attachmentId);
+				node.removeChild(item);
+				rosten.alert("删除成功！");
+			}else{
+				rosten.alert("删除失败！");
+			}
+		});
+	};
     lang.mixin(rosten,application);
     
     return application;

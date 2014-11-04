@@ -112,6 +112,22 @@
 		color:#ff0000;
 		vertical-align:text-top;
 	}
+	.dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 0px;}
+    .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
+	.charts {
+		clear: both;
+	}
+	.chart-area-pie {
+		/*border: 1px solid #ccc;*/
+        height: 165px;
+        width:400px;
+        margin:0 auto;
+	}
+	.chart-pie {
+		width:400px;
+		height: 165px;
+	}
+	
 </style>
 <script type="text/javascript">
    	logout = function(){
@@ -132,13 +148,22 @@
 	     	"dijit/registry",
 	     	"dojox/layout/ContentPane",
 	     	"dijit/Dialog",
+	     	"dojo/data/ItemFileWriteStore",
+	     	"dojox/charting/Chart",
+	     	"dojox/charting/DataSeries",
+	     	"dojox/charting/themes/ThreeD",
+	     	"dojox/charting/widget/Legend",
+	     	"dojox/charting/plot2d/Pie",
+	     	"dojox/charting/action2d/Tooltip",
+	     	"dojox/charting/action2d/MoveSlice",
 	     	"dijit/layout/BorderContainer",
 	     	"dijit/layout/AccordionContainer",
 	     	"dijit/form/ValidationTextBox",
 	     	"dijit/form/Button",
 	     	"rosten/widget/TitlePane",
 	     	"rosten/app/Main"],
-		function(parser, kernel,JSON,lang,query,connect,win,dom,domStyle,domClass,domConstruct,registry,ContentPane,Dialog) {
+		function(parser, kernel,JSON,lang,query,connect,win,dom,domStyle,domClass,domConstruct,registry,ContentPane,Dialog,ItemFileWriteStore,
+				Chart,DataSeries,ThreeD,Legend,Pie,Tooltip,MoveSlice) {
 			rosten.init({webpath : "${request.getContextPath()}",dojogridcss : true});
 			kernel.addOnLoad(function() {
 				var n = dom.byId("preLoader");
@@ -157,7 +182,35 @@
 		        };
 				initInstance(naviJson,data);
 				connect.connect(registry.byId("personSearchInput"),"onKeyPress",searchPersonByKeyPress);
+
+				//增加图标功能
+				top_makeCharts();
 			});
+			top_makeCharts = function(){
+				//单位固定资产分类统计
+		        var store = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getAssetByType',id:company?.id)}"});
+		        var chartP = new Chart("pie");
+	            chartP.setTheme(ThreeD);
+	            chartP.addPlot("default", {type: Pie, radius: 80});
+	            chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, top_valTrans, "number")));
+	            chartP.render();
+	            
+	            new Tooltip(chartP);
+	    		new MoveSlice(chartP);
+	            
+	   		 	//top_addLegend(chartP, "pie_legend");
+			};
+			function top_valTrans(value, store, item){
+		        return {
+		            y: store.getValue(item, value),
+		            text:store.getValue(item,"name"),
+		            tooltip: "总金额:" + store.getValue(item, value) + "万元"
+		        };
+		    };
+			function top_addLegend(chart, node){
+		        var legend = new Legend({chart: chart}, node);
+		        dojo.connect(chart, "render", legend, "refresh");
+		    };
 			lang.extend(ContentPane,{
 	   			onDownloadError:function(error){
 	   				if(error.status=="401"){
@@ -205,7 +258,7 @@
 							<div class="nav verticalAlign">
 								<span class="nav0Icon">&nbsp;</span> <span class="nav0Div">&nbsp;<span
 									id="header_username">
-										${(user.chinaName!=null?user.chinaName:user.username) + "&nbsp;" + usertype}
+										${user.getFormattedName() + "&nbsp;" + usertype}
 								</span>&nbsp;&nbsp;欢迎您的到来！
 								</span> <span class="nav5Icon">&nbsp;</span> <span class="nav5Div"><a
 									href="javascript:changeSkin();">更换皮肤</a></span> <span class="nav4Icon">&nbsp;</span>
@@ -266,8 +319,6 @@
 								height:"157px",width:"50%",style:{marginRight:"1px"},
 								_moreClick:more_gtask,moreText:"更多"'>
 								
-								
-								<ul><li><span class="type">【公告】</span><a href="javascript:openGtask('【公告】','4028ac81-480d9b6a-0148-0db22f03-0009')"><span>请您审核名称为 【组织2014年度公司集体活动的通知！】 的公告</span></a><span class="time">2014-08-25 23:09</span></li></ul>
 						</div>
 							
 						<div data-dojo-type="rosten/widget/TitlePane" id="home_bbs"
@@ -275,21 +326,28 @@
 								height:"157px",
 								_moreClick:more_bbs,moreText:"更多"'>
 								
-								<ul><li><a href="javascript:openBbs('4028ac81-480d9b6a-0148-0db17b22-0005')"><span>定于2014年8月26日召开公司党组会议！</span></a><span class="new">&nbsp;</span><span class="time">2014-08-25 00:00</span></li><li><a href="javascript:openBbs('4028ac81-480d9b6a-0148-0dca205b-001f')"><span>关于学习十八大会议精神的会议通知!</span></a><span class="new">&nbsp;</span><span class="time">2014-08-25 00:00</span></li></ul>
 						</div>	
 						
 					</div>
 				
 					<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"207px"}' >
 						<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" id ="home_personMail"
-							data-dojo-props='region:"left",title:"新收邮件",toggleable:false,
-								height:"157px",width:"50%",style:{marginRight:"1px"},
-								_moreClick:more_mail,moreText:"更多"'>
+							data-dojo-props='region:"left",title:"资产分布",toggleable:false,
+								height:"157px",width:"50%",style:{marginRight:"1px",padding:"0px"},
+								moreText:""'>
+								
+							<div class="charts">
+								<div id="pie_legend"></div>
+								<div class="chart-area-pie">
+									<div id="pie" class="chart-pie"></div>
+								</div>
+							</div>		
+							
 						</div>
 						<div data-dojo-type="rosten/widget/TitlePane"
 							data-dojo-props='region:"center",title:"工作日志",toggleable:false,
 								height:"157px",
-								_moreClick:more_bbs,moreText:"更多"'>
+								_moreClick:more_worklog,moreText:"更多"'>
 								
 							<div class="por-mod"> 
 							<!--计划-->
@@ -373,7 +431,7 @@
 			</div>
 		</div>
 		<div data-dojo-type="dijit/layout/ContentPane" id="footer"
-			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright @2012 ; rosten
+			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright @2014 ; rosten
 			版权所有,提供技术支持</div>
 	</div>
 </body>

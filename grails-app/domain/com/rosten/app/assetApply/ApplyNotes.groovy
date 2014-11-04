@@ -42,7 +42,7 @@ class ApplyNotes {
 		if(userDepart){
 			return userDepart.departName
 		}else{
-			return "协会本部"
+			return ""
 		}
 	}
 	
@@ -53,7 +53,7 @@ class ApplyNotes {
 		if(userCategory){
 			return userCategory.categoryName
 		}else{
-			return "车辆"
+			return ""
 		}
 	}
 	

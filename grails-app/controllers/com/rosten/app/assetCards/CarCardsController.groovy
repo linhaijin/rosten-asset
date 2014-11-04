@@ -87,10 +87,10 @@ class CarCardsController {
 		def carCards = new CarCards()
 		if(params.id && !"".equals(params.id)){
 			carCards = CarCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId =carCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId =carCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			carCards.company = company
 			//新资产卡片编号

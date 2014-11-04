@@ -87,10 +87,10 @@ class BookCardsController {
 		def bookCards = new BookCards()
 		if(params.id && !"".equals(params.id)){
 			bookCards = BookCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId = bookCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId = bookCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			bookCards.company = company
 			//新资产卡片编号

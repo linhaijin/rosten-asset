@@ -87,10 +87,10 @@ class HouseCardsController {
 		def houseCards = new HouseCards()
 		if(params.id && !"".equals(params.id)){
 			houseCards = HouseCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId =houseCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId =houseCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			houseCards.company = company
 			//新资产卡片编号

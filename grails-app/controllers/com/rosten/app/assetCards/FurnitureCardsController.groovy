@@ -86,10 +86,10 @@ class FurnitureCardsController {
 		def furnitureCards = new FurnitureCards()
 		if(params.id && !"".equals(params.id)){
 			furnitureCards = FurnitureCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId = furnitureCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId = furnitureCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			furnitureCards.company = company
 			//新资产卡片编号

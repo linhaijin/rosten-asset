@@ -87,10 +87,10 @@ class LandCardsController {
 		def landCards = new LandCards()
 		if(params.id && !"".equals(params.id)){
 			landCards = LandCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId =landCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId =landCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			landCards.company = company
 			//新资产卡片编号

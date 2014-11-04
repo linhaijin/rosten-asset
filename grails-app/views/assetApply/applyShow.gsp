@@ -4,18 +4,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <title>设备申请</title>
+    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .rosten_form table tr{
-    		height:40px;
+    		height:30px;
     	}
     	body{
 			overflow:auto;
 		}
     </style>
 	<script type="text/javascript">
-	require(["dojo/parser",
-	         "dojo/dom",
-	         "dojo/_base/lang",
+		require(["dojo/parser",
+	        "dojo/dom",
+	        "dojo/_base/lang",
 	 		"dojo/_base/kernel",
 	 		"dijit/registry",
 	 		"dijit/layout/TabContainer",
@@ -24,6 +25,7 @@
 	 		"dijit/form/DateTextBox",
 	 		"dijit/form/SimpleTextarea",
 	 		"dijit/form/Button",
+	 		"dijit/form/Select",
 	     	"rosten/widget/ActionBar",
 	     	"rosten/widget/TitlePane",
 	     	"rosten/app/Application",
@@ -36,7 +38,36 @@
 			});
 			
 			assetApply_save = function(object){
-				
+				var allowdepartsName = dijit.byId("allowdepartsName").attr("value");
+				if(allowdepartsName == "" || allowdepartsName == null){
+					alert("注意：请选择申请部门！");
+					dijit.byId("allowdepartsName").focus();
+					return;
+				}
+				var allowCategoryName = dijit.byId("allowCategoryName").attr("value");
+				if(allowCategoryName == "" || allowCategoryName == null){
+					alert("注意：请选择资产分类！");
+					dijit.byId("allowCategoryName").focus();
+					return;
+				}
+				var assetName = dijit.byId("assetName").attr("value");
+				if(assetName == "" || assetName == null){
+					alert("注意：请填写资产名称！");
+					dijit.byId("assetName").focus();
+					return;
+				}
+				var userName = dijit.byId("userName").attr("value");
+				if(userName == "" || userName == null){
+					alert("注意：请填写使用人！");
+					dijit.byId("userName").focus();
+					return;
+				}
+				var totalPrice = dijit.byId("totalPrice").attr("value");
+				if(totalPrice == 0){
+					alert("注意：总金额不能为0.0！");
+					dijit.byId("totalPrice").focus();
+					return;
+				}
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -328,7 +359,7 @@
 						<td><div align="right"><span style="color:red">*&nbsp;</span>总金额（元）：</div></td>
 					    <td>
 					    	<input id="totalPrice" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
+                               	data-dojo-props='id:"totalPrice",name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                	trim:true,
                                	required:true,
              					value:"${applyNotes?.totalPrice}"

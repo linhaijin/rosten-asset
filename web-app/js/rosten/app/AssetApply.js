@@ -64,7 +64,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}
 		var isCreatedCards = rosten.getGridSelectedValue("getCardsCreatedLabel");
 		if(isCreatedCards == "已生成"){
-			alert("注意：该申请已生成资产卡片，请勿重复生成！");
+			alert("注意：该申请单已生成资产卡片，请勿重复生成！");
 			return;
 		}
 		

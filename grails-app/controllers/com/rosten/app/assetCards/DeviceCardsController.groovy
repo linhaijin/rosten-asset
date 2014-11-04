@@ -87,10 +87,10 @@ class DeviceCardsController {
 		def deviceCards = new DeviceCards()
 		if(params.id && !"".equals(params.id)){
 			deviceCards = DeviceCards.get(params.id)
-			//处理申请单金额
-			def applyNotesId =deviceCards.applyNotes.id
-			def applyNotes = ApplyNotes.get(applyNotesId)
-			applyNotes.totalPrice += params.onePrice.toDouble()
+//			//处理申请单金额
+//			def applyNotesId =deviceCards.applyNotes.id
+//			def applyNotes = ApplyNotes.get(applyNotesId)
+//			applyNotes.totalPrice += params.onePrice.toDouble()
 		}else{
 			deviceCards.company = company
 			//新资产卡片编号

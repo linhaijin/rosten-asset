@@ -593,7 +593,7 @@
 		</div>
 		<div data-dojo-type="dojox.widget.WizardPane" data-dojo-props='canGoBack:"true",doneFunction:assetChooseDone' >
 			<div id="chooseAsset">
-				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:820px;height:360px;padding:2px;"'>
+				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='refreshOnShow:true,style:"width:820px;height:360px;padding:2px;"'>
 					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
 						data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
 				</div>

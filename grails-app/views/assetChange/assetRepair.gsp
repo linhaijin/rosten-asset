@@ -323,7 +323,7 @@
 					assetTotal = assetTotalSel.attr("value").replace(".","-");
 				}
 			}
-			
+			alert("assetTotal=="+assetTotal);
 			//异步处理所选资产数据
 			var url = "${createLink(controller:'assetRepair',action:'assetChooseOperate')}";
 			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
@@ -452,7 +452,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
-			<g:hiddenField id="assetTotal" name="assetTotal" value="${assetRepair?.assetTotal}" />
+			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox"  name="assetTotal" value="${assetRepair?.assetTotal}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />

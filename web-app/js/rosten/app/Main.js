@@ -380,14 +380,20 @@ define(["dojo/_base/kernel"
     	case "【公告】":
     		rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
     		break;
-    	case "【发文】":
-    		rosten.openNewWindow("sendFile", rosten.webPath + "/sendFile/sendFileShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【资产申请】":
+    		rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetApply");
     		break;
-    	case "【大事记】":
-    		rosten.openNewWindow("dsj", rosten.webPath + "/dsj/dsjShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【资产报损】":
+    		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetScrap");
     		break;
-    	case "【会议通知】":
-    		rosten.openNewWindow("meeting", rosten.webPath + "/meeting/meetingShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【资产调拨】":
+    		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetAllocate");
+    		break;
+    	case "【资产报失】":
+    		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetLose");
+    		break;
+    	case "【资产报修】":
+    		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetRepair");
     		break;
     	}
     	

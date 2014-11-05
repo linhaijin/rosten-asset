@@ -609,6 +609,7 @@ class AssetRepairController {
 		if(params.assetTotal && params.assetTotal!=""){
 			nowTotalPrice = params.assetTotal.replace("-",".").toDouble()
 			assetTotal = nowTotalPrice
+			println "assetTotal=="+assetTotal
 			
 		}
 		double totalPrice = 0

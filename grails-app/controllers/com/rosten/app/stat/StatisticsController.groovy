@@ -5,6 +5,14 @@ import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 import grails.converters.JSON
 
+import com.rosten.app.assetCards.CarCards
+import com.rosten.app.assetCards.LandCards
+import com.rosten.app.assetCards.DeviceCards
+import com.rosten.app.assetCards.HouseCards
+import com.rosten.app.assetCards.BookCards
+import com.rosten.app.assetCards.FurnitureCards
+
+
 class StatisticsController {
 	
 	def getAssetStatic ={
@@ -89,19 +97,40 @@ class StatisticsController {
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]
 		
-		def sMap = ["id":001,"name":"土地","number":3000]
+		def landList = LandCards.list()
+		def landTotal = landList.collect { item ->
+			item.onePrice
+		}.sum()
+		def sMap = ["id":001,"name":"土地","number":landTotal?landTotal/10000:0]
 		json.items+=sMap
 		
-		sMap = ["id":002,"name":"房屋","number":1000]
+		def houseList = HouseCards.list()
+		def houseTotal = houseList.collect { item ->
+			item.onePrice
+		}.sum()
+		sMap = ["id":002,"name":"房屋","number":houseTotal?houseTotal/10000:0]
 		json.items+=sMap
 		
-		sMap = ["id":003,"name":"设备","number":1000]
+		def deviceList = DeviceCards.list()
+		def deviceTotal = deviceList.collect { item ->
+			item.onePrice
+		}.sum()
+		def dTotal = deviceTotal/10000
+		sMap = ["id":003,"name":"设备","number":deviceTotal?deviceTotal/10000:0]
 		json.items+=sMap
 		
-		sMap = ["id":004,"name":"图书","number":200]
+		def furList = FurnitureCards.list()
+		def furTotal = furList.collect { item ->
+			item.onePrice
+		}.sum()
+		sMap = ["id":004,"name":"图书","number":furTotal?furTotal/10000:0]
 		json.items+=sMap
 		
-		sMap = ["id":005,"name":"车辆","number":2000]
+		def carList = CarCards.list()
+		def carTotal=carList.collect { item ->
+			item.onePrice
+		}.sum()
+		sMap = ["id":005,"name":"车辆","number":carTotal?carTotal/10000:0]
 		json.items+=sMap
 		
 		render json as JSON

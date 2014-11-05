@@ -26,6 +26,7 @@ class AssetChangeService {
 		def query = {
 			eq("company",company)
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -40,6 +41,7 @@ class AssetChangeService {
 		def query = { 
 			eq("company",company)
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -70,6 +72,7 @@ class AssetChangeService {
 		def query = {
 			eq("company",company)
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -83,6 +86,7 @@ class AssetChangeService {
 		def query = { 
 			eq("company",company) 
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -112,6 +116,7 @@ class AssetChangeService {
 		def query = {
 			eq("company",company)
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -125,6 +130,7 @@ class AssetChangeService {
 		def query = { 
 			eq("company",company) 
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
@@ -154,6 +160,7 @@ class AssetChangeService {
 		def query = {
 			eq("company",company)
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
 			}

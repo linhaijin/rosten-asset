@@ -151,6 +151,7 @@ define(["dojo/dom",
             }
             
         };
+        return rosten[id];
     };
     selectGroup = function(url) {
         var id = "sys_groupDialog";

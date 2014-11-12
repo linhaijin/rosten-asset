@@ -115,7 +115,7 @@ class StatisticsController {
 		def deviceTotal = deviceList.collect { item ->
 			item.onePrice
 		}.sum()
-		def dTotal = deviceTotal/10000
+		
 		sMap = ["id":003,"name":"设备","number":deviceTotal?deviceTotal/10000:0]
 		json.items+=sMap
 		

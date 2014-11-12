@@ -67,7 +67,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			alert("注意：该申请单已生成资产卡片，请勿重复生成！");
 			return;
 		}
-		
+		var content ={};
 		content.companyId = companyId;
 		content.applyIds = unids;
 		rosten.read(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.assetApplyCallback);

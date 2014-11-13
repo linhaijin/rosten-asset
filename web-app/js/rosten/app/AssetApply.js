@@ -3,6 +3,42 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
+	
+	mineApply_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("s_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("s_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var category = registry.byId("s_category");
+		if(category.get("value")!=""){
+			content.category = category.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	mineApply_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_registerNum").set("value","");
+			registry.byId("s_assetName").set("value","");
+			registry.byId("s_category").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
 	//资产申请
 	assetApply_add = function(){//新增资产申请
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -101,6 +137,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/applyManage/mineApplyView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/applyManage/mineApplySearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/applyManage/mineApplyGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);

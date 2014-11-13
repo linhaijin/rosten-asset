@@ -32,7 +32,15 @@ import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
 
 class ApplyManageController {
-
+	def mineApplySearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["categoryList"] = AssetCategory.findAllByCompany(company)
+		
+		render(view:'/assetApply/mineApplySearch',model:model)
+	}
+	
 	def getFormattedSeriesDate(){
 		def nowDate= new Date()
 		def SeriesDate= "20"+nowDate.time
@@ -175,6 +183,7 @@ class ApplyManageController {
 			applyNotes = ApplyNotes.get(params.id)
 		}else{
 			applyNotes.applyUser = currentUser
+			applyNotes.userDepart = currentUser.getDepartEntity()
 		}
 		
 		model["user"] = currentUser
@@ -554,6 +563,14 @@ class ApplyManageController {
 			json["gridHeader"] = _gridHeader
 //			json["gridHeader"] = assetApplyService.getAssetApplyListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -562,11 +579,11 @@ class ApplyManageController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetApplyService.getMineApplyDataStore(args)
+			json["gridData"] = assetApplyService.getMineApplyDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = assetApplyService.getMineApplyCount(company)
+			def total = assetApplyService.getMineApplyCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

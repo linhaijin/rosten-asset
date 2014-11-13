@@ -287,7 +287,7 @@
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${applyNotes?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"160px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"240px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
@@ -306,6 +306,7 @@
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               	trim:true,
 				               	required:true,
+				               	readOnly:true,
 								value:"${applyNotes?.getDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${applyNotes?.userDepart?.id }" />
@@ -320,6 +321,7 @@
                                	data-dojo-props='name:"allowCategoryName",${fieldAcl.isReadOnly("allowCategoryName")},
                                	trim:true,
                                	required:true,
+                               	readOnly:true,
              					value:"${applyNotes?.getCategoryName()}"
                            	'/>
                            	<g:hiddenField name="allowCategoryId" value="${applyNotes?.userCategory?.id }" />
@@ -362,18 +364,24 @@
                                	data-dojo-props='id:"totalPrice",name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                	trim:true,
                                	required:true,
-             					value:"${applyNotes?.totalPrice}"
+             					value:"${Double.doubleToLongBits(applyNotes?.totalPrice)}"
                            	'/>
 			            </td>
-			            <td><div align="right"><span style="color:red">*&nbsp;</span>用途：</div></td>
-					   	<td>
-					    	<input id="usedBy" data-dojo-type="dijit/form/ValidationTextBox" 
+			            <td></td>
+			            <td></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>用途：</div></td>
+					   	<td colspan=3>
+					    	<input id="usedBy" data-dojo-type="dijit/form/SimpleTextarea" 
                                	data-dojo-props='name:"usedBy",${fieldAcl.isReadOnly("usedBy")},
                                	trim:true,
                                	required:true,
+                               	style:{width:"600px",height:"100px"},
              					value:"${applyNotes?.usedBy}"
                            	'/>
 			           	</td>
+					
 					</tr>
 				</table>
 			</div>

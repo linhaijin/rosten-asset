@@ -67,6 +67,7 @@ class ApplyNotes {
 	String assetName
 	
 	//使用人
+	@GridColumn(name="使用人")
 	String userName
 	
 	//数量

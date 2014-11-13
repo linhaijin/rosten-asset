@@ -137,34 +137,20 @@ define(["dojo/_base/kernel"
             	require(["rosten/app/PublicManage"],function(){
             		show_naviEntity(oRight);
             	});
-            }
-//            else if (oString == "bookKeeping") {//资产建账
-//            	deleteMailNavigation();
-//            	require(["rosten/app/BookKeeping"],function(){
-//            		show_naviEntity(oRight);
-//            	});
-//            }
-            else if (oString == "assetCards") {//资产卡片
+            } else if (oString == "assetCards") {//资产卡片
             	deleteMailNavigation();
             	require(["rosten/app/AssetCards"],function(){
-            		show_naviEntity("carCards");
+            		show_naviEntity(oRight);
             	});
             }else if (oString == "assetChange") {//资产变动
             	deleteMailNavigation();
             	require(["rosten/app/AssetChange"],function(){
-            		show_naviEntity("assetScrap");
+            		show_naviEntity(oRight);
             	});
             }
-//            else if (oString == "assetMaintain") {//资产运维
-//            	deleteMailNavigation();
-//            	require(["rosten/app/AssetMaintain"],function(){
-//            		show_naviEntity("assetRepair");
-//            	});
-//            }
             else if (oString == "assetCheck") {//资产核查
             	deleteMailNavigation();
             	require(["rosten/app/AssetCheck"],function(){
-//            		show_naviEntity("myPdrw");
             		show_naviEntity(oRight);
             	});
             }else if (oString == "assetReport") {//资产上报

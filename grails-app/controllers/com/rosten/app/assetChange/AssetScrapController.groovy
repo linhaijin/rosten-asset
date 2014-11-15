@@ -33,6 +33,15 @@ import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport
 
 class AssetScrapController {
+	def assetScrapSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetChange/assetScrapSearch',model:model)
+	}
+	
 	def assetCardsService
     def assetChangeService
 	def springSecurityService
@@ -345,6 +354,13 @@ class AssetScrapController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetChangeService.getAssetScrapListLayout()
 		}
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
+		if(params.applyDept && !"".equals(params.applyDept)) searchArgs["applyDept"] = Depart.findByCompanyAndDepartName(company,params.applyDept)
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -353,10 +369,10 @@ class AssetScrapController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetChangeService.getAssetScrapDataStore(args)
+			json["gridData"] = assetChangeService.getAssetScrapDataStore(args,searchArgs)
 		}
 		if(params.refreshPageControl){
-			def total = assetChangeService.getAssetScrapCount(company)
+			def total = assetChangeService.getAssetScrapCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

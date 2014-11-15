@@ -56,18 +56,21 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			}else{
 				content.id = unids;
+				rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
+					if(data.result == true || data.result == "true"){
+						rosten.alert("成功：资产申请单已删除！");
+						rosten.kernel.refreshGrid();
+					}else{
+						rosten.alert(data.result);
+					}
+				});
 			}
-			rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
-				if(data.result == true || data.result == "true"){
-					rosten.alert("成功：资产申请单已删除！");
-					rosten.kernel.refreshGrid();
-				}else{
-					rosten.alert(data.result);
-				}
-			});
 		};
 	};
 	
+	assetApply_docking = function(){
+		rosten.alert("此功能暂不提供！");
+	}
 	//提交功能由列表页面改为视图提交，注销代码
 //	assetApply_submit = function(){//提交资产申请
 //		var _1 = rosten.confirm("确认提交申请，是否继续?");

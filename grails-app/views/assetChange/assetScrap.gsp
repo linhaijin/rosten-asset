@@ -55,7 +55,8 @@
 						document.getElementById("applyDesc").focus();
 						return;
 					}
-
+					
+					//新增是否同类型资产变更start--2014-10-31
 					var searchQuery = {id:"*"};
 					var categoryId = "";
 					var grid = dijit.byId("assetScrapListGrid");
@@ -80,8 +81,6 @@
 								alert("注意：资产列表只能为同类型资产！");
 								return;
 							}else{//rensult为true，资产列表为同类型资产，继续
-								//新增是否同类型资产变更start--2014-10-31
-								
 								//增加对多次单击的次数----2014-9-4
 								var buttonWidget = object.target;
 								rosten.toggleAction(buttonWidget,true);
@@ -114,7 +113,7 @@
 									rosten.alert("系统错误，请通知管理员！");
 									rosten.toggleAction(buttonWidget,false);
 								},"rosten_form");
-								//新增是否同类型资产变更end
+								
 							}
 						},
 						error : function(response,args) {
@@ -123,12 +122,9 @@
 						}
 					};
 					dojo.xhrPost(ioArgs);
-
-					
-					//新增是否同类型资产变更
-					
-					
+					//新增是否同类型资产变更end
 				};
+				
 				page_quit = function(){
 					rosten.pagequit();
 				};	
@@ -365,9 +361,12 @@
 				}
 	
 				var assetTotal;
+				var assettotal;
 				var assetTotalSel = dijit.byId("assetTotal");
 				if(assetTotalSel){
-					if(assetTotalSel.attr("value")!=""){
+					if(assetTotalSel.attr("value") == "" || assetTotalSel.attr("value") == null){
+						assetTotal = "0-0";
+					}else{
 						assetTotal = assetTotalSel.attr("value").replace(".","-");
 					}
 				}
@@ -552,6 +551,7 @@
                                	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
+                               		
              						value:"${assetScrap?.assetTotal}"
                            	'/>
 			            </td>

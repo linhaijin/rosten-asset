@@ -3,7 +3,6 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
-	
 	//资产报损
 	assetScrap_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -60,6 +59,42 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=assetScrap");
 		rosten.kernel.getGrid().clearSelected();
+	};
+	
+	assetScrap_search = function(){
+		var content = {};
+		
+		var seriesNo = registry.byId("s_seriesNo");
+		if(seriesNo.get("value")!=""){
+			content.seriesNo = seriesNo.get("value");
+		}
+		
+		var applyMan = registry.byId("s_applyMan");
+		if(applyMan.get("value")!=""){
+			content.applyMan = applyMan.get("value");
+		}
+		
+		var applyDept = registry.byId("s_applyDept");
+		if(applyDept.get("value")!=""){
+			content.applyDept = applyDept.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	assetScrap_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_seriesNo").set("value","");
+			registry.byId("s_applyMan").set("value","");
+			registry.byId("s_applyDept").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
 	};
 	
 //	资产调拨
@@ -225,6 +260,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/assetScrap/assetScrapView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/assetScrap/assetScrapSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/assetScrap/assetScrapGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);

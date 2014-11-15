@@ -110,7 +110,7 @@ class ApplyManageController {
 						break;
 					default :
 					
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+//						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
@@ -140,7 +140,7 @@ class ApplyManageController {
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("生成资产卡片",imgPath + "init.gif","assetCards_create")
-		actionList << createAction("财务对接",imgPath + "s_open.png",strname + "_delete")
+		actionList << createAction("财务对接",imgPath + "s_open.png",strname + "_docking")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
@@ -617,12 +617,6 @@ class ApplyManageController {
 		def json=[:]
 		
 		def applyNotes = ApplyNotes.get(params.id)
-		//处理资产申请状态
-		if(params.status.equals("资产报备") || params.status.equals("打印盖章")){
-			applyNotes.applyStatus = "已结束"
-		}else{
-			applyNotes.applyStatus = params.status
-		}
 		
 		//处理当前人的待办事项
 		def currentUser = springSecurityService.getCurrentUser()
@@ -703,6 +697,12 @@ class ApplyManageController {
 			}
 		}
 		applyNotes.status = nextStatus
+		//处理资产申请状态
+		if(params.status.equals("资产报备") || params.status.equals("打印盖章")){
+			applyNotes.applyStatus = "已结束"
+		}else{
+			applyNotes.applyStatus = nextStatus
+		}
 		applyNotes.currentDealDate = new Date()
 		
 		//判断下一处理人是否与当前处理人员为同一人

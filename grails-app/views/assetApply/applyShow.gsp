@@ -279,7 +279,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"850px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:450px;padding:0px">
 			<g:hiddenField name="registerNum_form" value="${applyNotes?.registerNum}" />

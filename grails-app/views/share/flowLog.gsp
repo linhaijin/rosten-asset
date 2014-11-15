@@ -9,7 +9,7 @@
 
 <body>
 
-	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"流程图",open:false,toggleable:true,moreText:"",height:"480px",marginBottom:"2px",
+	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"流程图",open:false,toggleable:true,moreText:"",height:"600px",marginBottom:"2px",
 		style:{overflow:"auto"}
 	'>
 		<g:if test="${logEntityName}">

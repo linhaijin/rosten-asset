@@ -61,38 +61,73 @@
 						document.getElementById("applyDesc").focus();
 						return;
 					}
-					//增加对多次单击的次数----2014-9-4
-					var buttonWidget = object.target;
-					rosten.toggleAction(buttonWidget,true);
-	
-					//流程相关信息
-					var content = {};
-					<g:if test='${flowCode}'>
-						content.flowCode = "${flowCode}";
-						content.relationFlow = "${relationFlow}";
-					</g:if>
-					
-					rosten.readSync(rosten.webPath + "/assetLose/assetLoseSave",content,function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("保存成功！").queryDlgClose= function(){
+
+					//新增是否同类型资产变更start--2014-11-15
+					var searchQuery = {id:"*"};
+					var categoryId = "";
+					var grid = dijit.byId("assetLoseListGrid");
+					var store = grid.store;
+					store.fetch({
+						query:searchQuery,onComplete:function(items){
+							for(var i=0;i < items.length;i++){
+								var _item = items[i];
+								categoryId += store.getValue(_item, "id") + ",";
+							}
+						},queryOptions:{deep:true}
+					});
+					categoryId = categoryId.substring(0,categoryId.length-1) 
+
+					var url = "${createLink(controller:'assetLose',action:'assetLoseSaveCheck')}";
+					url += "?categoryId="+encodeURI(categoryId);
+
+					var ioArgs = {
+						url : url,
+						handleAs : "json",
+						load : function(response,args) {
+							if(response.result=="false"){//rensult为false，资产列表为不同类型资产
+								alert("注意：资产列表只能为同类型资产！");
+								return;
+							}else{//rensult为true，资产列表为同类型资产，继续
+								//增加对多次单击的次数----2014-9-4
+								var buttonWidget = object.target;
+								rosten.toggleAction(buttonWidget,true);
+				
+								//流程相关信息
+								var content = {};
 								<g:if test='${flowCode}'>
-									if(window.location.href.indexOf(data.id)==-1){
-										window.location.replace(window.location.href + "&id=" + data.id);
-									}else{
-										window.location.reload();
-									}
+									content.flowCode = "${flowCode}";
+									content.relationFlow = "${relationFlow}";
 								</g:if>
-								<g:else>
-									page_quit();
-								</g:else>
-							};
-						}else{
-							rosten.alert("保存失败!");
+								
+								rosten.readSync(rosten.webPath + "/assetLose/assetLoseSave",content,function(data){
+									if(data.result=="true" || data.result == true){
+										rosten.alert("保存成功！").queryDlgClose= function(){
+											<g:if test='${flowCode}'>
+												if(window.location.href.indexOf(data.id)==-1){
+													window.location.replace(window.location.href + "&id=" + data.id);
+												}else{
+													window.location.reload();
+												}
+											</g:if>
+											<g:else>
+												page_quit();
+											</g:else>
+										};
+									}else{
+										rosten.alert("保存失败!");
+									}
+								},function(error){
+									rosten.alert("系统错误，请通知管理员！");
+									rosten.toggleAction(buttonWidget,false);
+								},"rosten_form");
+							}
+						},
+						error : function(response,args) {
+							alert(response.message);
+							return;
 						}
-					},function(error){
-						rosten.alert("系统错误，请通知管理员！");
-						rosten.toggleAction(buttonWidget,false);
-					},"rosten_form");
+					};
+					dojo.xhrPost(ioArgs);
 				};
 				
 				page_quit = function(){
@@ -502,6 +537,7 @@
                                	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
+                               		disabled:"disabled",
              						value:"${assetLose?.assetTotal}"
                            	'/>
 			            </td>

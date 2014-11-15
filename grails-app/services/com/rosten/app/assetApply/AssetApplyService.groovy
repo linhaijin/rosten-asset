@@ -20,10 +20,14 @@ class AssetApplyService {
 		def c = ApplyNotes.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			eq("company",company)
-			or{
-				eq("currentUser",user)
-				eq("applyUser",user)
+			if(user.getAllRolesValue().contains("系统管理员") || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("currentUser",user)
+					eq("applyUser",user)
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("userCategory")){
@@ -41,10 +45,14 @@ class AssetApplyService {
 		def user = springSecurityService.getCurrentUser()
 		def c = ApplyNotes.createCriteria()
 		def query = {
-			eq("company",company)
-			or{
-				eq("currentUser",user)
-				eq("applyUser",user)
+			if(user.getAllRolesValue().contains("系统管理员") || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("currentUser",user)
+					eq("applyUser",user)
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("userCategory")){

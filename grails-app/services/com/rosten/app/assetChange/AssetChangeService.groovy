@@ -10,16 +10,16 @@ class AssetChangeService {
 		return gridUtil.buildLayoutJSON(new AssetScrap())
 	}
 	
-	def getAssetScrapDataStore ={params->
+	def getAssetScrapDataStore ={params,searchArgs->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllAssetScrap(offset,max,params.company)
+		def propertyList = getAllAssetScrap(offset,max,params.company,searchArgs)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllAssetScrap ={offset,max,company->
+	def getAllAssetScrap ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetScrap.createCriteria()
 		def pa=[max:max,offset:offset]
@@ -30,12 +30,19 @@ class AssetChangeService {
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
 //			eq("currentUser",user)
 		}
 		return c.list(pa,query)
 	}
 	
-	def getAssetScrapCount ={company->
+	def getAssetScrapCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetScrap.createCriteria()
 		def query = { 
@@ -44,6 +51,13 @@ class AssetChangeService {
 				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
+			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 //			eq("currentUser",user)
 		}

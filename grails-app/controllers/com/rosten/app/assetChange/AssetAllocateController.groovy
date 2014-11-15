@@ -758,6 +758,65 @@ class AssetAllocateController {
 		render json as JSON
 	}
 	
+	def assetAllocateSaveCheck = {
+		def json,message
+		def categoryId
+		def categoryIds = []
+		if(params.categoryId && params.categoryId !=null){
+			categoryId = params.categoryId
+			categoryIds = categoryId.split(",")
+		}
+		def carCards
+		def landCards
+		def houseCards
+		def deviceCards
+		def bookCards
+		def furnitureCards
+
+		def typeArr = []
+		if(categoryIds.size()>0){
+			categoryIds.each{
+				//通过资产Id获取资产类型
+				carCards = CarCards.get(it)
+				if(carCards){
+					typeArr<<"car"
+				}
+				landCards = LandCards.get(it)
+				if(landCards){
+					typeArr<<"land"
+				}
+				houseCards = HouseCards.get(it)
+				if(houseCards){
+					typeArr<<"house"
+				}
+				deviceCards = DeviceCards.get(it)
+				if(deviceCards){
+					typeArr<<"device"
+				}
+				bookCards = BookCards.get(it)
+				if(bookCards){
+					typeArr<<"book"
+				}
+				furnitureCards = FurnitureCards.get(it)
+				if(furnitureCards){
+					typeArr<<"furniture"
+				}
+			}
+			typeArr = typeArr.unique()
+			if(typeArr.size()==1){
+				message = "操作成功！"
+				json = [result:'true',message:message]
+			}else{
+				message = "注意：资产列表只能为同类型资产！！"
+				json = [result:'false',message:message]
+			}
+		}else{
+			message = "操作失败，请联系管理员！"
+			json = [result:'error',message:message]
+		}
+		render json as JSON
+	}
+	
 	def assetAllocateFlowDeal ={
 		def json=[:]
 		

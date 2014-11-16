@@ -17,19 +17,19 @@
           <tr>
             <th width="8%">申请单号</th>
             <td width="18%">
-            	<input id="scrap_seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
+            	<input id="repair_seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
             <th width="8%">申请人</th>
             <td width="18%">
-            	<input id="scrap_applyMan"  data-dojo-type="dijit/form/ValidationTextBox" 
+            	<input id="repair_applyMan"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
             <th width="8%">申请部门</th>
             <td width="18%">
-            	<div id="scrap_applyDept" data-dojo-type="dijit/form/ComboBox"
+            	<div id="repair_applyDept" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""
 	            '>
 	            	 <g:each in="${DepartList}" var="item">
@@ -39,8 +39,8 @@
             </td>
             <td>
             	<div class="btn">
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetScrap_search()}'>查询</button>
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetScrap_resetSearch()}'>重置条件</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetRepair_search()}'>查询</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetRepair_resetSearch()}'>重置条件</button>
               	</div>
             </td>
           </tr>

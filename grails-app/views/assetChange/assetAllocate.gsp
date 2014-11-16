@@ -101,6 +101,7 @@
 				
 								//流程相关信息
 								var content = {};
+								content.assetTotal = assetTotal;
 								<g:if test='${flowCode}'>
 									content.flowCode = "${flowCode}";
 									content.relationFlow = "${relationFlow}";
@@ -366,9 +367,12 @@
 			}
 
 			var assetTotal;
+			var assettotal;
 			var assetTotalSel = dijit.byId("assetTotal");
 			if(assetTotalSel){
-				if(assetTotalSel.attr("value")!=""){
+				if(assetTotalSel.attr("value") == "" || assetTotalSel.attr("value") == null){
+					assetTotal = "0-0";
+				}else{
 					assetTotal = assetTotalSel.attr("value").replace(".","-");
 				}
 			}
@@ -504,7 +508,7 @@
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetAllocate?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"120px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"190px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请单号：</div></td>
@@ -512,15 +516,18 @@
                            	<input id="seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
                                		trim:true,
-                               		required:true,disabled:"disabled",
+                               		required:true,
+                               		readOnly:true,
              						value:"${assetAllocate?.seriesNo}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请日期：</div></td>
 					    <td width="250">
 					    	<input id="applyDate" data-dojo-type="dijit/form/DateTextBox" 
-                               	data-dojo-props='name:"applyDate",trim:true,${fieldAcl.isReadOnly("applyDate")},
-                               		value:"${assetAllocate?.getFormattedShowApplyDate()}"
+                               	data-dojo-props='name:"applyDate",${fieldAcl.isReadOnly("applyDate")},
+                               	trim:true,
+                               	readOnly:true,
+                               	value:"${assetAllocate?.getFormattedShowApplyDate()}"
                            	'/>
 			            </td>
 					</tr>
@@ -531,7 +538,8 @@
                                	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
                                		trim:true,
                                		required:true,
-             						value:"${user?.chinaName}"
+                               		readOnly:true,
+             						value:"${assetAllocate.applyMan==null?user.chinaName:assetAllocate.applyMan}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
@@ -540,10 +548,13 @@
 				               	data-dojo-props='name:"callOutDeptName",${fieldAcl.isReadOnly("callOutDeptName")},
 				               		trim:true,
 				               		required:true,
+				               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
 									value:"${assetAllocate?.getOutDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="callOutDeptId" value="${assetAllocate?.callOutDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callOutDeptName","callOutDeptId")}'>选择</button>
+				         	<g:if test="${assetAllocate.dataStatus=='未审批'}">
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callOutDeptName","callOutDeptId")}'>选择</button>
+							</g:if>
 						</td>
 					</tr>
 					<tr>
@@ -553,10 +564,13 @@
                                	data-dojo-props='name:"callInDeptName",${fieldAcl.isReadOnly("callInDeptName")},
                                		trim:true,
                                		required:true,
+                               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
              						value:"${assetAllocate?.getInDepartName()}"
                            	'/>
                            	<g:hiddenField name="callInDeptId" value="${assetAllocate?.callInDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callInDeptName","callInDeptId")}'>选择</button>
+                           	<g:if test="${assetAllocate.dataStatus=='未审批'}">
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callInDeptName","callInDeptId")}'>选择</button>
+			            	</g:if>
 			            </td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
 					    <td>
@@ -564,7 +578,7 @@
                                	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
-                               		disabled:"disabled",
+                               		readOnly:true,
              						value:"${assetAllocate?.assetTotal}"
                            	'/>
 			            </td>
@@ -576,6 +590,8 @@
     							data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
                                		trim:true,
                                		required:true,
+                               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
+                               		style:{width:"550px",height:"80px"},
                                		value:"${assetAllocate?.applyDesc}"
                            '/>
 					    </td>
@@ -614,9 +630,9 @@
 		</div>
 	</g:if>
 </div> 
-<div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:455px'">
-	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:415px; margin:5 auto;">
-		<div data-dojo-type="dojox.widget.WizardPane" id="assetSelectWizardPane" style="height:360px;border:1px;" >
+<div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:515px'">
+	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:475px; margin:5 auto;">
+		<div data-dojo-type="dojox.widget.WizardPane" id="assetSelectWizardPane" style="height:430px;border:1px;" >
 			<div>
 				<label>请选择资产类别：</label>
 				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
@@ -631,7 +647,7 @@
 		</div>
 		<div data-dojo-type="dojox.widget.WizardPane" data-dojo-props='canGoBack:"true",doneFunction:assetChooseDone' >
 			<div id="chooseAsset">
-				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='refreshOnShow:true,style:"width:820px;height:360px;padding:2px;"'>
+				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='refreshOnShow:true,style:"width:820px;height:430px;padding:2px;"'>
 					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
 						data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
 				</div>

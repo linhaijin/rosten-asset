@@ -59,10 +59,9 @@ class AssetAllocateController {
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
-						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
@@ -92,6 +91,15 @@ class AssetAllocateController {
 		model["img"] = img
 		model["action"] = action
 		return model
+	}
+	
+	def assetAllocateSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetChange/assetAllocateSearch',model:model)
 	}
 	
 	def assetAllocateAdd = {
@@ -339,6 +347,15 @@ class AssetAllocateController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetChangeService.getAssetAllocateListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
+		if(params.callInDept && !"".equals(params.callInDept)) searchArgs["callInDept"] = Depart.findByCompanyAndDepartName(company,params.callInDept)
+		if(params.callOutDept && !"".equals(params.callOutDept)) searchArgs["callOutDept"] = Depart.findByCompanyAndDepartName(company,params.callOutDept)
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -347,10 +364,10 @@ class AssetAllocateController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetChangeService.getAssetAllocateDataStore(args)
+			json["gridData"] = assetChangeService.getAssetAllocateDataStore(args,searchArgs)
 		}
 		if(params.refreshPageControl){
-			def total = assetChangeService.getAssetAllocateCount(company)
+			def total = assetChangeService.getAssetAllocateCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -413,7 +430,8 @@ class AssetAllocateController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
-					eq("seriesNo",seriesNo)
+					like("seriesNo","%"+seriesNo+"%")
+//					eq("seriesNo",seriesNo)
 				}
 			}
 		}
@@ -611,7 +629,6 @@ class AssetAllocateController {
 		if(params.assetTotal && params.assetTotal!=""){
 			nowTotalPrice = params.assetTotal.replace("-",".").toDouble()
 			assetTotal = nowTotalPrice
-			
 		}
 		double totalPrice = 0
 		
@@ -622,50 +639,103 @@ class AssetAllocateController {
 		def bookCards
 		def furnitureCards
 		
+		def seriesNo_exist
+		def seriesNo_exists
 		if(assetIds.size()>0){
 			assetIds.each{
 				//将申请单号和资产变更类型写入资产建账信息中，同时计算总金额
 				if(assetType.equals("car")){
 					carCards = CarCards.get(it)
 					if(carCards){
-						carCards.assetStatus = "资产已调拨"
-						carCards.seriesNo = seriesNo
-						totalPrice = carCards.onePrice
+						seriesNo_exist = carCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",") 
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							carCards.assetStatus = "资产已调拨"
+							carCards.seriesNo = seriesNo
+							totalPrice = carCards.onePrice
+						}
+//						carCards.assetStatus = "资产已调拨"
+//						carCards.seriesNo = seriesNo
+//						totalPrice = carCards.onePrice
 					}
 				}else if(assetType.equals("land")){
-					landCards LandCards.get(it)
+					landCards = LandCards.get(it)
 					if(landCards){
-						landCards.assetStatus = "资产已调拨"
-						landCards.seriesNo = seriesNo
-						totalPrice = landCards.onePrice
+						seriesNo_exist = landCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							landCards.assetStatus = "资产已调拨"
+							landCards.seriesNo = seriesNo
+							totalPrice = landCards.onePrice
+						}
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
 					if(houseCards){
-						houseCards.assetStatus = "资产已调拨"
-						houseCards.seriesNo = seriesNo
-						totalPrice = houseCards.onePrice
+						seriesNo_exist = houseCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							houseCards.assetStatus = "资产已调拨"
+							houseCards.seriesNo = seriesNo
+							totalPrice = houseCards.onePrice
+						}
 					}
 				}else if(assetType.equals("device")){
 					deviceCards = DeviceCards.get(it)
 					if(deviceCards){
-						deviceCards.assetStatus = "资产已调拨"
-						deviceCards.seriesNo = seriesNo
-						totalPrice = deviceCards.onePrice
+						seriesNo_exist = deviceCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							deviceCards.assetStatus = "资产已调拨"
+							deviceCards.seriesNo = seriesNo
+							totalPrice = deviceCards.onePrice
+						}
 					}
 				}else if(assetType.equals("book")){
 					bookCards = BookCards.get(it)
 					if(bookCards){
-						bookCards.assetStatus = "资产已调拨"
-						bookCards.seriesNo = seriesNo
-						totalPrice = bookCards.onePrice
+						seriesNo_exist = bookCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							bookCards.assetStatus = "资产已调拨"
+							bookCards.seriesNo = seriesNo
+							totalPrice = bookCards.onePrice
+						}
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
-						furnitureCards.assetStatus = "资产已调拨"
-						furnitureCards.seriesNo = seriesNo
-						totalPrice = furnitureCards.onePrice
+						seriesNo_exist = furnitureCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							furnitureCards.assetStatus = "资产已调拨"
+							furnitureCards.seriesNo = seriesNo
+							totalPrice = furnitureCards.onePrice
+						}
 					}
 				}
 				assetTotal += totalPrice
@@ -821,12 +891,6 @@ class AssetAllocateController {
 		def json=[:]
 		
 		def assetAllocate = AssetAllocate.get(params.id)
-		//处理资产调拨状态
-		assetAllocate.dataStatus = params.status
-//		if(params.status.equals("已归档")){
-//			assetAllocate.dataStatus = params.status
-//		}
-		
 		//处理当前人的待办事项
 		def currentUser = springSecurityService.getCurrentUser()
 		def frontStatus = assetAllocate.status
@@ -908,6 +972,8 @@ class AssetAllocateController {
 		}
 		assetAllocate.status = nextStatus
 		assetAllocate.currentDealDate = new Date()
+		//处理资产调拨状态
+		assetAllocate.dataStatus = nextStatus
 		
 		//判断下一处理人是否与当前处理人员为同一人
 		if(currentUser.equals(assetAllocate.currentUser)){
@@ -1011,6 +1077,8 @@ class AssetAllocateController {
 				assetAllocate.currentDepart = user.getDepartName()
 				assetAllocate.currentDealDate = new Date()
 				assetAllocate.status = nextStatus
+				//处理资产调拨状态
+				assetAllocate.dataStatus = nextStatus
 				
 				//判断下一处理人是否与当前处理人员为同一人
 				if(currentUser.equals(assetAllocate.currentUser)){

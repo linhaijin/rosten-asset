@@ -33,15 +33,6 @@ import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport
 
 class AssetScrapController {
-	def assetScrapSearchView ={
-		def model =[:]
-		
-		def company = Company.get(params.companyId)
-		model["DepartList"] = Depart.findAllByCompany(company)
-		
-		render(view:'/assetChange/assetScrapSearch',model:model)
-	}
-	
 	def assetCardsService
     def assetChangeService
 	def springSecurityService
@@ -71,7 +62,6 @@ class AssetScrapController {
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
@@ -101,6 +91,15 @@ class AssetScrapController {
 		model["img"] = img
 		model["action"] = action
 		return model
+	}
+	
+	def assetScrapSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetChange/assetScrapSearch',model:model)
 	}
 	
 	def assetScrapAdd = {
@@ -135,19 +134,18 @@ class AssetScrapController {
 			money = assetScrap.assetTotal
 			def seriesNo = assetScrap.seriesNo
 			def carCards = CarCards.findAllBySeriesNo(seriesNo)
-			if(carCards != null){assetType = "car"}
+			if(carCards.size() > 0){assetType = "car"}
 			def landCards = LandCards.findAllBySeriesNo(seriesNo)
-			if(landCards != null){assetType = "land"}
+			if(landCards.size() > 0){assetType = "land"}
 			def houseCards = HouseCards.findAllBySeriesNo(seriesNo)
-			if(houseCards != null){assetType = "house"}
+			if(houseCards.size() > 0){assetType = "house"}
 			def deviceCards = DeviceCards.findAllBySeriesNo(seriesNo)
-			if(deviceCards != null){assetType = "device"}
+			if(deviceCards.size() > 0){assetType = "device"}
 			def bookCards = BookCards.findAllBySeriesNo(seriesNo)
-			if(bookCards != null){assetType = "book"}
+			if(bookCards.size() > 0){assetType = "book"}
 			def furnitureCards = FurnitureCards.findAllBySeriesNo(seriesNo)
-			if(furnitureCards != null){assetType = "furniture"}
+			if(furnitureCards.size() > 0){assetType = "furniture"}
 		}
-		
 		model["assetType"] = assetType
 		model["user"] = currentUser
 		model["company"] = company
@@ -435,7 +433,7 @@ class AssetScrapController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
-					eq("seriesNo",seriesNo)
+					like("seriesNo","%"+seriesNo+"%")
 //					if(assetType=="" || assetType==null){
 //						eq("assetStatus","报废待审批")
 //					}
@@ -561,11 +559,12 @@ class AssetScrapController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
+					eq("assetStatus","已入库")
 //					if(freshType=="twice"){
 //						eq("assetStatus","报废待审批")
 //						eq("seriesNo",seriesNo)
 //					}else{
-						eq("assetStatus","已入库")
+//						eq("assetStatus","已入库")
 //					}
 				}
 			}
@@ -646,7 +645,6 @@ class AssetScrapController {
 		if(params.assetTotal && params.assetTotal!=""){
 			nowTotalPrice = params.assetTotal.replace("-",".").toDouble()
 			assetTotal = nowTotalPrice
-			
 		}
 		double totalPrice = 0
 		
@@ -657,50 +655,103 @@ class AssetScrapController {
 		def bookCards
 		def furnitureCards
 		
+		def seriesNo_exist
+		def seriesNo_exists
 		if(assetIds.size()>0){
 			assetIds.each{
 				//将申请单号和资产变更类型写入资产卡片信息中，同时计算总金额
 				if(assetType.equals("car")){
 					carCards = CarCards.get(it)
 					if(carCards){
-						carCards.assetStatus = "资产已报损"
-						carCards.seriesNo = seriesNo
-						totalPrice = carCards.onePrice
+						seriesNo_exist = carCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							carCards.assetStatus = "资产已报损"
+							carCards.seriesNo = seriesNo
+							totalPrice = carCards.onePrice
+						}
+//						carCards.assetStatus = "资产已报损"
+//						carCards.seriesNo = seriesNo
+//						totalPrice = carCards.onePrice
 					}
 				}else if(assetType.equals("land")){
 					landCards = LandCards.get(it)
 					if(landCards){
-						landCards.assetStatus = "资产已报损"
-						landCards.seriesNo = seriesNo
-						totalPrice = landCards.onePrice
+						seriesNo_exist = landCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							landCards.assetStatus = "资产已报损"
+							landCards.seriesNo = seriesNo
+							totalPrice = landCards.onePrice
+						}
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
 					if(houseCards){
-						houseCards.assetStatus = "资产已报损"
-						houseCards.seriesNo = seriesNo
-						totalPrice = houseCards.onePrice
+						seriesNo_exist = houseCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							houseCards.assetStatus = "资产已报损"
+							houseCards.seriesNo = seriesNo
+							totalPrice = houseCards.onePrice
+						}
 					}
 				}else if(assetType.equals("device")){
 					deviceCards = DeviceCards.get(it)
 					if(deviceCards){
-						deviceCards.assetStatus = "资产已报损"
-						deviceCards.seriesNo = seriesNo
-						totalPrice = deviceCards.onePrice
+						seriesNo_exist = deviceCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							deviceCards.assetStatus = "资产已报损"
+							deviceCards.seriesNo = seriesNo
+							totalPrice = deviceCards.onePrice
+						}
 					}
 				}else if(assetType.equals("book")){
 					bookCards = BookCards.get(it)
 					if(bookCards){
-						bookCards.assetStatus = "资产已报损"
-						bookCards.seriesNo = seriesNo
-						totalPrice = bookCards.onePrice
+						seriesNo_exist = bookCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							bookCards.assetStatus = "资产已报损"
+							bookCards.seriesNo = seriesNo
+							totalPrice = bookCards.onePrice
+						}
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
-						furnitureCards.assetStatus = "资产已报损"
-						furnitureCards.seriesNo = seriesNo
-						totalPrice = furnitureCards.onePrice
+						seriesNo_exist = furnitureCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							furnitureCards.assetStatus = "资产已报损"
+							furnitureCards.seriesNo = seriesNo
+							totalPrice = furnitureCards.onePrice
+						}
 					}
 				}
 				assetTotal += totalPrice
@@ -856,12 +907,6 @@ class AssetScrapController {
 		def json=[:]
 		
 		def assetScrap = AssetScrap.get(params.id)
-		//处理资产报损状态
-		assetScrap.dataStatus = params.status
-//		if(params.status.equals("已归档")){
-//			assetScrap.dataStatus = params.status
-//		}
-		
 		//处理当前人的待办事项
 		def currentUser = springSecurityService.getCurrentUser()
 		def frontStatus = assetScrap.status
@@ -943,6 +988,8 @@ class AssetScrapController {
 		}
 		assetScrap.status = nextStatus
 		assetScrap.currentDealDate = new Date()
+		//处理资产报损状态
+		assetScrap.dataStatus = nextStatus
 		
 		//判断下一处理人是否与当前处理人员为同一人
 		if(currentUser.equals(assetScrap.currentUser)){
@@ -1046,6 +1093,8 @@ class AssetScrapController {
 				assetScrap.currentDepart = user.getDepartName()
 				assetScrap.currentDealDate = new Date()
 				assetScrap.status = nextStatus
+				//处理资产报损状态
+				assetScrap.dataStatus = nextStatus
 				
 				//判断下一处理人是否与当前处理人员为同一人
 				if(currentUser.equals(assetScrap.currentUser)){

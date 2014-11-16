@@ -82,8 +82,8 @@ class ApplyNotes {
 	@GridColumn(name="用途",colIdx=8,width="80px")
 	String usedBy = "办公"
 	
-	//申请状态
-	String applyStatus = "新建"
+	//审核状态
+	String applyStatus = "未审核"
 	
 	//是否生产资产卡片
 	String isCreatedCards = "0"

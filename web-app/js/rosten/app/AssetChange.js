@@ -16,21 +16,21 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		 /*
 		 var content = {};
 			
-			var username = registry.byId("s_username");
-			if(username.get("value")!=""){
-				content.username = username.get("value");
-			}
-			
-			var chinaName = registry.byId("s_chinaName");
-			if(chinaName.get("value")!=""){
-				content.chinaName = chinaName.get("value");
-			}
-			
-			var departName = registry.byId("s_departName");
-			if(departName.get("value")!=""){
-				content.departName = departName.get("value");
-			}
-		 */
+		var seriesNo = registry.byId("scrap_seriesNo");
+		if(seriesNo.get("value")!=""){
+			content.seriesNo = seriesNo.get("value");
+		}
+		
+		var applyMan = registry.byId("scrap_applyMan");
+		if(applyMan.get("value")!=""){
+			content.applyMan = applyMan.get("value");
+		}
+		
+		var applyDept = registry.byId("scrap_applyDept");
+		if(applyDept.get("value")!=""){
+			content.applyDept = applyDept.get("value");
+		}
+		*/
 		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId);
 	};
 	
@@ -64,17 +64,17 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetScrap_search = function(){
 		var content = {};
 		
-		var seriesNo = registry.byId("s_seriesNo");
+		var seriesNo = registry.byId("scrap_seriesNo");
 		if(seriesNo.get("value")!=""){
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-		var applyMan = registry.byId("s_applyMan");
+		var applyMan = registry.byId("scrap_applyMan");
 		if(applyMan.get("value")!=""){
 			content.applyMan = applyMan.get("value");
 		}
 		
-		var applyDept = registry.byId("s_applyDept");
+		var applyDept = registry.byId("scrap_applyDept");
 		if(applyDept.get("value")!=""){
 			content.applyDept = applyDept.get("value");
 		}
@@ -89,9 +89,9 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetScrap_resetSearch = function(){
 		switch(rosten.kernel.navigationEntity) {
 		default:
-			registry.byId("s_seriesNo").set("value","");
-			registry.byId("s_applyMan").set("value","");
-			registry.byId("s_applyDept").set("value","");
+			registry.byId("scrap_seriesNo").set("value","");
+			registry.byId("scrap_applyMan").set("value","");
+			registry.byId("scrap_applyDept").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	
@@ -136,6 +136,48 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	assetAllocate_search = function(){
+		var content = {};
+		
+		var seriesNo = registry.byId("allocate_seriesNo");
+		if(seriesNo.get("value")!=""){
+			content.seriesNo = seriesNo.get("value");
+		}
+		
+		var applyMan = registry.byId("allocate_applyMan");
+		if(applyMan.get("value")!=""){
+			content.applyMan = applyMan.get("value");
+		}
+		
+		var callInDept = registry.byId("allocate_callInDept");
+		if(callInDept.get("value")!=""){
+			content.callInDept = callInDept.get("value");
+		}
+		
+		var callOutDept = registry.byId("allocate_callOutDept");
+		if(callOutDept.get("value")!=""){
+			content.callOutDept = callOutDept.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	assetAllocate_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("allocate_seriesNo").set("value","");
+			registry.byId("allocate_applyMan").set("value","");
+			registry.byId("allocate_callInDept").set("value","");
+			registry.byId("allocate_callOutDept").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
 	//资产报失
 	assetLose_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -175,6 +217,42 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	assetLose_search = function(){
+		var content = {};
+		
+		var seriesNo = registry.byId("lose_seriesNo");
+		if(seriesNo.get("value")!=""){
+			content.seriesNo = seriesNo.get("value");
+		}
+		
+		var applyMan = registry.byId("lose_applyMan");
+		if(applyMan.get("value")!=""){
+			content.applyMan = applyMan.get("value");
+		}
+		
+		var applyDept = registry.byId("lose_applyDept");
+		if(applyDept.get("value")!=""){
+			content.applyDept = applyDept.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	assetLose_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("lose_seriesNo").set("value","");
+			registry.byId("lose_applyMan").set("value","");
+			registry.byId("lose_applyDept").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
 	//资产报修
 	assetRepair_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -212,6 +290,42 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=assetRepair");
 		rosten.kernel.getGrid().clearSelected();
+	};
+	
+	assetRepair_search = function(){
+		var content = {};
+		
+		var seriesNo = registry.byId("repair_seriesNo");
+		if(seriesNo.get("value")!=""){
+			content.seriesNo = seriesNo.get("value");
+		}
+		
+		var applyMan = registry.byId("repair_applyMan");
+		if(applyMan.get("value")!=""){
+			content.applyMan = applyMan.get("value");
+		}
+		
+		var applyDept = registry.byId("repair_applyDept");
+		if(applyDept.get("value")!=""){
+			content.applyDept = applyDept.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	assetRepair_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("repair_seriesNo").set("value","");
+			registry.byId("repair_applyMan").set("value","");
+			registry.byId("repair_applyDept").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
 	};
 	
 	//增值减值
@@ -271,6 +385,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/assetAllocate/assetAllocateView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/assetAllocate/assetAllocateSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/assetAllocate/assetAllocateGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -281,6 +396,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/assetLose/assetLoseView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/assetLose/assetLoseSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/assetLose/assetLoseGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -291,6 +407,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/assetRepair/assetRepairView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/assetRepair/assetRepairSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/assetRepair/assetRepairGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);

@@ -109,8 +109,6 @@ class ApplyManageController {
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
-					
-//						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
@@ -241,7 +239,7 @@ class ApplyManageController {
 		if(!params.registerNum_form.equals("")){
 			applyNotes.registerNum = params.registerNum_form
 		}
-		
+		applyNotes.applyStatus = applyNotes.status
 		
 		//判断是否需要走流程
 		def _status
@@ -360,13 +358,13 @@ class ApplyManageController {
 		def company = Company.get(params.companyId)
 		def createCards = "false"
 		def ids = params.applyIds.split(",")
-		def json
+		def json,message
 		/**
 		 * 创建资产卡片
 		 */
 		try{
+			int createCardsCount = 0
 			if(ids.size()>0){
-				createCards = "true"
 				ids.each {  
 					def applyNotes = ApplyNotes.get(it)
 					def assetType = applyNotes.rootAssetCategory
@@ -404,133 +402,139 @@ class ApplyManageController {
 //					println "regNo_DE=="+regNo_DE
 //					println "regNo=="+regNo_A+regNo_BC+regNo_DE
 //					return
-					
-					if(assetType.equals("设备")){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-						for(int i=0;i<assetCount;i++){
-							def deviceCard = new DeviceCards()
-							deviceCard.company = company
-							deviceCard.applyNotes = applyNotes
-							deviceCard.registerNum = getFormattedSeriesDate()
-							deviceCard.userCategory = applyNotes.userCategory
-							deviceCard.assetName = applyNotes.assetName
-							deviceCard.userDepart = applyNotes.userDepart
-							deviceCard.onePrice = onePrice
-							deviceCard.country = applyNotes.country
-							deviceCard.assetStatus = "已入库"
-							deviceCard.save(flush: true)
+					if(applyNotes.isCreatedCards == "0"){
+						if(assetType.equals("设备")){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+							for(int i=0;i<assetCount;i++){
+								def deviceCard = new DeviceCards()
+								deviceCard.company = company
+								deviceCard.applyNotes = applyNotes
+								deviceCard.registerNum = getFormattedSeriesDate()
+								deviceCard.userCategory = applyNotes.userCategory
+								deviceCard.assetName = applyNotes.assetName
+								deviceCard.userDepart = applyNotes.userDepart
+								deviceCard.onePrice = onePrice
+								deviceCard.country = applyNotes.country
+								deviceCard.assetStatus = "已入库"
+								deviceCard.save(flush: true)
+							}
+						}else if(assetType == "车辆"){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+	//						def assetCount = applyNotes.amount
+							for(int i=0;i<assetCount;i++){
+								def carCard = new CarCards()
+								carCard.company = company
+								carCard.applyNotes = applyNotes
+								carCard.registerNum = getFormattedSeriesDate()
+								carCard.userCategory = applyNotes.userCategory
+								carCard.assetName = applyNotes.assetName
+								carCard.userDepart = applyNotes.userDepart
+		//						carCard.userStatus = applyNotes.userStatus
+		//						carCard.assetSource = applyNotes.assetSource
+		//						carCard.costCategory = applyNotes.costCategory
+		//						carCard.buyDate = applyNotes.buyDate
+		//						carCard.organizationalType = applyNotes.organizationalType
+								carCard.onePrice = onePrice
+		//						if(applyNotes.undertakingRevenue == 0){
+		//							carCard.undertakingRevenue = 0
+		//						}else{
+		//							carCard.undertakingRevenue = applyNotes.undertakingRevenue/assetCount
+		//						}
+		//						if(applyNotes.fiscalAppropriation == 0){
+		//							carCard.fiscalAppropriation = 0
+		//						}else{
+		//							carCard.fiscalAppropriation = applyNotes.fiscalAppropriation/assetCount
+		//						}
+		//						if(applyNotes.otherFund == 0){
+		//							carCard.otherFund = 0
+		//						}else{
+		//							carCard.otherFund = applyNotes.otherFund/assetCount
+		//						}
+		//						carCard.storagePosition = applyNotes.storagePosition
+								carCard.country = applyNotes.country
+								carCard.assetStatus = "已入库"
+								carCard.save(flush: true)
+							}
+							
+						}else if(assetType == "房屋"){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+	//						def assetCount = applyNotes.amount
+							for(int i=0;i<assetCount;i++){
+								def houseCard = new HouseCards()
+								houseCard.company = company
+								houseCard.applyNotes = applyNotes
+								houseCard.registerNum = getFormattedSeriesDate()
+								houseCard.userCategory = applyNotes.userCategory
+								houseCard.assetName = applyNotes.assetName
+								houseCard.userDepart = applyNotes.userDepart
+								houseCard.onePrice = onePrice
+								houseCard.country = applyNotes.country
+								houseCard.assetStatus = "已入库"
+								houseCard.save(flush: true)
+							}
+						}else if(assetType == "土地"){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+	//						def assetCount = applyNotes.amount
+							for(int i=0;i<assetCount;i++){
+								def landCard = new LandCards()
+								landCard.company = company
+								landCard.applyNotes = applyNotes
+								landCard.registerNum = getFormattedSeriesDate()
+								landCard.userCategory = applyNotes.userCategory
+								landCard.assetName = applyNotes.assetName
+								landCard.userDepart = applyNotes.userDepart
+								landCard.onePrice = onePrice
+								landCard.country = applyNotes.country
+								landCard.assetStatus = "已入库"
+								landCard.save(flush: true)
+							}
+						}else if(assetType == "图书"){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+	//						def assetCount = applyNotes.amount
+							for(int i=0;i<assetCount;i++){
+								def bookCard = new BookCards()
+								bookCard.company = company
+								bookCard.applyNotes = applyNotes
+								bookCard.registerNum = getFormattedSeriesDate()
+								bookCard.userCategory = applyNotes.userCategory
+								bookCard.assetName = applyNotes.assetName
+								bookCard.userDepart = applyNotes.userDepart
+								bookCard.onePrice = onePrice
+								bookCard.country = applyNotes.country
+								bookCard.assetStatus = "已入库"
+								bookCard.save(flush: true)
+							}
+						}else if(assetType == "家具"){
+							/*获取申请信息中的数量，创建相同数量的资产卡片*/
+	//						def assetCount = applyNotes.amount
+							for(int i=0;i<assetCount;i++){
+								def furnitureCard = new FurnitureCards()
+								furnitureCard.company = company
+								furnitureCard.applyNotes = applyNotes
+								furnitureCard.registerNum = getFormattedSeriesDate()
+								furnitureCard.userCategory = applyNotes.userCategory
+								furnitureCard.assetName = applyNotes.assetName
+								furnitureCard.userDepart = applyNotes.userDepart
+								furnitureCard.onePrice = onePrice
+								furnitureCard.country = applyNotes.country
+								furnitureCard.assetStatus = "已入库"
+								furnitureCard.save(flush: true)
+							}
 						}
-					}else if(assetType == "车辆"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-//						def assetCount = applyNotes.amount
-						for(int i=0;i<assetCount;i++){
-							def carCard = new CarCards()
-							carCard.company = company
-							carCard.applyNotes = applyNotes
-							carCard.registerNum = getFormattedSeriesDate()
-							carCard.userCategory = applyNotes.userCategory
-							carCard.assetName = applyNotes.assetName
-							carCard.userDepart = applyNotes.userDepart
-	//						carCard.userStatus = applyNotes.userStatus
-	//						carCard.assetSource = applyNotes.assetSource
-	//						carCard.costCategory = applyNotes.costCategory
-	//						carCard.buyDate = applyNotes.buyDate
-	//						carCard.organizationalType = applyNotes.organizationalType
-							carCard.onePrice = onePrice
-	//						if(applyNotes.undertakingRevenue == 0){
-	//							carCard.undertakingRevenue = 0
-	//						}else{
-	//							carCard.undertakingRevenue = applyNotes.undertakingRevenue/assetCount
-	//						}
-	//						if(applyNotes.fiscalAppropriation == 0){
-	//							carCard.fiscalAppropriation = 0
-	//						}else{
-	//							carCard.fiscalAppropriation = applyNotes.fiscalAppropriation/assetCount
-	//						}
-	//						if(applyNotes.otherFund == 0){
-	//							carCard.otherFund = 0
-	//						}else{
-	//							carCard.otherFund = applyNotes.otherFund/assetCount
-	//						}
-	//						carCard.storagePosition = applyNotes.storagePosition
-							carCard.country = applyNotes.country
-							carCard.assetStatus = "已入库"
-							carCard.save(flush: true)
-						}
-						
-					}else if(assetType == "房屋"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-//						def assetCount = applyNotes.amount
-						for(int i=0;i<assetCount;i++){
-							def houseCard = new HouseCards()
-							houseCard.company = company
-							houseCard.applyNotes = applyNotes
-							houseCard.registerNum = getFormattedSeriesDate()
-							houseCard.userCategory = applyNotes.userCategory
-							houseCard.assetName = applyNotes.assetName
-							houseCard.userDepart = applyNotes.userDepart
-							houseCard.onePrice = onePrice
-							houseCard.country = applyNotes.country
-							houseCard.assetStatus = "已入库"
-							houseCard.save(flush: true)
-						}
-					}else if(assetType == "土地"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-//						def assetCount = applyNotes.amount
-						for(int i=0;i<assetCount;i++){
-							def landCard = new LandCards()
-							landCard.company = company
-							landCard.applyNotes = applyNotes
-							landCard.registerNum = getFormattedSeriesDate()
-							landCard.userCategory = applyNotes.userCategory
-							landCard.assetName = applyNotes.assetName
-							landCard.userDepart = applyNotes.userDepart
-							landCard.onePrice = onePrice
-							landCard.country = applyNotes.country
-							landCard.assetStatus = "已入库"
-							landCard.save(flush: true)
-						}
-					}else if(assetType == "图书"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-//						def assetCount = applyNotes.amount
-						for(int i=0;i<assetCount;i++){
-							def bookCard = new BookCards()
-							bookCard.company = company
-							bookCard.applyNotes = applyNotes
-							bookCard.registerNum = getFormattedSeriesDate()
-							bookCard.userCategory = applyNotes.userCategory
-							bookCard.assetName = applyNotes.assetName
-							bookCard.userDepart = applyNotes.userDepart
-							bookCard.onePrice = onePrice
-							bookCard.country = applyNotes.country
-							bookCard.assetStatus = "已入库"
-							bookCard.save(flush: true)
-						}
-					}else if(assetType == "家具"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-//						def assetCount = applyNotes.amount
-						for(int i=0;i<assetCount;i++){
-							def furnitureCard = new FurnitureCards()
-							furnitureCard.company = company
-							furnitureCard.applyNotes = applyNotes
-							furnitureCard.registerNum = getFormattedSeriesDate()
-							furnitureCard.userCategory = applyNotes.userCategory
-							furnitureCard.assetName = applyNotes.assetName
-							furnitureCard.userDepart = applyNotes.userDepart
-							furnitureCard.onePrice = onePrice
-							furnitureCard.country = applyNotes.country
-							furnitureCard.assetStatus = "已入库"
-							furnitureCard.save(flush: true)
-						}
+						applyNotes.isCreatedCards = "1"
+						createCardsCount += 1
+						createCards = "true"
 					}
-					applyNotes.isCreatedCards = "1"
 				}
-				json = [result:'true']
+				message = "共有"+createCardsCount+"个资产申请单生成资产卡片！"
+				json = [result:'true',message:message]
 			}else{
-				json = [result:'error']
+				message = "错误，请联系管理员！"
+				json = [result:'error',message:message]
 			}
 		}catch(Exception e){
-			json = [result:'error']
+			message = "错误，请联系管理员！"
+			json = [result:'error',message:message]
 		}
 		model["createCards"] = createCards
 		def applyNotes = new ApplyNotes()
@@ -595,6 +599,14 @@ class ApplyManageController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetApplyService.getAssetApplyListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -603,11 +615,11 @@ class ApplyManageController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetApplyService.getAssetApplyDataStore(args)
+			json["gridData"] = assetApplyService.getAssetApplyDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = assetApplyService.getAssetApplyCount(company)
+			def total = assetApplyService.getAssetApplyCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -676,7 +688,7 @@ class ApplyManageController {
 					
 					def args = [:]
 					args["type"] = "【资产申请】"
-					args["content"] = "请您审核编号为  【" + applyNotes.registerNum +  "】 的申请信息"
+					args["content"] = "请您审核编号为  【" + applyNotes.registerNum +  "】 的资产申请信息！"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = applyNotes.id
 					args["user"] = nextUser
@@ -697,13 +709,14 @@ class ApplyManageController {
 			}
 		}
 		applyNotes.status = nextStatus
-		//处理资产申请状态
-		if(params.status.equals("资产报备") || params.status.equals("打印盖章")){
-			applyNotes.applyStatus = "已结束"
-		}else{
-			applyNotes.applyStatus = nextStatus
-		}
 		applyNotes.currentDealDate = new Date()
+		//处理资产审核状态
+		applyNotes.applyStatus = nextStatus
+//		if(params.status.equals("资产报备") || params.status.equals("打印盖章")){
+//			applyNotes.applyStatus = "已结束"
+//		}else{
+//			applyNotes.applyStatus = nextStatus
+//		}
 		
 		//判断下一处理人是否与当前处理人员为同一人
 		if(currentUser.equals(applyNotes.currentUser)){
@@ -794,7 +807,7 @@ class ApplyManageController {
 				//增加待办事项
 				def args = [:]
 				args["type"] = "【资产申请】"
-				args["content"] = "编号为  【" + applyNotes.registerNum +  "】 的申请信息被退回，请查看！"
+				args["content"] = "编号为  【" + applyNotes.registerNum +  "】 的资产申请信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = applyNotes.id
 				args["user"] = user
@@ -807,6 +820,8 @@ class ApplyManageController {
 				applyNotes.currentDepart = user.getDepartName()
 				applyNotes.currentDealDate = new Date()
 				applyNotes.status = nextStatus
+				//处理资产审核状态
+				applyNotes.applyStatus = nextStatus
 				
 				//判断下一处理人是否与当前处理人员为同一人
 				if(currentUser.equals(applyNotes.currentUser)){

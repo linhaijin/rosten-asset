@@ -24,6 +24,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -54,6 +55,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -63,7 +65,6 @@ class AssetCardsService {
 		def query = { eq("company",company) }
 		return c.count(query)
 	}
-	
 	
 	//设备资产
 	def getDeviceCardsListLayout ={
@@ -85,6 +86,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -115,6 +117,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -145,6 +148,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -175,6 +179,7 @@ class AssetCardsService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}

@@ -35,8 +35,8 @@ class AssetApplyService {
 				}else{
 					like(k,"%" + v + "%")
 				}
-				
 			}
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -60,7 +60,6 @@ class AssetApplyService {
 				}else{
 					like(k,"%" + v + "%")
 				}
-				
 			}
 		}
 		return c.count(query)
@@ -71,32 +70,47 @@ class AssetApplyService {
 		return gridUtil.buildLayoutJSON(new ApplyNotes())
 	}
 	
-	def getAssetApplyDataStore ={params->
+	def getAssetApplyDataStore ={params,searchArgs->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllAssetApply(offset,max,params.company)
+		def propertyList = getAllAssetApply(offset,max,params.company,searchArgs)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllAssetApply ={offset,max,company->
+	def getAllAssetApply ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = ApplyNotes.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
 			eq("applyStatus","已结束")
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
 	
-	def getAssetApplyCount ={company->
+	def getAssetApplyCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = ApplyNotes.createCriteria()
 		def query = { 
 			eq("company",company) 
 			eq("applyStatus","已结束")
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
 		}
 		return c.count(query)
 	}

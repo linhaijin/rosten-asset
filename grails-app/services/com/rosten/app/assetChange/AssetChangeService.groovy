@@ -37,7 +37,7 @@ class AssetChangeService {
 					like(k,"%" + v + "%")
 				}
 			}
-//			eq("currentUser",user)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -59,7 +59,6 @@ class AssetChangeService {
 					like(k,"%" + v + "%")
 				}
 			}
-//			eq("currentUser",user)
 		}
 		return c.count(query)
 	}
@@ -70,16 +69,16 @@ class AssetChangeService {
 		return gridUtil.buildLayoutJSON(new AssetAllocate())
 	}
 	
-	def getAssetAllocateDataStore ={params->
+	def getAssetAllocateDataStore ={params,searchArgs->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllAssetAllocate(offset,max,params.company)
+		def propertyList = getAllAssetAllocate(offset,max,params.company,searchArgs)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllAssetAllocate ={offset,max,company->
+	def getAllAssetAllocate ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetAllocate.createCriteria()
 		def pa=[max:max,offset:offset]
@@ -90,11 +89,19 @@ class AssetChangeService {
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
+			searchArgs.each{k,v->
+				if(k.equals("callInDept") || k.equals("callOutDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
 	
-	def getAssetAllocateCount ={company->
+	def getAssetAllocateCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetAllocate.createCriteria()
 		def query = { 
@@ -103,6 +110,13 @@ class AssetChangeService {
 				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
+			}
+			searchArgs.each{k,v->
+				if(k.equals("callInDept") || k.equals("callOutDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)
@@ -114,16 +128,16 @@ class AssetChangeService {
 		return gridUtil.buildLayoutJSON(new AssetLose())
 	}
 	
-	def getAssetLoseDataStore ={params->
+	def getAssetLoseDataStore ={params,searchArgs->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllAssetLose(offset,max,params.company)
+		def propertyList = getAllAssetLose(offset,max,params.company,searchArgs)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllAssetLose ={offset,max,company->
+	def getAllAssetLose ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetLose.createCriteria()
 		def pa=[max:max,offset:offset]
@@ -134,11 +148,19 @@ class AssetChangeService {
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
 	
-	def getAssetLoseCount ={company->
+	def getAssetLoseCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetLose.createCriteria()
 		def query = { 
@@ -147,6 +169,13 @@ class AssetChangeService {
 				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
+			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)
@@ -158,16 +187,16 @@ class AssetChangeService {
 		return gridUtil.buildLayoutJSON(new AssetRepair())
 	}
 	
-	def getAssetRepairDataStore ={params->
+	def getAssetRepairDataStore ={params,searchArgs->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllAssetRepair(offset,max,params.company)
+		def propertyList = getAllAssetRepair(offset,max,params.company,searchArgs)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllAssetRepair ={offset,max,company->
+	def getAllAssetRepair ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetRepair.createCriteria()
 		def pa=[max:max,offset:offset]
@@ -178,18 +207,34 @@ class AssetChangeService {
 				eq("currentUser",user)
 				eq("status","已结束")
 			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
 	
-	def getAssetRepairCount ={company->
+	def getAssetRepairCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
 		def c = AssetRepair.createCriteria()
 		def query = { 
 			eq("company",company) 
 			or{
+				eq("drafter",user)
 				eq("currentUser",user)
 				eq("status","已结束")
+			}
+			searchArgs.each{k,v->
+				if(k.equals("applyDept")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)

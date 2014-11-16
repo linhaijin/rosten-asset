@@ -287,7 +287,7 @@
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${applyNotes?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"240px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"220px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
@@ -296,7 +296,7 @@
                                	data-dojo-props='
                              	trim:true,
                              	required:true,
-                             	disabled:"disabled",
+                             	readOnly:true,
            						value:"${applyNotes?.getFormattedUser()}"
                            	'/>
 			            </td>
@@ -307,12 +307,14 @@
 				               	trim:true,
 				               	required:true,
 				               	readOnly:true,
+				               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
 								value:"${applyNotes?.getDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${applyNotes?.userDepart?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	<g:if test="${applyNotes.applyStatus=='未审核'}">
+				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	</g:if>
 			           	</td>
-					    
 					</tr>
 					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产分类：</div></td>
@@ -322,10 +324,14 @@
                                	trim:true,
                                	required:true,
                                	readOnly:true,
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
              					value:"${applyNotes?.getCategoryName()}"
                            	'/>
                            	<g:hiddenField name="allowCategoryId" value="${applyNotes?.userCategory?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectAssetCategory("${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+							<g:if test="${applyNotes.applyStatus=='未审核'}">
+				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectAssetCategory("${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	</g:if>
+							
 			           	</td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产名称：</div></td>
 					    <td>
@@ -333,6 +339,7 @@
                                	data-dojo-props='name:"assetName",${fieldAcl.isReadOnly("assetName")},
                                	trim:true,
                                	required:true,
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
              					value:"${applyNotes?.assetName}"
                            	'/>
 			            </td>
@@ -344,6 +351,7 @@
                                	data-dojo-props='name:"userName",${fieldAcl.isReadOnly("userName")},
                                	trim:true,
                                	required:true,
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
              					value:"${applyNotes?.getFormattedUser()}"
                            	'/>
 			           	</td>
@@ -353,6 +361,7 @@
                                	data-dojo-props='name:"amount",${fieldAcl.isReadOnly("amount")},
                                	trim:true,
                                	required:true,
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
                                	value:"${applyNotes?.amount}"
                            	'/>
 			            </td>
@@ -364,6 +373,7 @@
                                	data-dojo-props='id:"totalPrice",name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
                                	trim:true,
                                	required:true,
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
              					value:"${Double.doubleToLongBits(applyNotes?.totalPrice)}"
                            	'/>
 			            </td>
@@ -377,7 +387,8 @@
                                	data-dojo-props='name:"usedBy",${fieldAcl.isReadOnly("usedBy")},
                                	trim:true,
                                	required:true,
-                               	style:{width:"600px",height:"100px"},
+                               	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	style:{width:"550px",height:"80px"},
              					value:"${applyNotes?.usedBy}"
                            	'/>
 			           	</td>

@@ -62,7 +62,6 @@ class AssetRepairController {
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
@@ -92,6 +91,15 @@ class AssetRepairController {
 		model["img"] = img
 		model["action"] = action
 		return model
+	}
+	
+	def assetRepairSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetChange/assetRepairSearch',model:model)
 	}
 	
 	def assetRepairAdd = {
@@ -325,6 +333,14 @@ class AssetRepairController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetChangeService.getAssetRepairListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
+		if(params.applyDept && !"".equals(params.applyDept)) searchArgs["applyDept"] = Depart.findByCompanyAndDepartName(company,params.applyDept)
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -333,10 +349,10 @@ class AssetRepairController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetChangeService.getAssetRepairDataStore(args)
+			json["gridData"] = assetChangeService.getAssetRepairDataStore(args,searchArgs)
 		}
 		if(params.refreshPageControl){
-			def total = assetChangeService.getAssetRepairCount(company)
+			def total = assetChangeService.getAssetRepairCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -399,7 +415,8 @@ class AssetRepairController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
-					eq("seriesNo",seriesNo)
+					like("seriesNo","%"+seriesNo+"%")
+//					eq("seriesNo",seriesNo)
 //					if(assetType=="" || assetType==null){
 //						eq("assetStatus","报废待审批")
 //					}
@@ -524,11 +541,12 @@ class AssetRepairController {
 			and{
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
+					eq("assetStatus","已入库")
 //					if(freshType=="twice"){
 //						eq("assetStatus","报废待审批")
 //						eq("seriesNo",seriesNo)
 //					}else{
-						eq("assetStatus","已入库")
+//						eq("assetStatus","已入库")
 //					}
 				}
 			}
@@ -619,50 +637,103 @@ class AssetRepairController {
 		def bookCards
 		def furnitureCards
 		
+		def seriesNo_exist
+		def seriesNo_exists
 		if(assetIds.size()>0){
 			assetIds.each{
 				//将申请单号和资产变更类型写入资产建账信息中
 				if(assetType.equals("car")){
 					carCards = CarCards.get(it)
 					if(carCards){
-						carCards.assetStatus = "资产已报修"
-						carCards.seriesNo = seriesNo
-						totalPrice = carCards.onePrice
+						seriesNo_exist = carCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							carCards.assetStatus = "资产已报修"
+							carCards.seriesNo = seriesNo
+							totalPrice = carCards.onePrice
+						}
+//						carCards.assetStatus = "资产已报修"
+//						carCards.seriesNo = seriesNo
+//						totalPrice = carCards.onePrice
 					}
 				}else if(assetType.equals("land")){
 					landCards = LandCards.get(it)
 					if(landCards){
-						landCards.assetStatus = "资产已报修"
-						landCards.seriesNo = seriesNo
-						totalPrice = landCards.onePrice
+						seriesNo_exist = landCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							landCards.assetStatus = "资产已报修"
+							landCards.seriesNo = seriesNo
+							totalPrice = landCards.onePrice
+						}
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
 					if(houseCards){
-						houseCards.assetStatus = "资产已报修"
-						houseCards.seriesNo = seriesNo
-						totalPrice = houseCards.onePrice
+						seriesNo_exist = houseCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							houseCards.assetStatus = "资产已报修"
+							houseCards.seriesNo = seriesNo
+							totalPrice = houseCards.onePrice
+						}
 					}
 				}else if(assetType.equals("device")){
 					deviceCards = DeviceCards.get(it)
 					if(deviceCards){
-						deviceCards.assetStatus = "资产已报修"
-						deviceCards.seriesNo = seriesNo
-						totalPrice = deviceCards.onePrice
+						seriesNo_exist = deviceCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							deviceCards.assetStatus = "资产已报修"
+							deviceCards.seriesNo = seriesNo
+							totalPrice = deviceCards.onePrice
+						}
 					}
 				}else if(assetType.equals("book")){
 					bookCards = BookCards.get(it)
 					if(bookCards){
-						bookCards.assetStatus = "资产已报修"
-						bookCards.seriesNo = seriesNo
-						totalPrice = bookCards.onePrice
+						seriesNo_exist = bookCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							bookCards.assetStatus = "资产已报修"
+							bookCards.seriesNo = seriesNo
+							totalPrice = bookCards.onePrice
+						}
 					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
-						furnitureCards.assetStatus = "资产已报修"
-						furnitureCards.seriesNo = seriesNo
-						totalPrice = furnitureCards.onePrice
+						seriesNo_exist = furnitureCards.seriesNo
+						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+							seriesNo_exists = seriesNo_exist.split(",")
+							if(seriesNo in seriesNo_exists){
+								//undo
+							}
+						}else{
+							furnitureCards.assetStatus = "资产已报修"
+							furnitureCards.seriesNo = seriesNo
+							totalPrice = furnitureCards.onePrice
+						}
 					}
 				}
 				assetTotal += totalPrice
@@ -820,11 +891,6 @@ class AssetRepairController {
 		def json=[:]
 		
 		def assetRepair = AssetRepair.get(params.id)
-		//处理资产报修状态
-		assetRepair.dataStatus = params.status
-//		if(params.status.equals("已归档")){
-//			assetRepair.dataStatus = params.status
-//		}
 		
 		//处理当前人的待办事项
 		def currentUser = springSecurityService.getCurrentUser()
@@ -907,6 +973,8 @@ class AssetRepairController {
 		}
 		assetRepair.status = nextStatus
 		assetRepair.currentDealDate = new Date()
+		//处理资产报修状态
+		assetRepair.dataStatus = nextStatus
 		
 		//判断下一处理人是否与当前处理人员为同一人
 		if(currentUser.equals(assetRepair.currentUser)){
@@ -1010,6 +1078,8 @@ class AssetRepairController {
 				assetRepair.currentDepart = user.getDepartName()
 				assetRepair.currentDealDate = new Date()
 				assetRepair.status = nextStatus
+				//处理资产报修状态
+				assetRepair.dataStatus = nextStatus
 				
 				//判断下一处理人是否与当前处理人员为同一人
 				if(currentUser.equals(assetRepair.currentUser)){

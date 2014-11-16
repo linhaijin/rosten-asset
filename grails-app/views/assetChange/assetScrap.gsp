@@ -43,6 +43,12 @@
 				});
 			
 				assetScrap_save = function(object){
+					var allowdepartsName = dojo.byId("allowdepartsName").value;
+					if(allowdepartsName == ""){
+						alert("注意：请选择申请部门！");
+						document.getElementById("allowdepartsName").focus();
+						return;
+					}
 					var assetTotal = dojo.byId("assetTotal").value;
 					if(assetTotal==0){
 						alert("注意：请添加资产信息！");
@@ -87,6 +93,7 @@
 
 								//流程相关信息
 								var content = {};
+								content.assetTotal = assetTotal;
 								<g:if test='${flowCode}'>
 									content.flowCode = "${flowCode}";
 									content.relationFlow = "${relationFlow}";
@@ -502,23 +509,26 @@
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetScrap?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"90px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"190px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请单号：</div></td>
 					    <td width="250">
                            	<input id="seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
-                               		trim:true,
-                               		required:true,disabled:"disabled",
-             						value:"${assetScrap?.seriesNo}"
+                              	trim:true,
+                              	required:true,
+                              	readOnly:true,
+            					value:"${assetScrap?.seriesNo}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请日期：</div></td>
 					    <td width="250">
 					    	<input id="applyDate" data-dojo-type="dijit/form/DateTextBox" 
-                               	data-dojo-props='name:"applyDate",trim:true,${fieldAcl.isReadOnly("applyDate")},
-                               		value:"${assetScrap?.getFormattedShowApplyDate()}"
+                               	data-dojo-props='name:"applyDate",${fieldAcl.isReadOnly("applyDate")},
+                               	trim:true,
+                               	readOnly:true,
+                               	value:"${assetScrap?.getFormattedShowApplyDate()}"
                            	'/>
 			            </td>
 					</tr>
@@ -529,40 +539,48 @@
                                	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
                                		trim:true,
                                		required:true,
-             						value:"${user?.chinaName}"
+                               		readOnly:true,
+             						value:"${assetScrap.applyMan==null?user.chinaName:assetScrap.applyMan}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
 					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
-				               		trim:true,
-				               		required:true,
-									value:"${assetScrap?.getDepartName()}"
+				               	trim:true,
+				               	required:true,
+				               	${assetScrap.dataStatus!='未审批'?'readOnly:true,':'' }
+								value:"${assetScrap?.getDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${assetScrap?.applyDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	<g:if test="${assetScrap.dataStatus=='未审批'}">
+				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	</g:if>
 			           </td>
 					</tr>
 					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
-					    <td>
+					    <td colspan="3">
 					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
-                               		trim:true,
-                               		required:true,
-                               		
-             						value:"${assetScrap?.assetTotal}"
+                               	trim:true,
+                               	required:true,
+                               	readOnly:true,
+             					value:"${assetScrap?.assetTotal}"
                            	'/>
 			            </td>
-			            <td ><div align="right"><span style="color:red">*&nbsp;</span>申请理由：</div></td>
-						<td>
-						    <input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
+			        </tr>
+			        <tr>
+			            <td><div align="right"><span style="color:red">*&nbsp;</span>申请理由：</div></td>
+						<td colspan="3">
+						    <input id="applyDesc" data-dojo-type="dijit/form/SimpleTextarea" 
 	    						data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
-	                               	trim:true,
-	                               	required:true,
-	                               	value:"${assetScrap?.applyDesc}"
-	                         '/>
+	                            trim:true,
+	                            required:true,
+	                            ${assetScrap.dataStatus!='未审批'?'readOnly:true,':'' }
+	                            style:{width:"550px",height:"80px"},
+	                        	value:"${assetScrap?.applyDesc}"
+	                    	'/>
 						</td>
 					</tr>
 				</table>

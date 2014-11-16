@@ -55,6 +55,12 @@
 					document.getElementById("repairReason").focus();
 					return;
 				}
+				var contacts = dojo.byId("contacts").value;
+				if(contacts == "" || contacts == null){
+					alert("注意：请填写联系人！");
+					document.getElementById("contacts").focus();
+					return;
+				}
 				var contactPhone = dojo.byId("contactPhone").value;
 				if(contactPhone == "" || contactPhone == null){
 					alert("注意：请填写联系电话！");
@@ -99,6 +105,7 @@
 
 							//流程相关信息
 							var content = {};
+							content.assetTotal = assetTotal;
 							<g:if test='${flowCode}'>
 								content.flowCode = "${flowCode}";
 								content.relationFlow = "${relationFlow}";
@@ -132,9 +139,6 @@
 					}
 				};
 				dojo.xhrPost(ioArgs);
-
-				
-				
 			};
 			
 			page_quit = function(){
@@ -353,11 +357,14 @@
 					assetType = assetSel.attr("value");
 				}
 			}
-			
+
 			var assetTotal;
+			var assettotal;
 			var assetTotalSel = dijit.byId("assetTotal");
 			if(assetTotalSel){
-				if(assetTotalSel.attr("value")!=""){
+				if(assetTotalSel.attr("value") == "" || assetTotalSel.attr("value") == null){
+					assetTotal = "0-0";
+				}else{
 					assetTotal = assetTotalSel.attr("value").replace(".","-");
 				}
 			}
@@ -489,7 +496,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
-			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox"  name="assetTotal" value="${assetRepair?.assetTotal}" />
+			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" name="assetTotal" value="${assetRepair?.assetTotal}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -501,16 +508,19 @@
 					    <td width="250">
                            	<input id="seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
-                               		trim:true,
-                               		required:true,disabled:"disabled",
-             						value:"${assetRepair?.seriesNo}"
+                               	trim:true,
+                               	required:true,
+                               	readOnly:true,
+             					value:"${assetRepair?.seriesNo}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请日期：</div></td>
 					    <td width="250">
 					    	<input id="applyDate" data-dojo-type="dijit/form/DateTextBox" 
-                               	data-dojo-props='name:"applyDate",trim:true,${fieldAcl.isReadOnly("applyDate")},
-                               		value:"${assetRepair?.getFormattedShowApplyDate()}"
+                               	data-dojo-props='name:"applyDate",${fieldAcl.isReadOnly("applyDate")},
+                               	trim:true,
+                               	readOnly:true,
+                               	value:"${assetRepair?.getFormattedShowApplyDate()}"
                            	'/>
 			            </td>
 					</tr>
@@ -519,21 +529,25 @@
 					    <td>
 					    	<input id="applyMan" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
-                               		trim:true,
-                               		required:true,
-             						value:"${user?.chinaName}"
+                               	trim:true,
+                               	required:true,
+                               	readOnly:true,
+             					value:"${assetRepair.applyMan==null?user.chinaName:assetRepair.applyMan}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
 					   <td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
-				               		trim:true,
-				               		required:true,
-									value:"${assetRepair?.getDepartName()}"
+				               	trim:true,
+				               	required:true,
+				               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+								value:"${assetRepair?.getDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${assetRepair?.applyDept?.id }" />
-							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         	<g:if test="${assetRepair.dataStatus=='未审批'}">
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+			           		</g:if>
 			           </td>
 					</tr>
 					<tr>
@@ -541,18 +555,19 @@
 					    <td>
 					    	<input id="repairReason" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"repairReason",name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
-                               		trim:true,
-                               		required:true,
-             						value:"${assetRepair?.repairReason}"
+                               	trim:true,
+                               	required:true,
+                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+             					value:"${assetRepair?.repairReason}"
                            	'/>
 			            </td>
 			            <td ><div align="right"><span style="color:red">*&nbsp;</span>预约维修时间：</div></td>
 						<td>
 						    <input id="expectDate" data-dojo-type="dijit/form/DateTextBox" 
 	    						data-dojo-props='name:"expectDate",${fieldAcl.isReadOnly("expectDate")},
-	                               	trim:true,
-	                               	required:true,
-	                               	value:"${assetRepair?.getFormattedShowExpectDate()}"
+	                            trim:true,
+	                            required:true,
+	                            value:"${assetRepair?.getFormattedShowExpectDate()}"
 	                         '/>
 						</td>
 					</tr>
@@ -561,18 +576,20 @@
 					    <td>
 					    	<input id="contacts" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"contacts",${fieldAcl.isReadOnly("contacts")},
-                               		trim:true,
-                               		required:true,
-             						value:"${user?.chinaName}"
+                               	trim:true,
+                               	required:true,
+                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+             					value:"${assetRepair.contacts==null?user.chinaName:assetRepair.contacts}"
                            	'/>
 			            </td>
 			            <td ><div align="right"><span style="color:red">*&nbsp;</span>联系电话：</div></td>
 						<td>
 						    <input id="contactPhone" data-dojo-type="dijit/form/ValidationTextBox" 
 	    						data-dojo-props='name:"contactPhone",${fieldAcl.isReadOnly("contactPhone")},
-	                               	trim:true,
-	                               	required:true,
-	                               	value:"${assetRepair?.contactPhone}"
+	                            trim:true,
+	                            required:true,
+	                            ${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+	                            value:"${assetRepair?.contactPhone}"
 	                         '/>
 						</td>
 					</tr>
@@ -581,8 +598,8 @@
 					    <td colspan="3">
 					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
-                               		trim:true,
-             						value:"${assetRepair?.storagePosition}"
+                               	trim:true,
+             					value:"${assetRepair?.storagePosition}"
                            	'/>
 			            </td>
 					</tr>
@@ -595,16 +612,16 @@
 					    <td width="250">
                            	<input id="maintenanceMan" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"maintenanceMan",${fieldAcl.isReadOnly("maintenanceMan")},
-                               		trim:true,
-             						value:"${assetRepair?.maintenanceMan}"
+                               	trim:true,
+             					value:"${assetRepair?.maintenanceMan}"
                            	'/>
 			            </td>
 					    <td width="120"><div align="right">维护联系电话：</div></td>
 					    <td width="250">
                            	<input id="maintenancePhone" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"maintenancePhone",${fieldAcl.isReadOnly("maintenancePhone")},
-                               		trim:true,
-             						value:"${assetRepair?.maintenancePhone}"
+                               	trim:true,
+             					value:"${assetRepair?.maintenancePhone}"
                            	'/>
 			            </td>
 					</tr>
@@ -613,16 +630,16 @@
 					    <td>
 					    	<input id="maintenanceDate" data-dojo-type="dijit/form/DateTextBox" 
                                	data-dojo-props='name:"maintenanceDate",${fieldAcl.isReadOnly("maintenanceDate")},
-                               		trim:true,
-             						value:"${assetRepair?.getFormattedShowMaintenanceDate()}"
+                               	trim:true,
+             					value:"${assetRepair?.getFormattedShowMaintenanceDate()}"
                            	'/>
 			            </td>
 					    <td><div align="right">维护费用：</div></td>
 					   <td width="250">
 					    	<input id="maintenanceCost" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"maintenanceCost",${fieldAcl.isReadOnly("maintenanceCost")},
-				               		trim:true,
-									value:"${assetRepair?.maintenanceCost}"
+				               	trim:true,
+								value:"${assetRepair?.maintenanceCost}"
 				          	'/>
 			           </td>
 					</tr>
@@ -631,9 +648,9 @@
 					    <td>
 					    	<select id="repairComplete" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"repairComplete",${fieldAcl.isReadOnly("repairComplete")},
-                           			autoComplete:false,
-                           			trim:true,
-            						value:"${assetRepair?.repairComplete}"
+                           		autoComplete:false,
+                           		trim:true,
+            					value:"${assetRepair?.repairComplete}"
                             '>
 	                            <option value="未修复">未修复</option>
 								<option value="已修复">已修复</option>
@@ -644,8 +661,8 @@
 						<td>
 						    <input id="feedback" data-dojo-type="dijit/form/ValidationTextBox" 
 	    						data-dojo-props='name:"feedback",${fieldAcl.isReadOnly("feedback")},
-	                               	trim:true,
-	                               	value:"${assetRepair?.feedback}"
+	                            trim:true,
+	                            value:"${assetRepair?.feedback}"
 	                         '/>
 						</td>
 					</tr>

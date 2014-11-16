@@ -103,7 +103,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}
 		var isCreatedCards = rosten.getGridSelectedValue("getCardsCreatedLabel");
 		if(isCreatedCards == "已生成"){
-			alert("注意：该申请单已生成资产卡片，请勿重复生成！");
+			alert("注意：某些申请单已生成卡片，请勿重复操作！");
 			return;
 		}
 		var content ={};
@@ -149,6 +149,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/applyManage/applyApprovalView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/applyManage/mineApplySearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/applyManage/assetApplyGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);

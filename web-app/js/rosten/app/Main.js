@@ -304,7 +304,7 @@ define(["dojo/_base/kernel"
     		if(_data.dataCount){
     			titlePaneNode.changeTitleCount("(" + _data.dataCount + "条)");
     		}else{
-    			titlePaneNode.changeTitleCount("");
+    			titlePaneNode.changeTitleCount("(暂无工作)");
     		}
     		
     		var data = _data.dataList;
@@ -498,7 +498,16 @@ define(["dojo/_base/kernel"
 		if(data.length>0){
 			titlePaneNode.changeTitleCount("(" + data.length + "条)");
 		}else{
-			titlePaneNode.changeTitleCount("");
+			var _showName = "暂无数据";
+			switch(idname){
+			case "home_bbs":
+				_showName = "暂无公告";
+				break;
+			case "home_download":
+				_showName = "暂无下载文件";
+				break;
+			}
+			titlePaneNode.changeTitleCount("(" + _showName + ")");
 		}
 		
 		var node = titlePaneNode.containerNode;

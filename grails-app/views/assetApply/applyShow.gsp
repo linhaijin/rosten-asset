@@ -374,7 +374,7 @@
                                	trim:true,
                                	required:true,
                                	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
-             					value:"${Double.doubleToLongBits(applyNotes?.totalPrice)}"
+             					value:"${applyNotes?.totalPrice}"
                            	'/>
 			            </td>
 			            <td></td>

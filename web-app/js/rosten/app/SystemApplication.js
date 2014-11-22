@@ -54,6 +54,7 @@ define(["dojo/dom",
                 url : url,
                 rootLabel : "部门层级",
                 showCheckBox : false,
+                title:"部门选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -89,6 +90,7 @@ define(["dojo/dom",
                 rootLabel : "资产分类",
                 showCheckBox : false,
                 showRoot:false,
+                title:"资产分类选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -123,6 +125,7 @@ define(["dojo/dom",
                 url : url,
                 rootLabel : "用户层级",
                 showCheckBox : true,
+                title:"用户选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -264,6 +267,7 @@ define(["dojo/dom",
                 url : url,
                 rootLabel : "资源层级",
                 showCheckBox : true,
+                title:"资源选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -303,6 +307,7 @@ define(["dojo/dom",
                 url : url,
                 rootLabel : "资源层级",
                 showCheckBox : true,
+                title:"资源选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);

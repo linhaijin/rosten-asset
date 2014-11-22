@@ -43,27 +43,33 @@
 			});
 			assetRepair_save = function(object){
 				
-				var allowdepartsName = dojo.byId("allowdepartsName").value;
-				if(allowdepartsName == "" || allowdepartsName == null){
-					alert("注意：请选择申请部门！");
-					document.getElementById("allowdepartsName").focus();
+				var usedDepartName = dojo.byId("usedDepartName").value;
+				if(usedDepartName == "" || usedDepartName == null){
+					alert("注意：使用部门不能为空！");
+					document.getElementById("usedDepartName").focus();
+					return;
+				}
+				var usedMan = dojo.byId("usedMan").value;
+				if(usedMan == "" || usedMan == null){
+					alert("注意：使用人不能为空！");
+					document.getElementById("usedMan").focus();
 					return;
 				}
 				var repairReason = dojo.byId("repairReason").value;
 				if(repairReason == "" || repairReason == null){
-					alert("注意：请填写报修原因！");
+					alert("注意：报修原因不能为空！");
 					document.getElementById("repairReason").focus();
 					return;
 				}
 				var contacts = dojo.byId("contacts").value;
 				if(contacts == "" || contacts == null){
-					alert("注意：请填写联系人！");
+					alert("注意：联系人不能为空！");
 					document.getElementById("contacts").focus();
 					return;
 				}
 				var contactPhone = dojo.byId("contactPhone").value;
 				if(contactPhone == "" || contactPhone == null){
-					alert("注意：请填写联系电话！");
+					alert("注意：联系电话不能为空！");
 					document.getElementById("contactPhone").focus();
 					return;
 				}
@@ -496,6 +502,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
+			<g:hiddenField name="applyMan" id="applyMan" value="${assetRepair.applyMan==null?user.chinaName:assetRepair.applyMan}" />
 			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" name="assetTotal" value="${String.format("%.2f", assetRepair?.assetTotal)}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
@@ -525,30 +532,30 @@
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
-					    <td>
-					    	<input id="applyMan" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
-                               	trim:true,
-                               	required:true,
-                               	readOnly:true,
-             					value:"${assetRepair.applyMan==null?user.chinaName:assetRepair.applyMan}"
-                           	'/>
-			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
-					   <td width="250">
-					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
-				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
+						<td><div align="right"><span style="color:red">*&nbsp;</span>使用部门：</div></td>
+					   	<td width="250">
+					    	<input id="usedDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"usedDepartName",${fieldAcl.isReadOnly("usedDepartName")},
 				               	trim:true,
 				               	required:true,
 				               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
-								value:"${assetRepair?.getDepartName()}"
+								value:"${assetRepair?.getUsedDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="allowdepartsId" value="${assetRepair?.applyDept?.id }" />
+				         	<g:hiddenField name="usedDepartId" value="${assetRepair?.usedDepart?.id }" />
 				         	<g:if test="${assetRepair.dataStatus=='未审批'}">
-								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 			           		</g:if>
 			           </td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
+					    <td>
+					    	<input id="usedMan" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
+                               	trim:true,
+                               	required:true,
+                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+             					value:"${assetRepair?.usedMan}"
+                           	'/>
+			            </td>
 					</tr>
 					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>报修原因：</div></td>

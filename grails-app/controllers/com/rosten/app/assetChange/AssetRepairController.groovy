@@ -338,8 +338,8 @@ class AssetRepairController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
-		if(params.applyDept && !"".equals(params.applyDept)) searchArgs["applyDept"] = Depart.findByCompanyAndDepartName(company,params.applyDept)
+		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		if(params.refreshData){
 			def args =[:]
@@ -504,7 +504,7 @@ class AssetRepairController {
 			freshType = params.freshType
 		}
 		
-		def assetType = "car"
+		def assetType = "house"
 		if(params.assetType && params.assetType!="" && params.assetType!=null){
 			assetType = params.assetType
 		}

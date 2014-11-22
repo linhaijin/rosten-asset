@@ -45,25 +45,25 @@
 				assetLose_save = function(object){
 					var usedDepartName = dojo.byId("usedDepartName").value;
 					if(usedDepartName == "" && usedDepartName != null){
-						alert("注意：使用部门不能为空！");
+						rosten.alert("注意：使用部门不能为空！");
 						document.getElementById("usedDepartName").focus();
 						return;
 					}
 					var usedMan = dojo.byId("usedMan").value;
 					if(usedMan == "" && usedMan != null){
-						alert("注意：使用人不能为空！");
+						rosten.alert("注意：使用人不能为空！");
 						document.getElementById("usedMan").focus();
 						return;
 					}
 					var assetTotal = dojo.byId("assetTotal").value;
 					if(assetTotal==0){
-						alert("注意：请添加资产信息！");
+						rosten.alert("注意：请添加资产信息！");
 						document.getElementById("assetTotal").focus();
 						return;
 					}
 					var applyDesc = dojo.byId("applyDesc").value;
 					if(applyDesc=="" || applyDesc==null){
-						alert("注意：申请理由不能为空！");
+						rosten.alert("注意：申请理由不能为空！");
 						document.getElementById("applyDesc").focus();
 						return;
 					}
@@ -91,7 +91,7 @@
 						handleAs : "json",
 						load : function(response,args) {
 							if(response.result=="false"){//rensult为false，资产列表为不同类型资产
-								alert("注意：资产列表只能为同类型资产！");
+								rosten.alert("注意：资产列表只能为同类型资产！");
 								return;
 							}else{//rensult为true，资产列表为同类型资产，继续
 								//增加对多次单击的次数----2014-9-4
@@ -130,7 +130,7 @@
 							}
 						},
 						error : function(response,args) {
-							alert(response.message);
+							rosten.alert(response.message);
 							return;
 						}
 					};
@@ -336,7 +336,7 @@
 			var grid = dijit.byId("assetChooseListGrid");
 			var selected = grid.getSelected();
 			if (selected.length == 0) {
-				alert("请在资产列表中选择数据！");
+				rosten.alert("请在资产列表中选择数据！");
 				return;
 			}
 			
@@ -408,12 +408,12 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败，请联系管理员!");
+						rosten.alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
 				error : function(response,args) {
-					alert(response.message);
+					rosten.alert(response.message);
 					return;
 				}
 			};
@@ -425,7 +425,7 @@
 			var grid = dijit.byId("assetLoseListGrid");
 			var selected = grid.getSelected();
 			if (selected.length == 0) {
-				alert("请在资产列表中选择数据！");
+				rosten.alert("请在资产列表中选择数据！");
 				return;
 			}
 			
@@ -471,12 +471,12 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败，请联系管理员!");
+						rosten.alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
 				error : function(response,args) {
-					alert(response.message);
+					rosten.alert(response.message);
 					return;
 				}
 			};

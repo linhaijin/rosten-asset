@@ -300,14 +300,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-		var applyMan = registry.byId("repair_applyMan");
-		if(applyMan.get("value")!=""){
-			content.applyMan = applyMan.get("value");
+		var usedDepart = registry.byId("repair_usedDepart");
+		if(usedDepart.get("value")!=""){
+			content.usedDepart = usedDepart.get("value");
 		}
 		
-		var applyDept = registry.byId("repair_applyDept");
-		if(applyDept.get("value")!=""){
-			content.applyDept = applyDept.get("value");
+		var usedMan = registry.byId("repair_usedMan");
+		if(usedMan.get("value")!=""){
+			content.usedMan = usedMan.get("value");
 		}
 		
 		switch(rosten.kernel.navigationEntity) {
@@ -321,8 +321,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("repair_seriesNo").set("value","");
-			registry.byId("repair_applyMan").set("value","");
-			registry.byId("repair_applyDept").set("value","");
+			registry.byId("repair_usedDepart").set("value","");
+			registry.byId("repair_usedMan").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

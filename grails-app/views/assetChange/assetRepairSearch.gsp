@@ -21,21 +21,21 @@
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="8%">申请人</th>
+            <th width="8%">使用部门</th>
             <td width="18%">
-            	<input id="repair_applyMan"  data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true
-               '/>
-            </td>
-            <th width="8%">申请部门</th>
-            <td width="18%">
-            	<div id="repair_applyDept" data-dojo-type="dijit/form/ComboBox"
+            	<div id="repair_usedDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""
 	            '>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
 	            </div>
+            </td>
+            <th width="8%">使用人</th>
+            <td width="18%">
+            	<input id="repair_usedMan"  data-dojo-type="dijit/form/ValidationTextBox" 
+                	data-dojo-props='trim:true
+               '/>
             </td>
             <td>
             	<div class="btn">

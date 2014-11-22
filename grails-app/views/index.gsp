@@ -189,16 +189,26 @@
 			top_makeCharts = function(){
 				//单位固定资产分类统计
 		        var store = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getAssetByType',id:company?.id)}"});
-		        var chartP = new Chart("pie");
-	            chartP.setTheme(ThreeD);
-	            chartP.addPlot("default", {type: Pie, radius: 80});
-	            chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, top_valTrans, "number")));
-	            chartP.render();
-	            
-	            new Tooltip(chartP);
-	    		new MoveSlice(chartP);
-	            
-	   		 	//top_addLegend(chartP, "pie_legend");
+
+		        store.fetch({
+					query:{id:"*"},onComplete:function(items){
+						if(items.length>0){
+							var chartP = new Chart("pie");
+				            chartP.setTheme(ThreeD);
+				            chartP.addPlot("default", {type: Pie, radius: 80});
+				            chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, top_valTrans, "number")));
+				            chartP.render();
+				            
+				            new Tooltip(chartP);
+				    		new MoveSlice(chartP);
+				    		
+				    		//top_addLegend(chartP, "pie_legend");
+						}else{
+							domStyle.set(dom.byId("top_chart"),"display","none");
+							rosten.errordeal(registry.byId("home_chart").containerNode, "暂无数据");
+						}
+					},queryOptions:{deep:true}
+				});
 			};
 			function top_valTrans(value, store, item){
 		        return {
@@ -331,12 +341,12 @@
 					</div>
 				
 					<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"207px"}' >
-						<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" id ="home_personMail"
+						<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" id ="home_chart"
 							data-dojo-props='region:"left",title:"资产分布",toggleable:false,
 								height:"157px",width:"50%",style:{marginRight:"1px",padding:"0px"},
 								moreText:""'>
 								
-							<div class="charts">
+							<div class="charts" id="top_chart">
 								<div id="pie_legend"></div>
 								<div class="chart-area-pie">
 									<div id="pie" class="chart-pie"></div>

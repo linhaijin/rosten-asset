@@ -174,7 +174,7 @@
                                	data-dojo-props='id:"onePrice",name:"onePrice",${fieldAcl.isReadOnly("onePrice")},
                                		trim:true,
                                		required:true,
-             						value:"${carCards?.onePrice}"
+             						value:"${String.format("%.2f", carCards?.onePrice)}"
                            	'/>
 			            </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>事业收入（元）：</div></td>

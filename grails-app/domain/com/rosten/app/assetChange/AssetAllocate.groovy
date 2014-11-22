@@ -50,27 +50,53 @@ class AssetAllocate {
 	@GridColumn(name="申请人",width="100px",colIdx=3)
 	String applyMan
 	
-	//调入部门
-	Depart callInDept
-	@GridColumn(name="调入部门",width="120px",colIdx=4)
-	def getInDepartName(){
-		if(callInDept){
-			return callInDept.departName
+	//原部门
+	Depart originalDepart
+	def getOriginalDepartName(){
+		if(originalDepart){
+			return originalDepart.departName
 		}else{
 			return ""
 		}
 	}
 	
-	//调出部门
-	Depart callOutDept
-	@GridColumn(name="调出部门",width="120px",colIdx=5)
-	def getOutDepartName(){
-		if(callOutDept){
-			return callOutDept.departName
+	//原使用人
+	String originalUser
+	
+	//新部门
+	Depart newDepart
+	def getNewDepartName(){
+		if(newDepart){
+			return newDepart.departName
 		}else{
 			return ""
 		}
 	}
+	
+	//新使用人
+	String newUser
+	
+	//调入部门
+//	Depart callInDept
+//	@GridColumn(name="调入部门",width="120px",colIdx=4)
+//	def getInDepartName(){
+//		if(callInDept){
+//			return callInDept.departName
+//		}else{
+//			return ""
+//		}
+//	}
+	
+	//调出部门
+//	Depart callOutDept
+//	@GridColumn(name="调出部门",width="120px",colIdx=5)
+//	def getOutDepartName(){
+//		if(callOutDept){
+//			return callOutDept.departName
+//		}else{
+//			return ""
+//		}
+//	}
 	
 	//资产总和
 	@GridColumn(name="资产总和",width="100px",colIdx=5)
@@ -160,8 +186,12 @@ class AssetAllocate {
 		seriesNo nullable:false ,blank: false, unique: true
 		applyDate nullable:false,blank:false
 		applyMan nullable:false,blank:false
-		callInDept nullable:false,blank:false
-		callOutDept nullable:false,blank:false
+		originalDepart nullable:false,blank:false
+		originalUser nullable:false,blank:false
+		newDepart nullable:false,blank:false
+		newUser nullable:false,blank:false
+//		callInDept nullable:false,blank:false
+//		callOutDept nullable:false,blank:false
 		assetTotal nullable:false,blank:false
 		applyDesc nullable:false,blank:false
 		dataStatus nullable:false,blank:false

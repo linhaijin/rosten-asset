@@ -25,18 +25,18 @@
             	<input id="allocate_applyMan"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true,style:{width:"120px"}'/>
             </td>
-            <th width="7%">调入部门</th>
+            <th width="7%">原部门</th>
             <td width="13%">
-            	<div id="allocate_callInDept" data-dojo-type="dijit/form/ComboBox"
+            	<div id="allocate_originalDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""'>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
 	            </div>
             </td>
-            <th width="7%">调出部门</th>
+            <th width="7%">新部门</th>
             <td width="13%">
-            	<div id="allocate_callOutDept" data-dojo-type="dijit/form/ComboBox"
+            	<div id="allocate_newDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""'>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>

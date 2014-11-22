@@ -149,14 +149,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.applyMan = applyMan.get("value");
 		}
 		
-		var callInDept = registry.byId("allocate_callInDept");
-		if(callInDept.get("value")!=""){
-			content.callInDept = callInDept.get("value");
+		var originalDepart = registry.byId("allocate_originalDepart");
+		if(originalDepart.get("value")!=""){
+			content.originalDepart = originalDepart.get("value");
 		}
 		
-		var callOutDept = registry.byId("allocate_callOutDept");
-		if(callOutDept.get("value")!=""){
-			content.callOutDept = callOutDept.get("value");
+		var newDepart = registry.byId("allocate_newDepart");
+		if(newDepart.get("value")!=""){
+			content.newDepart = newDepart.get("value");
 		}
 		
 		switch(rosten.kernel.navigationEntity) {
@@ -171,8 +171,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		default:
 			registry.byId("allocate_seriesNo").set("value","");
 			registry.byId("allocate_applyMan").set("value","");
-			registry.byId("allocate_callInDept").set("value","");
-			registry.byId("allocate_callOutDept").set("value","");
+			registry.byId("allocate_originalDepart").set("value","");
+			registry.byId("allocate_newDepart").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

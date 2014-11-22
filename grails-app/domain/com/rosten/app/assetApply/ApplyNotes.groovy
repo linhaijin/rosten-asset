@@ -24,6 +24,11 @@ class ApplyNotes {
 		def SeriesDate= "20"+nowDate.time
 		return SeriesDate
 	}
+	
+	def getDoubleFormat(price){
+		def df = String.format("%.2f", price)
+		return df
+	}
 	//申请编号
 	@GridColumn(name="申请编号",colIdx=1,formatter="assetApply_formatTopic",width="120px")
 	String registerNum = getFormattedSeriesDate()
@@ -74,9 +79,18 @@ class ApplyNotes {
 	@GridColumn(name="数量",colIdx=6,width="50px")
 	int amount = 1
 	
-	//总金额
-	@GridColumn(name="金额（元）",colIdx=7,width="80px")
-	Double totalPrice = 0
+	//单价
+	
+	@GridColumn(name="单价（元）",colIdx=7,width="80px")
+	Double onePrice = 0
+//	def getOnePrice(){
+//		if(onePrice != 0){
+//			return getDoubleFormat(onePrice)
+//		}else{
+//			return 0.00
+//		}
+//	}
+	
 	
 	//用途
 	@GridColumn(name="用途",colIdx=8,width="80px")
@@ -189,7 +203,7 @@ class ApplyNotes {
 		assetName nullable:false,blank:false
 		userName nullable:false,blank:false
 		amount nullable:false,blank:false
-		totalPrice nullable:false,blank:false
+		onePrice nullable:false,blank:false
 		usedBy nullable:false,blank:false
 		applyStatus nullable:false,blank:false
 		country nullable:true,blank:true

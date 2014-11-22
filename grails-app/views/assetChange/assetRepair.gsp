@@ -496,7 +496,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
-			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" name="assetTotal" value="${assetRepair?.assetTotal}" />
+			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" name="assetTotal" value="${String.format("%.2f", assetRepair?.assetTotal)}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -706,12 +706,12 @@
 			<div>
 				<label>请选择资产类别：</label>
 				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
-					<option value="car">车辆</option>
+					<option value="house">房屋及建筑物</option>
+					<option value="car">运输工具</option>
+					<option value="device">电子设备</option>
+					<option value="furniture">办公家具</option>
 					<option value="land">土地</option>
-					<option value="house">房屋</option>
-					<option value="device">设备</option>
 					<option value="book">图书</option>
-					<option value="furniture">家具</option>
 				</select>
 			</div>
 		</div>

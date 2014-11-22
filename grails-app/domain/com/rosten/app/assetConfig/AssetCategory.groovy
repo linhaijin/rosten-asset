@@ -11,6 +11,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.List;
 
+import com.rosten.app.assetCards.CarCards
+import com.rosten.app.assetCards.LandCards
+import com.rosten.app.assetCards.HouseCards
+import com.rosten.app.assetCards.DeviceCards
+import com.rosten.app.assetCards.BookCards
+import com.rosten.app.assetCards.FurnitureCards
+
 class AssetCategory {
 	String id
 	
@@ -81,6 +88,30 @@ class AssetCategory {
 			description sqlType:"clob"
 		}else{
 			description sqlType:"text"
+		}
+	}
+	
+	def beforeDelete(){
+		AssetCategory.withNewSession{session ->
+			CarCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			LandCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			HouseCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			DeviceCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			BookCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			FurnitureCards.findAllByUserCategory(this).each{item->
+				item.delete()
+			}
+			session.flush()
 		}
 	}
 	

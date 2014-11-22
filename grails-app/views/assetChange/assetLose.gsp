@@ -551,7 +551,7 @@
                                	trim:true,
                                	required:true,
                                	readOnly:true,
-             					value:"${assetLose?.assetTotal}"
+             					value:"${String.format("%.2f", assetLose?.assetTotal)}"
                            	'/>
 			            </td>
 			         </tr>
@@ -608,12 +608,12 @@
 			<div>
 				<label>请选择资产类别：</label>
 				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
-					<option value="car">车辆</option>
+					<option value="house">房屋及建筑物</option>
+					<option value="car">运输工具</option>
+					<option value="device">电子设备</option>
+					<option value="furniture">办公家具</option>
 					<option value="land">土地</option>
-					<option value="house">房屋</option>
-					<option value="device">设备</option>
 					<option value="book">图书</option>
-					<option value="furniture">家具</option>
 				</select>
 			</div>
 		</div>

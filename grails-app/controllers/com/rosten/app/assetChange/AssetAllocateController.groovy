@@ -133,7 +133,7 @@ class AssetAllocateController {
 		def assetAllocate = new AssetAllocate()
 		if(params.id){
 			assetAllocate = AssetAllocate.get(params.id)
-			currentDepart = assetAllocate.callInDept
+			currentDepart = currentUser.getDepartEntity()
 			isSubDepart = currentDepart.isSubDepart
 		}
 		
@@ -171,15 +171,15 @@ class AssetAllocateController {
 		
 		//特殊字段信息处理
 		assetAllocate.applyDate = Util.convertToTimestamp(params.applyDate)
-		if(params.callOutDeptId && !params.callOutDeptId.equals("")){
-			assetAllocate.callOutDept = Depart.get(params.callOutDeptId)
+		if(params.originalDepartId && !params.originalDepartId.equals("")){
+			assetAllocate.originalDepart = Depart.get(params.originalDepartId)
 		}else{
-			assetAllocate.callOutDept = params.callOutDeptName
+			assetAllocate.originalDepart = params.originalDepartName
 		}
-		if(params.callInDeptId && !params.callInDeptId.equals("")){
-			assetAllocate.callInDept = Depart.get(params.callInDeptId)
+		if(params.newDepartId && !params.newDepartId.equals("")){
+			assetAllocate.newDepart = Depart.get(params.newDepartId)
 		}else{
-			assetAllocate.callInDept = params.callInDeptName
+			assetAllocate.newDepart = params.newDepartName
 		}
 		if(!params.seriesNo_form.equals("")){
 			assetAllocate.seriesNo = params.seriesNo_form
@@ -353,8 +353,8 @@ class AssetAllocateController {
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
 		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
-		if(params.callInDept && !"".equals(params.callInDept)) searchArgs["callInDept"] = Depart.findByCompanyAndDepartName(company,params.callInDept)
-		if(params.callOutDept && !"".equals(params.callOutDept)) searchArgs["callOutDept"] = Depart.findByCompanyAndDepartName(company,params.callOutDept)
+		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
+		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
 		
 		if(params.refreshData){
 			def args =[:]

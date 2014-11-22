@@ -175,10 +175,11 @@ class ApplyManageController {
 		def currentUser = springSecurityService.getCurrentUser()
 		
 		def company = Company.get(params.companyId)
-		
+//		def onePrice
 		def applyNotes = new ApplyNotes()
 		if(params.id){
 			applyNotes = ApplyNotes.get(params.id)
+//			onePrice = String.format("%.2f", applyNotes.onePrice)//取消科学技术法展示
 		}else{
 			applyNotes.applyUser = currentUser
 			applyNotes.userDepart = currentUser.getDepartEntity()
@@ -229,7 +230,6 @@ class ApplyManageController {
 //		}else{
 //			applyNotes.rootAssetCategory = AssetCategory.categoryName
 //		}
-		
 		if(params.allowdepartsId.equals("")){
 			applyNotes.userDepart = params.allowdepartsName
 		}else{
@@ -371,8 +371,8 @@ class ApplyManageController {
 //					//获取资产编号A代码
 //					def regNo_A
 					def assetCount = applyNotes.amount
-					def totalPrice = applyNotes.totalPrice
-					def onePrice = totalPrice/assetCount
+					def onePrice = applyNotes.onePrice
+//					def onePrice = totalPrice/assetCount
 //					if(onePrice>2000){
 //						regNo_A = "1"
 //					}else{
@@ -403,7 +403,7 @@ class ApplyManageController {
 //					println "regNo=="+regNo_A+regNo_BC+regNo_DE
 //					return
 					if(applyNotes.isCreatedCards == "0"){
-						if(assetType.equals("设备")){
+						if(assetType.equals("电子设备")){
 							/*获取申请信息中的数量，创建相同数量的资产卡片*/
 							for(int i=0;i<assetCount;i++){
 								def deviceCard = new DeviceCards()
@@ -418,7 +418,7 @@ class ApplyManageController {
 								deviceCard.assetStatus = "已入库"
 								deviceCard.save(flush: true)
 							}
-						}else if(assetType == "车辆"){
+						}else if(assetType == "交通工具"){
 							/*获取申请信息中的数量，创建相同数量的资产卡片*/
 	//						def assetCount = applyNotes.amount
 							for(int i=0;i<assetCount;i++){
@@ -456,7 +456,7 @@ class ApplyManageController {
 								carCard.save(flush: true)
 							}
 							
-						}else if(assetType == "房屋"){
+						}else if(assetType == "房屋及建筑物"){
 							/*获取申请信息中的数量，创建相同数量的资产卡片*/
 	//						def assetCount = applyNotes.amount
 							for(int i=0;i<assetCount;i++){
@@ -504,7 +504,7 @@ class ApplyManageController {
 								bookCard.assetStatus = "已入库"
 								bookCard.save(flush: true)
 							}
-						}else if(assetType == "家具"){
+						}else if(assetType == "办公家具"){
 							/*获取申请信息中的数量，创建相同数量的资产卡片*/
 	//						def assetCount = applyNotes.amount
 							for(int i=0;i<assetCount;i++){
@@ -540,12 +540,6 @@ class ApplyManageController {
 		def applyNotes = new ApplyNotes()
 		
 		render json as JSON
-//		if(createCards == "true"){
-//			render(view:"/assetApply/createCards",model:model)
-//		}else{
-//			render(view:'/demo/applyShow',model:model)
-//		}
-		//undo
 	}
 	
 	def mineApplyGrid ={
@@ -561,7 +555,7 @@ class ApplyManageController {
 			_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"assetName"]
 			_gridHeader << ["name":"使用人","width":"100px","colIdx":6,"field":"userName"]
 			_gridHeader << ["name":"数量","width":"80px","colIdx":7,"field":"amount"]
-			_gridHeader << ["name":"金额（元）","width":"80px","colIdx":8,"field":"totalPrice"]
+			_gridHeader << ["name":"单价（元）","width":"80px","colIdx":8,"field":"onePrice"]
 			_gridHeader << ["name":"当前处理人","width":"100px","colIdx":9,"field":"getCurrentUserName"]
 			_gridHeader << ["name":"流程状态","width":"80px","colIdx":10,"field":"status"]
 			json["gridHeader"] = _gridHeader

@@ -161,7 +161,7 @@ class AssetConfigController {
 			assetCategory = AssetCategory.get(params.id)
 			categoryName = assetCategory.categoryName
 		}
-		def assetList = ['车辆','土地','房屋','设备','图书','家具']
+		def assetList = ['房屋及建筑物','电子设备','运输工具','办公家具']
 		def isRead = "no"
 		if(categoryName in assetList){
 			isRead = "yes"
@@ -212,19 +212,26 @@ class AssetConfigController {
 	
 	def assetCategoryDelete ={
 		def ids = params.id.split(",")
-		def name
+		def currentUser = springSecurityService.getCurrentUser()
+		def name,message
 		try{
 			ids.each{
 				def assetCategory = AssetCategory.get(it)
 				if(assetCategory){
 					name = assetCategory.categoryName
-					assetConfigService.deleteAssetCategory(assetCategory)
+					if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
+						message = "资产分类<"+name+">及其下层分类已删除！"
+						assetCategory.delete(flush: true)
+//						assetConfigService.deleteAssetCategory(assetCategory)
+					}else{
+						message = "注意：您没有权限进行操作，请联系管理员！"
+					}
 				}
 			}
 		}catch(Exception e){
 			println e
 		}
-		render "<script type='text/javascript'>refreshAssetCategoryTree()</script><h3>&nbsp;&nbsp;资产分类<"+name+">及其下层分类信息已删除！</h3>"
+		render "<script type='text/javascript'>refreshAssetCategoryTree()</script><h3>&nbsp;&nbsp;"+message+"</h3>"
 	}
 	
 	def assetCategoryTreeDataStore ={

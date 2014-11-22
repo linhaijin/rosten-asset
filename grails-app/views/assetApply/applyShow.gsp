@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>设备申请</title>
+    <title>资产申请</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .rosten_form table tr{
@@ -62,10 +62,10 @@
 					dijit.byId("userName").focus();
 					return;
 				}
-				var totalPrice = dijit.byId("totalPrice").attr("value");
-				if(totalPrice == 0){
-					alert("注意：总金额不能为0.0！");
-					dijit.byId("totalPrice").focus();
+				var onePrice = dijit.byId("onePrice").attr("value");
+				if(onePrice == 0){
+					alert("注意：单价不能为0.0！");
+					dijit.byId("onePrice").focus();
 					return;
 				}
 				//增加对多次单击的次数----2014-9-4
@@ -137,7 +137,7 @@
 						conditionObj = {};
 					}
 					conditionObj.conditionName = "money";
-					conditionObj.conditionValue = ${applyNotes?.totalPrice};
+					conditionObj.conditionValue = ${applyNotes?.onePrice};
 				}
 				
 				//增加对排他分支的控制
@@ -367,14 +367,14 @@
 			            </td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>总金额（元）：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>单价（元）：</div></td>
 					    <td>
-					    	<input id="totalPrice" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='id:"totalPrice",name:"totalPrice",${fieldAcl.isReadOnly("totalPrice")},
+					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='id:"onePrice",name:"onePrice",${fieldAcl.isReadOnly("onePrice")},
                                	trim:true,
                                	required:true,
                                	${applyNotes.applyStatus!='未审核'?'readOnly:true,':'' }
-             					value:"${applyNotes?.totalPrice}"
+             					value:"${String.format("%.2f", applyNotes?.onePrice)}"
                            	'/>
 			            </td>
 			            <td></td>

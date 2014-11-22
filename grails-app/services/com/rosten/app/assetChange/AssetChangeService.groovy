@@ -90,7 +90,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("callInDept") || k.equals("callOutDept")){
+				if(k.equals("originalDepart") || k.equals("newDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -112,7 +112,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("callInDept") || k.equals("callOutDept")){
+				if(k.equals("originalDepart") || k.equals("newDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")

@@ -504,11 +504,12 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"490px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetAllocate?.seriesNo}" />
+			<g:hiddenField id="applyMan" name="applyMan" value="${assetAllocate.applyMan==null?user.chinaName:assetAllocate.applyMan}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetAllocate?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"190px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"登记信息",toggleable:false,moreText:"",height:"210px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请单号：</div></td>
@@ -532,60 +533,72 @@
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
-					    <td>
-					    	<input id="applyMan" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
-                               		trim:true,
-                               		required:true,
-                               		readOnly:true,
-             						value:"${assetAllocate.applyMan==null?user.chinaName:assetAllocate.applyMan}"
-                           	'/>
-			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>原部门：</div></td>
 					   	<td width="250">
-					    	<input id="callOutDeptName" data-dojo-type="dijit/form/ValidationTextBox" 
-				               	data-dojo-props='name:"callOutDeptName",${fieldAcl.isReadOnly("callOutDeptName")},
+					    	<input id="originalDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"originalDepartName",${fieldAcl.isReadOnly("originalDepartName")},
 				               		trim:true,
 				               		required:true,
 				               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
-									value:"${assetAllocate?.getOutDepartName()}"
+									value:"${assetAllocate?.getOriginalDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="callOutDeptId" value="${assetAllocate?.callOutDept?.id }" />
+				         	<g:hiddenField name="originalDepartId" value="${assetAllocate?.originalDepart?.id }" />
 				         	<g:if test="${assetAllocate.dataStatus=='未审批'}">
-								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callOutDeptName","callOutDeptId")}'>选择</button>
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"originalDepartName","originalDepartId")}'>选择</button>
 							</g:if>
 						</td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>原使用人：</div></td>
+					    <td>
+					    	<input id="originalUser" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"originalUser",${fieldAcl.isReadOnly("originalUser")},
+                               		trim:true,
+                               		required:true,
+                               		readOnly:true,
+             						value:"${assetAllocate?.originalUser}"
+                           	'/>
+			            </td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>调入部门：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>新部门：</div></td>
 					    <td>
-					    	<input id="callInDeptName" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"callInDeptName",${fieldAcl.isReadOnly("callInDeptName")},
+					    	<input id="newDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"newDepartName",${fieldAcl.isReadOnly("newDepartName")},
                                		trim:true,
                                		required:true,
                                		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
-             						value:"${assetAllocate?.getInDepartName()}"
+             						value:"${assetAllocate?.getNewDepartName()}"
                            	'/>
-                           	<g:hiddenField name="callInDeptId" value="${assetAllocate?.callInDept?.id }" />
+                           	<g:hiddenField name="newDepartId" value="${assetAllocate?.newDepart?.id }" />
                            	<g:if test="${assetAllocate.dataStatus=='未审批'}">
-								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"callInDeptName","callInDeptId")}'>选择</button>
+								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"newDepartName","newDepartId")}'>选择</button>
 			            	</g:if>
 			            </td>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>新使用人：</div></td>
 					    <td>
+					    	<input id="newUser" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"newUser",${fieldAcl.isReadOnly("newUser")},
+                               		trim:true,
+                               		required:true,
+                               		readOnly:true,
+             						value:"${assetAllocate?.newUser}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
+					    <td colspan="3">
 					    	<input id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"assetTotal",name:"assetTotal",${fieldAcl.isReadOnly("assetTotal")},
                                		trim:true,
                                		required:true,
                                		readOnly:true,
-             						value:"${assetAllocate?.assetTotal}"
+             						value:"${String.format("%.2f", assetAllocate?.assetTotal)}"
                            	'/>
 			            </td>
 					</tr>
 					<tr>
-					 	<td ><div align="right"><span style="color:red">*&nbsp;</span>申请理由：</div></td>
-					  	<td colspan="3">
+						<td ><div align="right"><span style="color:red">*&nbsp;</span>申请理由：</div></td>
+						<td colspan="3">
 					    	<input id="applyDesc" data-dojo-type="dijit/form/ValidationTextBox" 
     							data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
                                		trim:true,
@@ -636,12 +649,12 @@
 			<div>
 				<label>请选择资产类别：</label>
 				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
-					<option value="car">车辆</option>
+					<option value="house">房屋及建筑物</option>
+					<option value="car">运输工具</option>
+					<option value="device">电子设备</option>
+					<option value="furniture">办公家具</option>
 					<option value="land">土地</option>
-					<option value="house">房屋</option>
-					<option value="device">设备</option>
 					<option value="book">图书</option>
-					<option value="furniture">家具</option>
 				</select>
 			</div>
 		</div>

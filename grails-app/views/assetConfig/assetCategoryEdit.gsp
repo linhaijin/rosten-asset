@@ -113,6 +113,20 @@
 	                    	'/>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <div align="right">排序：
+                            </div>
+                        </td>
+                        <td>
+                        	<input id="serialNo" data-dojo-type="dijit/form/ValidationTextBox" 
+	                    		data-dojo-props='name:"serialNo",
+	                    			"class":"input",
+	                    			trim:true,
+	                    			value:"${assetCategory?.serialNo }"
+	                    	'/>
+                        </td>
+                    </tr>
                    <tr>
                       <td>
                           <div align="right" >内容描述：</div>

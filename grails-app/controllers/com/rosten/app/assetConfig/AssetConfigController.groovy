@@ -9,7 +9,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User
 
 class AssetConfigController {
-	
+	def springSecurityService
 	def assetConfigService
 	
 	def imgPath ="images/rosten/actionbar/"
@@ -152,8 +152,10 @@ class AssetConfigController {
 	}
 	
 	def assetCategoryShow ={
-//		println params
 		def model =[:]
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		
 		def categoryName
 		if(params.categoryName && params.categoryName!=""){
 			categoryName = params.categoryName
@@ -170,22 +172,39 @@ class AssetConfigController {
 		model["isRead"] = isRead
 		model["assetList"] = assetList
 		model["assetCategory"] = AssetCategory.get(params.id)
+		model["companyId"] = company.id
 		render(view:'/assetConfig/assetCategoryEdit',model:model)
 	}
 	
 	def assetCategorySave ={
 		def assetCategory
+		
+		def assetList = ['房屋及建筑物','电子设备','运输工具','办公家具']
+		def isRead = "no"
+		if(params.categoryName in assetList){
+			isRead = "yes"
+		}
+		
 		if(params.id){
 			assetCategory = AssetCategory.get(params.id)
 			assetCategory.properties = params
 			assetCategory.clearErrors()
+			def company = Company.get(params.companyId)
+			
+			//判断部门名称是否已经存在
+			def _assetCategory = AssetCategory.findByCompanyAndCategoryName(company,params.categoryName)
+			if(_assetCategory && !params.id.equals(_assetCategory.id)){
+				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
+				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:params.companyId,"isRead":isRead])
+				return
+			}
 			
 			if(assetCategory.save(flush:true)){
 				flash.refreshTree = true;
 				flash.message = "'"+assetCategory.categoryName+"' 已成功保存！"
-				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory])
+				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:params.companyId,"isRead":isRead])
 			}else{
-				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory])
+				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:params.companyId,"isRead":isRead])
 			}
 		}else{
 			assetCategory = new AssetCategory()
@@ -194,6 +213,15 @@ class AssetConfigController {
 			
 			def company = Company.get(params.companyId)
 			assetCategory.company = company
+			
+			//判断是否已经存在
+			def _assetCategory = AssetCategory.findByCompanyAndCategoryName(company,params.categoryName)
+			if(_assetCategory){
+				//已经存在
+				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
+				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:company.id,"isRead":isRead])
+				return
+			}
 			
 			if(params.parentId){
 				def parent = AssetCategory.get(params.parentId)
@@ -206,7 +234,7 @@ class AssetConfigController {
 			}
 			flash.refreshTree = true;
 			flash.message = "'"+assetCategory.categoryName+"' 已成功保存！"
-			render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory])
+			render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:company.id,"isRead":isRead])
 		}
 	}
 	
@@ -219,24 +247,25 @@ class AssetConfigController {
 				def assetCategory = AssetCategory.get(it)
 				if(assetCategory){
 					name = assetCategory.categoryName
-					if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
+					if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员") || "admin".equals(currentUser.getUserType())){
 						message = "资产分类<"+name+">及其下层分类已删除！"
-						assetCategory.delete(flush: true)
-//						assetConfigService.deleteAssetCategory(assetCategory)
+//						assetCategory.delete(flush: true)
+						assetConfigService.deleteAssetCategory(assetCategory)
 					}else{
-						message = "注意：您没有权限进行操作，请联系管理员！"
+						message = "<span style=\"color:red\">注意：您没有权限进行操作，请联系管理员！</span>"
 					}
 				}
 			}
 		}catch(Exception e){
-			println e
+			message = "<span style=\"color:red\">注意：当前此分类已产生相关数据，不允许删除！</span>"
+//			println e
 		}
 		render "<script type='text/javascript'>refreshAssetCategoryTree()</script><h3>&nbsp;&nbsp;"+message+"</h3>"
 	}
 	
 	def assetCategoryTreeDataStore ={
 		def company = Company.get(params.companyId)
-		def dataList = AssetCategory.findAllByCompany(company)
+		def dataList = AssetCategory.findAllByCompany(company,[sort: "serialNo", order: "asc"])
 		def json = [identifier:'id',label:'name',items:[]]
 		dataList.each{
 			def sMap = ["id":it.id,"name":it.categoryName,"parentId":it.parent?.id,"children":[]]

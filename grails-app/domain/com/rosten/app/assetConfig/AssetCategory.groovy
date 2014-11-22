@@ -32,6 +32,9 @@ class AssetCategory {
 	@GridColumn(name="分类代码")
 	String categoryCode
 	
+	//资产顺序
+	String serialNo = "01"
+	
 	//总分类
 	String allCode
 	
@@ -76,6 +79,7 @@ class AssetCategory {
 		description nullable:true,blank:true
 		parent nullable:true
 		children(nullable:true)
+		serialNo nullable:true,blank:true
     }
 	
 	static mapping = {

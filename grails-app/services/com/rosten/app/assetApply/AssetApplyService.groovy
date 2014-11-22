@@ -1,6 +1,7 @@
 package com.rosten.app.assetApply
 
 import com.rosten.app.util.GridUtil
+import com.rosten.app.system.UserGroup
 
 class AssetApplyService {
 
@@ -17,10 +18,13 @@ class AssetApplyService {
 	
 	def getAllMineApply ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = ApplyNotes.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if(user.getAllRolesValue().contains("系统管理员") || user.getAllRolesValue().contains("资产管理员")){
+			if("zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -43,9 +47,12 @@ class AssetApplyService {
 	
 	def getMineApplyCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = ApplyNotes.createCriteria()
 		def query = {
-			if(user.getAllRolesValue().contains("系统管理员") || user.getAllRolesValue().contains("资产管理员")){
+			if("zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)

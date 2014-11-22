@@ -96,19 +96,20 @@ class StatisticsController {
 	def getAssetByType ={
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]
+		def sMap
 		
-		def landList = LandCards.list()
-		def landTotal = landList.collect { item ->
-			item.onePrice
-		}.sum()
-		def sMap = ["id":001,"name":"土地","number":landTotal?landTotal/10000:0]
-		json.items+=sMap
+//		def landList = LandCards.list()
+//		def landTotal = landList.collect { item ->
+//			item.onePrice
+//		}.sum()
+//		def sMap = ["id":001,"name":"土地","number":landTotal?landTotal/10000:0]
+//		json.items+=sMap
 		
 		def houseList = HouseCards.list()
 		def houseTotal = houseList.collect { item ->
 			item.onePrice
 		}.sum()
-		sMap = ["id":002,"name":"房屋","number":houseTotal?houseTotal/10000:0]
+		sMap = ["id":002,"name":"房屋及建筑物","number":houseTotal?houseTotal/10000:0]
 		json.items+=sMap
 		
 		def deviceList = DeviceCards.list()
@@ -116,21 +117,21 @@ class StatisticsController {
 			item.onePrice
 		}.sum()
 		
-		sMap = ["id":003,"name":"设备","number":deviceTotal?deviceTotal/10000:0]
+		sMap = ["id":003,"name":"电子设备","number":deviceTotal?deviceTotal/10000:0]
 		json.items+=sMap
 		
 		def furList = FurnitureCards.list()
 		def furTotal = furList.collect { item ->
 			item.onePrice
 		}.sum()
-		sMap = ["id":004,"name":"图书","number":furTotal?furTotal/10000:0]
+		sMap = ["id":004,"name":"办公家具","number":furTotal?furTotal/10000:0]
 		json.items+=sMap
 		
 		def carList = CarCards.list()
 		def carTotal=carList.collect { item ->
 			item.onePrice
 		}.sum()
-		sMap = ["id":005,"name":"车辆","number":carTotal?carTotal/10000:0]
+		sMap = ["id":005,"name":"运输工具","number":carTotal?carTotal/10000:0]
 		json.items+=sMap
 		
 		render json as JSON

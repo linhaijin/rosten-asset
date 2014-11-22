@@ -25,6 +25,7 @@ import com.rosten.app.system.Depart
 import com.rosten.app.system.Model
 import com.rosten.app.system.User
 import com.rosten.app.system.SystemService
+import com.rosten.app.system.UserGroup
 
 import com.rosten.app.share.ShareService
 import com.rosten.app.share.FlowLog
@@ -123,10 +124,18 @@ class ApplyManageController {
 	def mineApplyView ={
 		def actionList =[]
 		def strname = "assetApply"
+		def currentUser = springSecurityService.getCurrentUser()
 		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		
+		//增加资产管理员群组的控制权限
+		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
+		  elem.group.groupName
+		}
+		if("zcgly" in userGroups){
+			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		}
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -293,12 +302,15 @@ class ApplyManageController {
 	def assetApplyDelete = {
 		def ids = params.id.split(",")
 		def currentUser = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
+			elem.group.groupName
+		}
 		def json
 		try{
 			ids.each{
 				def applyNotes = ApplyNotes.get(it)
 				if(applyNotes){
-					if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
+					if("zcgly" in userGroups || currentUser.getAllRolesValue().contains("资产管理员")){
 						applyNotes.delete(flush: true)
 						json = [result:'true']
 					}else{
@@ -751,7 +763,7 @@ class ApplyManageController {
 					break
 			}
 			shareService.addFlowLog(applyNotes.id,"assetApply",currentUser,logContent)
-						
+			json["nextUserName"] = nextUsers.join("、")
 			json["result"] = true
 		}else{
 			applyNotes.errors.each{
@@ -844,8 +856,9 @@ class ApplyManageController {
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
 				shareService.addFlowLog(applyNotes.id,"assetApply",currentUser,logContent)
+				json["nextUserName"] = user?.getFormattedName()
 			}
-				
+			
 			json["result"] = true
 		}catch(Exception e){
 			json["result"] = false

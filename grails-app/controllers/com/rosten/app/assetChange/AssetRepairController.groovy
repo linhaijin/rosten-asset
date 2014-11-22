@@ -557,27 +557,29 @@ class AssetRepairController {
 			if(!(assetType.equals("") || assetType==null)){
 				if(assetType.equals("car")){
 					assetList = car.list(pa,query)
-//					assetList = CarCards.findAllByCompany(companyEntity,[max: max, sort: "createDate", order: "desc", offset: offset])
-					totalNum = assetList.size()
+					totalNum = CarCards.createCriteria().count(query)
 				}else if(assetType.equals("land")){
 					assetList = land.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = LandCards.createCriteria().count(query)
 				}else if(assetType.equals("house")){
 					assetList = house.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = HouseCards.createCriteria().count(query)
 				}else if(assetType.equals("device")){
 					assetList = device.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = DeviceCards.createCriteria().count(query)
 				}else if(assetType.equals("book")){
 					assetList = book.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = BookCards.createCriteria().count(query)
 				}else if(assetType.equals("furniture")){
 					assetList = furniture.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = FurnitureCards.createCriteria().count(query)
 				}
 			}
 			
 			def idx = 0
+			if(offset!=null){
+				idx = offset
+			}
 			assetList.each{
 				def sMap =[:]
 				sMap["rowIndex"] = idx+1
@@ -1015,7 +1017,7 @@ class AssetRepairController {
 					break
 			}
 			shareService.addFlowLog(assetRepair.id,"assetRepair",currentUser,logContent)
-						
+			json["nextUserName"] = nextUsers.join("、")
 			json["result"] = true
 		}else{
 			assetRepair.errors.each{
@@ -1108,6 +1110,7 @@ class AssetRepairController {
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
 				shareService.addFlowLog(assetRepair.id,"assetRepair",currentUser,logContent)
+				json["nextUserName"] = user?.getFormattedName()
 			}
 				
 			json["result"] = true

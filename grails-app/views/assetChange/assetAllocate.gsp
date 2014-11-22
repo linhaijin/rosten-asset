@@ -181,12 +181,17 @@
 	
 					//增加对应节点上的金额控制
 					if("${assetAllocate?.status}" == "新建"){
-						content.selectDepart = registry.byId("newDepartName").get("value");
+						if("${isSubDepart}"==true || "${isSubDepart}"=="true"){
+							content.selectDepart = "${assetAllocate?.getOriginalDepartName()}";
+						}
 						if(!conditionObj){
 							conditionObj = {};
 						}
 						conditionObj.conditionName = "IsSubDepart";
 						conditionObj.conditionValue = "${isSubDepart}";
+					}else if("${assetAllocate?.status}" == "调出部门审核" || "${assetAllocate?.status}" == "调入部门资产管理员审核"){
+						//此种情况只在二级单位无子部门情况
+						content.selectDepart = "${assetAllocate?.getNewDepartName()}";
 					}
 
 					//增加对排他分支的控制
@@ -270,7 +275,11 @@
 					}
 					rosten.readSync(rosten.webPath + "/assetAllocate/assetAllocateFlowDeal",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！").queryDlgClose= function(){
+							var _nextUserName = "";
+							if(data.nextUserName && data.nextUserName!=""){
+								_nextUserName = data.nextUserName;
+							}
+							rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -298,7 +307,11 @@
 					var content = {};
 					rosten.readSync("${createLink(controller:'assetAllocate',action:'assetAllocateFlowBack',params:[id:assetAllocate?.id])}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！").queryDlgClose= function(){
+							var _nextUserName = "";
+							if(data.nextUserName && data.nextUserName!=""){
+								_nextUserName = data.nextUserName;
+							}
+							rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user}","${company?.id }");
 								
@@ -550,7 +563,7 @@
 				               	data-dojo-props='name:"originalDepartName",${fieldAcl.isReadOnly("originalDepartName")},
 				               		trim:true,
 				               		required:true,
-				               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
+				               		readOnly:true,
 									value:"${assetAllocate?.getOriginalDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="originalDepartId" value="${assetAllocate?.originalDepart?.id }" />
@@ -576,7 +589,7 @@
                                	data-dojo-props='name:"newDepartName",${fieldAcl.isReadOnly("newDepartName")},
                                		trim:true,
                                		required:true,
-                               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
+                               		readOnly:true,
              						value:"${assetAllocate?.getNewDepartName()}"
                            	'/>
                            	<g:hiddenField name="newDepartId" value="${assetAllocate?.newDepart?.id }" />
@@ -637,9 +650,9 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
+			<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetAllocateListGrid" data-dojo-id="assetAllocateListGrid"
-					data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
 			</div>
 		</form>
 	</div>
@@ -671,9 +684,9 @@
 		</div>
 		<div data-dojo-type="dojox.widget.WizardPane" data-dojo-props='canGoBack:"true",doneFunction:assetChooseDone' >
 			<div id="chooseAsset">
-				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='refreshOnShow:true,style:"width:820px;height:430px;padding:2px;"'>
+				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='refreshOnShow:true,style:{width:"820px",height:"430px",padding:"2px",overflow:"auto"}'>
 					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
-						data-dojo-props='url:"${createLink(controller:'assetAllocate',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
+						data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetAllocate',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
 				</div>
 			</div>
 		</div>

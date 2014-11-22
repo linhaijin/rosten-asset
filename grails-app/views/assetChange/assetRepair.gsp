@@ -257,7 +257,11 @@
 				}
 				rosten.readSync(rosten.webPath + "/assetRepair/assetRepairFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						var _nextUserName = "";
+						if(data.nextUserName && data.nextUserName!=""){
+							_nextUserName = data.nextUserName;
+						}
+						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${user?.id}","${company?.id }");
 							
@@ -285,7 +289,11 @@
 				var content = {};
 				rosten.readSync("${createLink(controller:'assetRepair',action:'assetRepairFlowBack',params:[id:assetRepair?.id])}",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						var _nextUserName = "";
+						if(data.nextUserName && data.nextUserName!=""){
+							_nextUserName = data.nextUserName;
+						}
+						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${user}","${company?.id }");
 							
@@ -538,7 +546,7 @@
 				               	data-dojo-props='name:"usedDepartName",${fieldAcl.isReadOnly("usedDepartName")},
 				               	trim:true,
 				               	required:true,
-				               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+				               	readOnly:true,
 								value:"${assetRepair?.getUsedDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="usedDepartId" value="${assetRepair?.usedDepart?.id }" />
@@ -690,9 +698,9 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;"'>
+			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetRepairListGrid" data-dojo-id="assetRepairListGrid"
-					data-dojo-props='url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>
 			</div>
 		</form>
 	</div>
@@ -707,9 +715,9 @@
 		</div>
 	</g:if>
 </div> 
-<div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:455px'">
-	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:415px; margin:5 auto;">
-		<div data-dojo-type="dojox.widget.WizardPane" id="assetSelectWizardPane" style="height:360px;border:1px;" >
+<div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:515px'">
+	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:475px; margin:5 auto;">
+		<div data-dojo-type="dojox.widget.WizardPane" id="assetSelectWizardPane" style="height:430px;border:1px;" >
 			<div>
 				<label>请选择资产类别：</label>
 				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
@@ -724,9 +732,9 @@
 		</div>
 		<div data-dojo-type="dojox.widget.WizardPane" data-dojo-props='canGoBack:"true",doneFunction:assetChooseDone' >
 			<div id="chooseAsset">
-				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:820px;height:360px;padding:2px;"'>
+				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:820px;height:430px;padding:2px;overflow:auto;"'>
 					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
-						data-dojo-props='url:"${createLink(controller:'assetRepair',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
+						data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetRepair',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
 				</div>
 			</div>
 		</div>

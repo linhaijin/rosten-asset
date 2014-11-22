@@ -114,6 +114,7 @@ define(["dojo/_base/lang",
         } else {
             var args = {
                 url : url,
+                title:"用户选择",
                 type:type
             };
             rosten[id] = new DepartUserDialog(args);
@@ -147,6 +148,7 @@ define(["dojo/_base/lang",
                 url : url,
                 rootLabel : "部门层级",
                 showCheckBox : type,
+                title:"部门选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);
@@ -185,6 +187,7 @@ define(["dojo/_base/lang",
                 url : url,
                 rootLabel : "资产分类",
                 showCheckBox : type,
+                title:"资产分类选择",
                 folderClass : "departTree"
             };
             rosten[id] = new PickTreeDialog(args);

@@ -181,10 +181,10 @@ class AssetScrapController {
 		//特殊字段信息处理
 		assetScrap.applyDate = Util.convertToTimestamp(params.applyDate)
 		
-		if(params.allowdepartsId.equals("")){
-			assetScrap.applyDept = params.allowdepartsName
+		if(params.usedDepartId.equals("")){
+			assetScrap.usedDepart = params.usedDepartName
 		}else{
-			assetScrap.applyDept = Depart.get(params.allowdepartsId)
+			assetScrap.usedDepart = Depart.get(params.usedDepartId)
 		}
 		
 		if(!params.seriesNo_form.equals("")){
@@ -356,8 +356,8 @@ class AssetScrapController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
-		if(params.applyDept && !"".equals(params.applyDept)) searchArgs["applyDept"] = Depart.findByCompanyAndDepartName(company,params.applyDept)
+		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		if(params.refreshData){
 			def args =[:]
@@ -413,7 +413,7 @@ class AssetScrapController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
 		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
@@ -451,20 +451,20 @@ class AssetScrapController {
 					assetList = car.list(pa,query)
 //					assetList = CarCards.findAllByCompany(companyEntity,[max: max, sort: "createDate", order: "desc", offset: offset])
 					totalNum = assetList.size()
-				}else if(assetType.equals("land")){
-					assetList = land.list(pa,query)
-					totalNum = assetList.size()
 				}else if(assetType.equals("house")){
 					assetList = house.list(pa,query)
 					totalNum = assetList.size()
 				}else if(assetType.equals("device")){
 					assetList = device.list(pa,query)
 					totalNum = assetList.size()
-				}else if(assetType.equals("book")){
-					assetList = book.list(pa,query)
-					totalNum = assetList.size()
 				}else if(assetType.equals("furniture")){
 					assetList = furniture.list(pa,query)
+					totalNum = assetList.size()
+				}else if(assetType.equals("land")){
+					assetList = land.list(pa,query)
+					totalNum = assetList.size()
+				}else if(assetType.equals("book")){
+					assetList = book.list(pa,query)
 					totalNum = assetList.size()
 				}
 			}else{
@@ -522,7 +522,7 @@ class AssetScrapController {
 			freshType = params.freshType
 		}
 		
-		def assetType = "car"
+		def assetType = "house"
 		if(params.assetType && params.assetType!="" && params.assetType!=null){
 			assetType = params.assetType
 		}
@@ -539,7 +539,7 @@ class AssetScrapController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
 		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
@@ -966,7 +966,7 @@ class AssetScrapController {
 					
 					def args = [:]
 					args["type"] = "【资产报损】"
-					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的资产报损信息"
+					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的资产报损申请信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = assetScrap.id
 					args["user"] = nextUser

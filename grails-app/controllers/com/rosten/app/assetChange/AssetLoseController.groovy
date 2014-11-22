@@ -165,10 +165,10 @@ class AssetLoseController {
 		
 		//特殊字段信息处理
 		assetLose.applyDate = Util.convertToTimestamp(params.applyDate)
-		if(params.allowdepartsId.equals("")){
-			assetLose.applyDept = params.allowdepartsName
+		if(params.usedDepartId.equals("")){
+			assetLose.usedDepart = params.usedDepartName
 		}else{
-			assetLose.applyDept = Depart.get(params.allowdepartsId)
+			assetLose.usedDepart = Depart.get(params.usedDepartId)
 		}
 		if(!params.seriesNo_form.equals("")){
 			assetLose.seriesNo = params.seriesNo_form
@@ -339,8 +339,8 @@ class AssetLoseController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
-		if(params.applyDept && !"".equals(params.applyDept)) searchArgs["applyDept"] = Depart.findByCompanyAndDepartName(company,params.applyDept)
+		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		if(params.refreshData){
 			def args =[:]

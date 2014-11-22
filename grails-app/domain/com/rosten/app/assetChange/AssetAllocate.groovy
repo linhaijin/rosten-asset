@@ -47,11 +47,12 @@ class AssetAllocate {
 	}
 	
 	//申请人
-	@GridColumn(name="申请人",width="100px",colIdx=3)
+//	@GridColumn(name="申请人",width="100px",colIdx=3)
 	String applyMan
 	
 	//原部门
 	Depart originalDepart
+	@GridColumn(name="原部门",width="120px",colIdx=3)
 	def getOriginalDepartName(){
 		if(originalDepart){
 			return originalDepart.departName
@@ -65,6 +66,7 @@ class AssetAllocate {
 	
 	//新部门
 	Depart newDepart
+	@GridColumn(name="新部门",width="120px",colIdx=4)
 	def getNewDepartName(){
 		if(newDepart){
 			return newDepart.departName

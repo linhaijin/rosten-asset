@@ -69,14 +69,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-		var applyMan = registry.byId("scrap_applyMan");
-		if(applyMan.get("value")!=""){
-			content.applyMan = applyMan.get("value");
+		var usedDepart = registry.byId("scrap_usedDepart");
+		if(usedDepart.get("value")!=""){
+			content.usedDepart = usedDepart.get("value");
 		}
 		
-		var applyDept = registry.byId("scrap_applyDept");
-		if(applyDept.get("value")!=""){
-			content.applyDept = applyDept.get("value");
+		var usedMan = registry.byId("scrap_usedMan");
+		if(usedMan.get("value")!=""){
+			content.usedMan = usedMan.get("value");
 		}
 		
 		switch(rosten.kernel.navigationEntity) {
@@ -90,8 +90,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("scrap_seriesNo").set("value","");
-			registry.byId("scrap_applyMan").set("value","");
-			registry.byId("scrap_applyDept").set("value","");
+			registry.byId("scrap_usedDepart").set("value","");
+			registry.byId("scrap_usedMan").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	
@@ -144,10 +144,10 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-		var applyMan = registry.byId("allocate_applyMan");
-		if(applyMan.get("value")!=""){
-			content.applyMan = applyMan.get("value");
-		}
+//		var applyMan = registry.byId("allocate_applyMan");
+//		if(applyMan.get("value")!=""){
+//			content.applyMan = applyMan.get("value");
+//		}
 		
 		var originalDepart = registry.byId("allocate_originalDepart");
 		if(originalDepart.get("value")!=""){
@@ -170,7 +170,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("allocate_seriesNo").set("value","");
-			registry.byId("allocate_applyMan").set("value","");
+//			registry.byId("allocate_applyMan").set("value","");
 			registry.byId("allocate_originalDepart").set("value","");
 			registry.byId("allocate_newDepart").set("value","");
 			rosten.kernel.refreshGrid();
@@ -225,14 +225,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-		var applyMan = registry.byId("lose_applyMan");
-		if(applyMan.get("value")!=""){
-			content.applyMan = applyMan.get("value");
+		var usedDepart = registry.byId("lose_usedDepart");
+		if(usedDepart.get("value")!=""){
+			content.usedDepart = usedDepart.get("value");
 		}
 		
-		var applyDept = registry.byId("lose_applyDept");
-		if(applyDept.get("value")!=""){
-			content.applyDept = applyDept.get("value");
+		var usedMan = registry.byId("lose_usedMan");
+		if(usedMan.get("value")!=""){
+			content.usedMan = usedMan.get("value");
 		}
 		
 		switch(rosten.kernel.navigationEntity) {
@@ -246,8 +246,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("lose_seriesNo").set("value","");
-			registry.byId("lose_applyMan").set("value","");
-			registry.byId("lose_applyDept").set("value","");
+			registry.byId("lose_usedDepart").set("value","");
+			registry.byId("lose_usedMan").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

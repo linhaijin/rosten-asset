@@ -31,7 +31,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("applyDept")){
+				if(k.equals("usedDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -53,7 +53,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("applyDept")){
+				if(k.equals("usedDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -149,7 +149,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("applyDept")){
+				if(k.equals("usedDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -171,7 +171,7 @@ class AssetChangeService {
 				eq("status","已结束")
 			}
 			searchArgs.each{k,v->
-				if(k.equals("applyDept")){
+				if(k.equals("usedDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")

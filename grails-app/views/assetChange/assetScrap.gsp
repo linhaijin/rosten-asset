@@ -43,10 +43,16 @@
 				});
 			
 				assetScrap_save = function(object){
-					var allowdepartsName = dojo.byId("allowdepartsName").value;
-					if(allowdepartsName == ""){
-						alert("注意：请选择申请部门！");
-						document.getElementById("allowdepartsName").focus();
+					var usedDepartName = dojo.byId("usedDepartName").value;
+					if(usedDepartName == "" && usedDepartName != null){
+						alert("注意：使用部门不能为空！");
+						document.getElementById("usedDepartName").focus();
+						return;
+					}
+					var usedMan = dojo.byId("usedMan").value;
+					if(usedMan == "" && usedMan != null){
+						alert("注意：使用人不能为空！");
+						document.getElementById("usedMan").focus();
 						return;
 					}
 					var assetTotal = dojo.byId("assetTotal").value;
@@ -57,7 +63,7 @@
 					}
 					var applyDesc = dojo.byId("applyDesc").value;
 					if(applyDesc=="" || applyDesc==null){
-						alert("注意：请填写申请理由！");
+						alert("注意：申请理由不能为空！");
 						document.getElementById("applyDesc").focus();
 						return;
 					}
@@ -505,6 +511,7 @@
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"460px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetScrap?.seriesNo}" />
+			<g:hiddenField name="applyMan" id="applyMan" value="${assetScrap.applyMan==null?user.chinaName:assetScrap.applyMan}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetScrap?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -533,30 +540,30 @@
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
-					    <td>
-					    	<input id="applyMan" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"applyMan",${fieldAcl.isReadOnly("applyMan")},
-                               		trim:true,
-                               		required:true,
-                               		readOnly:true,
-             						value:"${assetScrap.applyMan==null?user.chinaName:assetScrap.applyMan}"
-                           	'/>
-			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>使用部门：</div></td>
 					   	<td width="250">
-					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
-				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
+					    	<input id="usedDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
+				               	data-dojo-props='name:"usedDepartName",${fieldAcl.isReadOnly("usedDepartName")},
 				               	trim:true,
 				               	required:true,
 				               	${assetScrap.dataStatus!='未审批'?'readOnly:true,':'' }
-								value:"${assetScrap?.getDepartName()}"
+								value:"${assetScrap?.getUsedDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="allowdepartsId" value="${assetScrap?.applyDept?.id }" />
+				         	<g:hiddenField name="usedDepartId" value="${assetScrap?.usedDepart?.id }" />
 				         	<g:if test="${assetScrap.dataStatus=='未审批'}">
-				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 				         	</g:if>
 			           </td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
+					    <td>
+					    	<input id="usedMan" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
+                               		trim:true,
+                               		required:true,
+                               		${assetScrap.dataStatus!='未审批'?'readOnly:true,':'' }
+             						value:"${assetScrap?.usedMan}"
+                           	'/>
+			            </td>
 					</tr>
 					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>资产总和：</div></td>
@@ -627,8 +634,8 @@
 					<option value="car">运输工具</option>
 					<option value="device">电子设备</option>
 					<option value="furniture">办公家具</option>
-					<option value="land">土地</option>
-					<option value="book">图书</option>
+					<!-- <option value="land">土地</option>
+					<option value="book">图书</option> -->
 				</select>
 			</div>
 		</div>

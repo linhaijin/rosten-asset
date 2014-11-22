@@ -352,7 +352,7 @@ class AssetAllocateController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
+//		if(params.applyMan && !"".equals(params.applyMan)) searchArgs["applyMan"] = params.applyMan
 		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
 		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
 		
@@ -513,7 +513,7 @@ class AssetAllocateController {
 			freshType = params.freshType
 		}
 		
-		def assetType = "car"
+		def assetType = "house"
 		if(params.assetType && params.assetType!="" && params.assetType!=null){
 			assetType = params.assetType
 		}

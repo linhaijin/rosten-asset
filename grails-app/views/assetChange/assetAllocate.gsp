@@ -43,19 +43,30 @@
 				});
 			
 				assetAllocate_save = function(object){
-					var callOutDeptName = dojo.byId("callOutDeptName").value;
-					if(callOutDeptName == "" || callOutDeptName == null){
-						alert("注意：请选择申请部门！");
-						document.getElementById("callOutDeptName").focus();
+					var originalDepartName = dojo.byId("originalDepartName").value;
+					if(originalDepartName == "" || originalDepartName == null){
+						alert("注意：原部门不能为空！");
+						document.getElementById("originalDepartName").focus();
 						return;
 					}
-					var callInDeptName = dojo.byId("callInDeptName").value;
-					if(callInDeptName == "" || callInDeptName == null){
-						alert("注意：请选择调入部门！");
-						document.getElementById("callInDeptName").focus();
+					var originalUser = dojo.byId("originalUser").value;
+					if(originalUser == "" || originalUser == null){
+						alert("注意：原使用人不能为空！");
+						document.getElementById("originalUser").focus();
 						return;
 					}
-					
+					var newDepartName = dojo.byId("newDepartName").value;
+					if(newDepartName == "" || newDepartName == null){
+						alert("注意：新部门不能为空！");
+						document.getElementById("newDepartName").focus();
+						return;
+					}
+					var newUser = dojo.byId("newUser").value;
+					if(newUser == "" || newUser == null){
+						alert("注意：新使用人不能为空！");
+						document.getElementById("newUser").focus();
+						return;
+					}
 					var assetTotal = dojo.byId("assetTotal").value;
 					if(assetTotal == 0){
 						alert("注意：请添加资产信息！");
@@ -64,7 +75,7 @@
 					}
 					var applyDesc = dojo.byId("applyDesc").value;
 					if(applyDesc == "" || applyDesc == null){
-						alert("注意：请填写申请理由！");
+						alert("注意：申请理由不能为空！");
 						document.getElementById("applyDesc").focus();
 						return;
 					}
@@ -170,7 +181,7 @@
 	
 					//增加对应节点上的金额控制
 					if("${assetAllocate?.status}" == "新建"){
-						content.selectDepart = registry.byId("callInDeptName").get("value");
+						content.selectDepart = registry.byId("newDepartName").get("value");
 						if(!conditionObj){
 							conditionObj = {};
 						}
@@ -553,7 +564,7 @@
                                	data-dojo-props='name:"originalUser",${fieldAcl.isReadOnly("originalUser")},
                                		trim:true,
                                		required:true,
-                               		readOnly:true,
+                               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
              						value:"${assetAllocate?.originalUser}"
                            	'/>
 			            </td>
@@ -579,7 +590,7 @@
                                	data-dojo-props='name:"newUser",${fieldAcl.isReadOnly("newUser")},
                                		trim:true,
                                		required:true,
-                               		readOnly:true,
+                               		${assetAllocate.dataStatus!='未审批'?'readOnly:true,':'' }
              						value:"${assetAllocate?.newUser}"
                            	'/>
 			            </td>
@@ -653,8 +664,8 @@
 					<option value="car">运输工具</option>
 					<option value="device">电子设备</option>
 					<option value="furniture">办公家具</option>
-					<option value="land">土地</option>
-					<option value="book">图书</option>
+					<!-- <option value="land">土地</option>
+					<option value="book">图书</option> -->
 				</select>
 			</div>
 		</div>

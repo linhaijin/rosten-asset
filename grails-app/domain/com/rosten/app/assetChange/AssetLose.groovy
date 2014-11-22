@@ -50,19 +50,34 @@ class AssetLose {
 	}
 	
 	//申请人
-	@GridColumn(name="申请人",width="100px",colIdx=3)
+//	@GridColumn(name="申请人",width="100px",colIdx=3)
 	String applyMan
 	
-	//申请部门
-	Depart applyDept
-	@GridColumn(name="申请部门",width="120px",colIdx=4)
-	def getDepartName(){
-		if(applyDept){
-			return applyDept.departName
+	//使用部门
+	Depart usedDepart
+	@GridColumn(name="使用部门",width="120px",colIdx=3)
+	def getUsedDepartName(){
+		if(usedDepart){
+			return usedDepart.departName
 		}else{
 			return ""
 		}
 	}
+	
+	//使用人
+	@GridColumn(name="使用人",width="70px",colIdx=4)
+	String usedMan
+	
+	//申请部门
+//	Depart applyDept
+//	@GridColumn(name="申请部门",width="120px",colIdx=4)
+//	def getDepartName(){
+//		if(applyDept){
+//			return applyDept.departName
+//		}else{
+//			return ""
+//		}
+//	}
 	
 	//资产总和
 	@GridColumn(name="资产总和（元）",width="100px",colIdx=5)
@@ -154,7 +169,9 @@ class AssetLose {
 		seriesNo nullable:false ,blank: false, unique: true
 		applyDate nullable:false,blank:false
 		applyMan nullable:false,blank:false
-		applyDept nullable:false,blank:false
+		usedDepart nullable:false,blank:false
+		usedMan nullable:false,blank:false
+//		applyDept nullable:false,blank:false
 		assetTotal nullable:false,blank:false
 		applyDesc nullable:false,blank:false
 		dataStatus nullable:false,blank:false

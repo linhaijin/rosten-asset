@@ -710,8 +710,8 @@
 					<option value="car">运输工具</option>
 					<option value="device">电子设备</option>
 					<option value="furniture">办公家具</option>
-					<option value="land">土地</option>
-					<option value="book">图书</option>
+					<!-- <option value="land">土地</option>
+					<option value="book">图书</option> -->
 				</select>
 			</div>
 		</div>

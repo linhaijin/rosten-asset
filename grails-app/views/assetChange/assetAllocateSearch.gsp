@@ -15,18 +15,13 @@
         
         <tbody>
           <tr>
-            <th width="7%">申请单号</th>
-            <td width="12%">
+            <th width="8%">申请单号</th>
+            <td width="18%">
             	<input id="allocate_seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true,style:{width:"120px"}'/>
             </td>
-            <th width="7%">申请人</th>
-            <td width="12%">
-            	<input id="allocate_applyMan"  data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,style:{width:"120px"}'/>
-            </td>
-            <th width="7%">原部门</th>
-            <td width="13%">
+            <th width="8%">原部门</th>
+            <td width="18%">
             	<div id="allocate_originalDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""'>
 	            	 <g:each in="${DepartList}" var="item">
@@ -34,8 +29,8 @@
 	                </g:each>
 	            </div>
             </td>
-            <th width="7%">新部门</th>
-            <td width="13%">
+            <th width="8%">新部门</th>
+            <td width="18%">
             	<div id="allocate_newDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""'>
 	            	 <g:each in="${DepartList}" var="item">

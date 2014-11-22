@@ -118,40 +118,41 @@ class AssetController {
 			model.serialNo = 9
 			
 			resource = new Resource()
-			resource.resourceName = "车辆资产"
-			resource.url = "carCards"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-					
-			resource = new Resource()
-			resource.resourceName = "土地资产"
-			resource.url = "landCards"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			resource = new Resource()
-			resource.resourceName = "房屋资产"
+			resource.resourceName = "房屋及建筑物资产"
 			resource.url = "houseCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "设备资产"
-			resource.url = "deviceCards"
+			resource.resourceName = "运输工具资产"
+			resource.url = "carCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "图书资产"
-			resource.url = "bookCards"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			resource = new Resource()
-			resource.resourceName = "家具资产"
+			resource.resourceName = "办公家具资产"
 			resource.url = "furnitureCards"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "电子设备资产"
+			resource.url = "deviceCards"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+					
+//			resource = new Resource()
+//			resource.resourceName = "土地资产"
+//			resource.url = "landCards"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
+//			
+//			resource = new Resource()
+//			resource.resourceName = "图书资产"
+//			resource.url = "bookCards"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)

@@ -177,7 +177,7 @@
 					}
 					
 					//增加对应节点上的金额控制
-					if("${assetScrap?.status}" == "后勤分管领导审核"){
+					if("${assetScrap?.status}" == "后勤部领导审核"){
 						if(!conditionObj){
 							conditionObj = {};
 						}
@@ -304,7 +304,7 @@
 							}
 							rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 								//刷新待办事项内容
-								window.opener.showStartGtask("${user}","${company?.id }");
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
 								if(data.refresh=="true" || data.refresh==true){
 									window.location.reload();

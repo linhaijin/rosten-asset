@@ -124,15 +124,13 @@ class ApplyManageController {
 	def mineApplyView ={
 		def actionList =[]
 		def strname = "assetApply"
-		def currentUser = springSecurityService.getCurrentUser()
-		
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		
 		//增加资产管理员群组的控制权限
+		def currentUser = springSecurityService.getCurrentUser()
 		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
 		  elem.group.groupName
 		}
-		if("zcgly" in userGroups){
+		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		}

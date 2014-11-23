@@ -39,9 +39,9 @@ class FurnitureCards {
 	@GridColumn(name="资产名称",colIdx=3)
 	String assetName
 	
-	//管理部门
+	//归属部门
 	Depart userDepart
-	@GridColumn(name="使用部门",colIdx=4)
+	@GridColumn(name="归属部门",colIdx=4)
 	def getDepartName(){
 		if(userDepart){
 			return userDepart.departName

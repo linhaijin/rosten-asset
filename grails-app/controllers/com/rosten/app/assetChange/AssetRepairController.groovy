@@ -16,6 +16,7 @@ import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
+import com.rosten.app.system.UserGroup
 
 import org.activiti.engine.runtime.ProcessInstance
 import com.rosten.app.system.Model
@@ -77,8 +78,15 @@ class AssetRepairController {
 		def actionList =[]
 		def strname = "assetRepair"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
-		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		//增加资产管理员群组的控制权限
+		def currentUser = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
+		  elem.group.groupName
+		}
+		if("zcgly" in userGroups || "xhzcgly" in userGroups){
+			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		}
 		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
@@ -163,10 +171,10 @@ class AssetRepairController {
 		
 		//特殊字段信息处理
 		assetRepair.applyDate = Util.convertToTimestamp(params.applyDate)
-		if(params.allowdepartsId.equals("")){
-			assetRepair.applyDept = params.allowdepartsName
+		if(params.usedDepartId.equals("")){
+			assetRepair.usedDepart = params.usedDepartName
 		}else{
-			assetRepair.applyDept = Depart.get(params.allowdepartsId)
+			assetRepair.usedDepart = Depart.get(params.usedDepartId)
 		}
 		if(!params.seriesNo_form.equals("")){
 			assetRepair.seriesNo = params.seriesNo_form
@@ -395,8 +403,8 @@ class AssetRepairController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
-		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"归属部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
 		
@@ -416,13 +424,6 @@ class AssetRepairController {
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
 					like("seriesNo","%"+seriesNo+"%")
-//					eq("seriesNo",seriesNo)
-//					if(assetType=="" || assetType==null){
-//						eq("assetStatus","报废待审批")
-//					}
-//					if(freshType=="twice"){
-//						eq("assetStatus","报废待审批")
-//					}
 				}
 			}
 		}
@@ -432,34 +433,42 @@ class AssetRepairController {
 			if(!(assetType.equals("") || assetType==null)){
 				if(assetType.equals("car")){
 					assetList = car.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = CarCards.createCriteria().count(query)
 				}else if(assetType.equals("land")){
 					assetList = land.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = LandCards.createCriteria().count(query)
 				}else if(assetType.equals("house")){
 					assetList = house.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = HouseCards.createCriteria().count(query)
 				}else if(assetType.equals("device")){
 					assetList = device.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = DeviceCards.createCriteria().count(query)
 				}else if(assetType.equals("book")){
 					assetList = book.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = BookCards.createCriteria().count(query)
 				}else if(assetType.equals("furniture")){
 					assetList = furniture.list(pa,query)
-					totalNum = assetList.size()
+					totalNum = FurnitureCards.createCriteria().count(query)
 				}
 			}else{
 				assetList = car.list(pa,query)
+				totalNum += CarCards.createCriteria().count(query)
 				assetList += land.list(pa,query)
+				totalNum += LandCards.createCriteria().count(query)
 				assetList += house.list(pa,query)
+				totalNum += HouseCards.createCriteria().count(query)
 				assetList += device.list(pa,query)
+				totalNum += DeviceCards.createCriteria().count(query)
 				assetList += book.list(pa,query)
+				totalNum += BookCards.createCriteria().count(query)
 				assetList += furniture.list(pa,query)
-				totalNum = assetList.size()
+				totalNum += FurnitureCards.createCriteria().count(query)
 			}
 			
 			def idx = 0
+			if(offset != null){
+				idx = offset
+			}
 			assetList.each{
 				def sMap =[:]
 				sMap["rowIndex"] = idx+1
@@ -521,8 +530,8 @@ class AssetRepairController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额","width":"80px","colIdx":5,"field":"onePrice"]
-		_gridHeader << ["name":"使用部门","width":"100px","colIdx":6,"field":"userDepart"]
+		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"归属部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		json["gridHeader"] = _gridHeader
 		
@@ -542,12 +551,6 @@ class AssetRepairController {
 				if(companyId!=null && companyId!=""){
 					eq("company",companyEntity)
 					eq("assetStatus","已入库")
-//					if(freshType=="twice"){
-//						eq("assetStatus","报废待审批")
-//						eq("seriesNo",seriesNo)
-//					}else{
-//						eq("assetStatus","已入库")
-//					}
 				}
 			}
 		}

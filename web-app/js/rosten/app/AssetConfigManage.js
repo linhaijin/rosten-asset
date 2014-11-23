@@ -51,18 +51,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		
 		switch (oString) {
 		case "assetCategory":
-			/*获取Grid方法
-            var naviJson = {
-                identifier : oString,
-                actionBarSrc : rosten.webPath + "/assetConfig/assetCategoryView?userId=" + userid,
-                gridSrc : rosten.webPath + "/assetConfig/assetCategoryGrid?companyId=" + companyId
-            };
-            rosten.kernel.addRightContent(naviJson);
-            var rostenGrid = rosten.kernel.getGrid();
-           */
-            /*直接挑战页面*/
+            /*资产分类*/
             var companyId = rosten.kernel.getUserInforByKey("companyid");
             rosten.kernel.setHref(rosten.webPath + "/assetConfig/assetCategory?companyId=" + companyId, oString);
+            break;
+		case "assetCodeConfig":
+            /*资产编号配置*/
+            var companyId = rosten.kernel.getUserInforByKey("companyid");
+            rosten.kernel.setHref(rosten.webPath + "/assetConfig/assetCodeConfig?companyId=" + companyId, oString);
             break;
 		}
 		

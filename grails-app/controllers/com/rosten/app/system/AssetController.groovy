@@ -40,6 +40,13 @@ class AssetController {
 			resource.url = "assetCategory"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "资产编号配置"
+			resource.url = "assetCodeConfig"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 //			resource = new Resource()
@@ -255,11 +262,11 @@ class AssetController {
 			model.description ="统计分析"
 			model.serialNo = 13
 			
-			resource = new Resource()
-			resource.resourceName = "档案报表"
-			resource.url = "staticDesign"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
+//			resource = new Resource()
+//			resource.resourceName = "档案报表"
+//			resource.url = "staticDesign"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"

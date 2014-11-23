@@ -56,7 +56,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			}else{
 				content.id = unids;
-				rosten.read(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
+				rosten.readSyncNoTime(rosten.webPath + "/applyManage/assetApplyDelete", content,function(data){
 					if(data.result == true || data.result == "true"){
 						rosten.alert("成功：资产申请单已删除！");
 						rosten.kernel.refreshGrid();
@@ -98,23 +98,21 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		var unids = rosten.getGridUnid("multi");
 		if (unids == ""){
-			alert("注意：请在列表中选择数据！")
+			rosten.alert("注意：请在列表中选择数据！")
 			return;
 		}
 		var isCreatedCards = rosten.getGridSelectedValue("getCardsCreatedLabel");
 		if(isCreatedCards == "已生成"){
-			alert("注意：某些申请单已生成卡片，请勿重复操作！");
+			rosten.alert("注意：某些申请单已生成卡片，请勿重复操作！");
 			return;
 		}
-		var content ={};
-		content.companyId = companyId;
-		content.applyIds = unids;
-		rosten.read(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.assetApplyCallback);
-//		rosten.kernel.createRostenShowDialog(rosten.webPath + "/applyManage/assetCardsCreate?companyId=" + companyId + "&applyIds=" + unids, {
-//            onLoadFunction : function() {
-//            	
-//            }
-//        });
+		var _1 = rosten.confirm("生成卡片需要花费一定时间，请耐心等待！是否继续?");
+		_1.callback = function() {
+			var content ={};
+			content.companyId = companyId;
+			content.applyIds = unids;
+			rosten.readSyncNoTime(rosten.webPath + "/applyManage/assetCardsCreate",content,rosten.assetApplyCallback);
+		}
 	};
 	
 	assetApply_formatTopic = function(value,rowIndex){

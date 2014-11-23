@@ -14,6 +14,66 @@ class AssetConfigController {
 	
 	def imgPath ="images/rosten/actionbar/"
 	
+	//204-11-23------资产编号配置-----------------------------------------------------
+	def assetCodeConfig ={
+		def model = [:]
+		def user = springSecurityService.getCurrentUser()
+		
+		def entity = AssetCode.findWhere(company:user.company)
+		if(entity==null) {
+			entity = new AssetCode()
+			
+			Calendar cal = Calendar.getInstance();
+			entity.nowYear = cal.get(Calendar.YEAR)
+			entity.frontYear = entity.nowYear -1
+			
+			model.companyId = user.company.id
+		}else{
+			model.companyId = entity.company.id
+		}
+		model.config = entity
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		
+		render(view:'/assetConfig/assetCodeConfig',model:model)
+	}
+	def assetCodeConfigView ={
+		def actionList =[]
+		
+		def strname = "assetCodeConfig"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("保存",imgPath + "Save.gif",strname + "_save")
+		
+		render actionList as JSON
+	}
+	def assetCodeConfigSave ={
+		def json=[:]
+		def entity = new AssetCode()
+		if(params.id && !"".equals(params.id)){
+			entity = AssetCode.get(params.id)
+		}
+		entity.properties = params
+		entity.clearErrors()
+		entity.company = Company.get(params.companyId)
+		
+		entity.nowCancel = params.config_nowCancel
+		entity.frontCancel = params.config_frontCancel
+		
+		if(entity.save(flush:true)){
+			json["result"] = true
+			json["configId"] = entity.id
+			json["companyId"] = entity.company.id
+		}else{
+			entity.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	//---------------------------------------------------------------------------
+	
 	def assetCategoryForm ={
 		def webPath = request.getContextPath() + "/"
 		def strname = "assetCategory"

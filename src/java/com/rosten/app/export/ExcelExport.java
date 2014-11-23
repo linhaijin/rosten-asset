@@ -58,7 +58,7 @@ public class ExcelExport {
 					ws.addCell(new Label(0, i+2, assetScrapList.get(i).getSeriesNo()));
 					ws.addCell(new Label(1, i+2, (String)assetScrapList.get(i).getFormattedShowApplyDate()));
 					ws.addCell(new Label(2, i+2, (String)assetScrapList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)assetScrapList.get(i).getDepartName()));
+//					ws.addCell(new Label(3, i+2, (String)assetScrapList.get(i).getDepartName()));
 					ws.addCell(new Label(4, i+2, assetScrapList.get(i).getAssetTotal().toString()));
 					ws.addCell(new Label(5, i+2, assetScrapList.get(i).getApplyDesc()));
 					ws.addCell(new Label(6, i+2, assetScrapList.get(i).getStatus()));
@@ -116,8 +116,8 @@ public class ExcelExport {
 					ws.addCell(new Label(0, i+2, assetAllocateList.get(i).getSeriesNo()));
 					ws.addCell(new Label(1, i+2, (String)assetAllocateList.get(i).getFormattedShowApplyDate()));
 					ws.addCell(new Label(2, i+2, (String)assetAllocateList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)assetAllocateList.get(i).getOutDepartName()));
-					ws.addCell(new Label(4, i+2, (String)assetAllocateList.get(i).getInDepartName()));
+//					ws.addCell(new Label(3, i+2, (String)assetAllocateList.get(i).getOutDepartName()));
+//					ws.addCell(new Label(4, i+2, (String)assetAllocateList.get(i).getInDepartName()));
 					ws.addCell(new Label(5, i+2, assetAllocateList.get(i).getAssetTotal().toString()));
 					ws.addCell(new Label(6, i+2, assetAllocateList.get(i).getApplyDesc()));
 					ws.addCell(new Label(7, i+2, assetAllocateList.get(i).getStatus()));
@@ -174,7 +174,7 @@ public class ExcelExport {
 					ws.addCell(new Label(0, i+2, assetLoseList.get(i).getSeriesNo()));
 					ws.addCell(new Label(1, i+2, (String)assetLoseList.get(i).getFormattedShowApplyDate()));
 					ws.addCell(new Label(2, i+2, (String)assetLoseList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)assetLoseList.get(i).getDepartName()));
+//					ws.addCell(new Label(3, i+2, (String)assetLoseList.get(i).getDepartName()));
 					ws.addCell(new Label(4, i+2, assetLoseList.get(i).getAssetTotal().toString()));
 					ws.addCell(new Label(5, i+2, assetLoseList.get(i).getApplyDesc()));
 					ws.addCell(new Label(6, i+2, assetLoseList.get(i).getStatus()));
@@ -231,7 +231,7 @@ public class ExcelExport {
 					ws.addCell(new Label(0, i+2, assetRepairList.get(i).getSeriesNo()));
 					ws.addCell(new Label(1, i+2, (String)assetRepairList.get(i).getFormattedShowApplyDate()));
 					ws.addCell(new Label(2, i+2, (String)assetRepairList.get(i).getApplyMan()));
-					ws.addCell(new Label(3, i+2, (String)assetRepairList.get(i).getDepartName()));
+//					ws.addCell(new Label(3, i+2, (String)assetRepairList.get(i).getDepartName()));
 					ws.addCell(new Label(4, i+2, assetRepairList.get(i).getMaintenanceMan()));
 					ws.addCell(new Label(5, i+2, (String)assetRepairList.get(i).getFormattedShowMaintenanceDate()));
 					ws.addCell(new Label(6, i+2, assetRepairList.get(i).getStatus()));

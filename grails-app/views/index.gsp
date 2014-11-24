@@ -114,16 +114,16 @@
 	}
 	.dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 0px;}
     .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
-	.charts {
+	.top_charts {
 		clear: both;
 	}
-	.chart-area-pie {
+	.top_chart-area-pie {
 		/*border: 1px solid #ccc;*/
         height: 165px;
         width:400px;
         margin:0 auto;
 	}
-	.chart-pie {
+	.top_chart-pie {
 		width:400px;
 		height: 165px;
 	}
@@ -149,6 +149,7 @@
 	     	"dojox/layout/ContentPane",
 	     	"dijit/Dialog",
 	     	"dojo/data/ItemFileWriteStore",
+	     	
 	     	"dojox/charting/Chart",
 	     	"dojox/charting/DataSeries",
 	     	"dojox/charting/themes/ThreeD",
@@ -156,6 +157,7 @@
 	     	"dojox/charting/plot2d/Pie",
 	     	"dojox/charting/action2d/Tooltip",
 	     	"dojox/charting/action2d/MoveSlice",
+	     	
 	     	"dijit/layout/BorderContainer",
 	     	"dijit/layout/AccordionContainer",
 	     	"dijit/form/ValidationTextBox",
@@ -193,16 +195,18 @@
 		        store.fetch({
 					query:{id:"*"},onComplete:function(items){
 						if(items.length>0){
-							var chartP = new Chart("pie");
+							var chartP = new Chart("top_pie");
 				            chartP.setTheme(ThreeD);
 				            chartP.addPlot("default", {type: Pie, radius: 80});
 				            chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, top_valTrans, "number")));
 				            chartP.render();
-				            
+
 				            new Tooltip(chartP);
-				    		new MoveSlice(chartP);
+				            
+				            /*
+				    		//new MoveSlice(chartP);
 				    		
-				    		//top_addLegend(chartP, "pie_legend");
+				    		top_addLegend(chartP, "top_pie_legend");*/
 						}else{
 							domStyle.set(dom.byId("top_chart"),"display","none");
 							rosten.errordeal(registry.byId("home_chart").containerNode, "暂无数据");
@@ -346,10 +350,10 @@
 								height:"157px",width:"50%",style:{marginRight:"1px",padding:"0px"},
 								moreText:""'>
 								
-							<div class="charts" id="top_chart">
-								<div id="pie_legend"></div>
-								<div class="chart-area-pie">
-									<div id="pie" class="chart-pie"></div>
+							<div class="top_charts" id="top_chart">
+								<div id="top_pie_legend"></div>
+								<div class="top_chart-area-pie">
+									<div id="top_pie" class="top_chart-pie"></div>
 								</div>
 							</div>		
 							

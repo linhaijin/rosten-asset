@@ -7,8 +7,9 @@
 <style type="text/css">
 	.dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 0px;}
     .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
+    
 	.charts {
-		clear: both;
+		overflow:auto;
 	}
 	.chart-area {
 		float: left;
@@ -23,35 +24,37 @@
 	}
 	
 	.chart-area-lines1 {
-        height: 200px;
+        height: 210px;
         width:520px;
         float:left;
 	}
 	.chart-lines1 {
 		width:520px;
-		height: 190px;
+		height: 200px;
 	}
 	
+	/*饼图*/
 	.chart-area-pie {
 		/*border: 1px solid #ccc;*/
-        height: 190px;
+        height: 210px;
         width:400px;
         margin:0 auto;
 	}
 	.chart-pie {
 		width:400px;
-		height: 190px;
+		height: 200px;
 	}
 	
+	/*按部门柱状图显示*/
 	.chart-area-cols {
 		/*border: 1px solid #ccc;*/
-        height: 200px;
-        width:520px;
+        height: 210px;
+        width:2500px;
         float:left;
 	}
 	.chart-cols {
-		width:520px;
-		height: 190px;
+		width:2500px;
+		height: 200px;
 	}
 	
 </style>
@@ -122,7 +125,7 @@
 	        chartL.addAxis("y", {
 	        	title: "金额(万元)",
 	        	titleGap: 20, 
-	        	max:4000,
+	        	//max:4000,
 	        	titleFontColor: "green",
 	            titleOrientation: "axis",
 	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
@@ -130,25 +133,20 @@
 	        	});
 	        
 	        // chartL.addSeries("技术中心", new DataSeries(store, {query: {depart :"a"}}, "price"));      
-	        chartL.addSeries("土地",[
-				{ x: 1, y: 1500},{ x: 2, y: 2100},{ x: 3, y: 3100},{ x: 4, y: 3100},{ x: 5, y: 3000},{ x: 6, y: 3500},
-	        	{ x: 7, y: 3500},{ x: 8, y: 3500},{ x: 9, y: 3500},{ x: 10, y: 3500},{ x: 11, y: 3500},{ x: 12, y: 3800}
+	        chartL.addSeries("房屋及建筑物",[
+				{ x: 1, y: 1500},{ x: 2, y: 2100},{ x: 3, y: 3100}
 	        ]); 
-	        chartL.addSeries("房屋",[
+	        chartL.addSeries("运输工具",[
 	        	{ x: 1, y: 800},{ x: 2, y: 800},{ x: 3, y: 800},{ x: 4, y: 800},{ x: 5, y: 800},{ x: 6, y: 800},
 	        	{ x: 7, y: 1100},{ x: 8, y: 1100},{ x: 9, y: 1500},{ x: 10, y: 1500},{ x: 11, y: 1500},{ x: 12, y: 1500}
 	        ]);
-	        chartL.addSeries("设备",[
+	        chartL.addSeries("办公家具",[
    	        	{ x: 1, y: 2000},{ x: 2, y: 2100},{ x: 3, y: 3000},{ x: 4, y: 3500},{ x: 5, y: 3500},{ x: 6, y: 3600},
 	        	{ x: 7, y: 3600},{ x: 8, y: 3000},{ x: 9, y: 3000},{ x: 10, y: 3700},{ x: 11, y: 3600},{ x: 12, y: 3600}
    	        ]);
-	        chartL.addSeries("图书",[
+	        chartL.addSeries("电子设备",[
   	        	{ x: 1, y: 500},{ x: 2, y: 500},{ x: 3, y: 600},{ x: 4, y: 800},{ x: 5, y: 800},{ x: 6, y: 1000},
         		{ x: 7, y: 1000},{ x: 8, y: 1000},{ x: 9, y: 1500},{ x: 10, y: 1500},{ x: 11, y: 1500},{ x: 12, y: 2000}
-  	        ]);
-	        chartL.addSeries("车辆",[
-  	        	{ x: 1, y: 1000},{ x: 2, y: 1000},{ x: 3, y: 1500},{ x: 4, y: 1500},{ x: 5, y: 1500},{ x: 6, y: 1600},
-        		{ x: 7, y: 1600},{ x: 8, y: 1600},{ x: 9, y: 2000},{ x: 10, y: 2000},{ x: 11, y: 2000},{ x: 12, y: 2000}
   	        ]);
 	        
 	        new Magnify(chartL);
@@ -205,7 +203,7 @@
     		addLegend(chartC, "cols_legend");
 
 
-			//各部门车辆统计
+			//各部门办公家具
 			
 			var store2 = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getAssetStatic',id:company?.id,params:[departIds:departIds])}"});
 			
@@ -221,14 +219,14 @@
             });
 
 			chartCl.addAxis("y", {
-	        	title: "车辆数(辆)",
+	        	title: "总金额(万元)",
 	        	titleGap: 20, 
 	        	titleFontColor: "green",
 	            titleOrientation: "axis",
 	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
 	        	
 	        });
-			chartCl.addSeries("机动车辆", new DataSeries(store2, {query: {type: "cl"}}, dojo.hitch(null, valTrans1, "number"))
+			chartCl.addSeries("办公家具", new DataSeries(store2, {query: {type: "bgjj"}}, dojo.hitch(null, valTrans1, "number"))
 			//,{stroke: {color: "lightblue"}, fill: "lightblue"}
 			);
 			
@@ -236,7 +234,7 @@
 			chartCl.render();
 	        addLegend(chartCl, "cols_legend_cl");
 
-	        //各部门土地统计
+	        //各部门运输工具统计
 			var chartTd = new Chart("cols_td");
 			chartTd.addPlot("default", {type: Columns,gap: 15});
 			chartTd.setTheme(ThreeD);
@@ -256,13 +254,13 @@
 	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
 	        	
 	        });
-			chartTd.addSeries("土地", new DataSeries(store2, {query: {type: "td"}}, {y: "money", tooltip: "money"}));
+			chartTd.addSeries("运输工具", new DataSeries(store2, {query: {type: "ysgj"}}, {y: "money", tooltip: "money"}));
 			
 			new Tooltip(chartTd);
 			chartTd.render();
 	        addLegend(chartTd, "cols_legend_td");
 	        
-	        //各部门土地统计
+	        //各部门电子设备统计
 	        var chartFw = new Chart("cols_fw");
 	        chartFw.addPlot("default", {type: Columns,gap: 15});
 	        chartFw.setTheme(ThreeD);
@@ -282,7 +280,7 @@
 	        	fixLower: "major", fixUpper: "major", natural: true,includeZero: true, vertical: true
 	        	
 	        });
-	        chartFw.addSeries("房屋", new DataSeries(store2, {query: {type: "td"}}, {y: "money", tooltip: "money"}));
+	        chartFw.addSeries("电子设备", new DataSeries(store2, {query: {type: "dzsb"}}, {y: "money", tooltip: "money"}));
 			
 			new Tooltip(chartFw);
 			chartFw.render();
@@ -310,10 +308,10 @@
 	
 </script>
 <body>
-	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
+	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"270px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
 			data-dojo-props='region:"left",title:"年度固定资产增速趋势统计    (2014年度)",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				height:"260px",width:"50%",style:{marginRight:"1px"},moreText:""'>
 			<div class="charts">
 				<div id="lines1_legend"></div>
 				<div class="chart-area-lines1">
@@ -324,7 +322,7 @@
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
 			data-dojo-props='region:"center",title:"固定资产分类统计",toggleable:false,
-				height:"210px",_moreClick:more_demo,moreText:"详情"'>
+				height:"260px",_moreClick:more_demo,moreText:""'>
 				
 			<div class="charts">
 				<div id="pie_legend"></div>
@@ -335,10 +333,10 @@
 				
 		</div>						
 	</div>
-	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
+	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"310px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
 			data-dojo-props='region:"left",title:"各部门固定资产分类统计",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				height:"260px",width:"50%",style:{marginRight:"1px",overflow:"auto"},moreText:""'>
 			<div class="charts">
 				<div id="cols_legend"></div>
 				<div class="chart-area-cols">
@@ -348,8 +346,8 @@
 				
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"各部门车辆统计",toggleable:false,
-				height:"210px",moreText:""'>
+			data-dojo-props='region:"center",title:"各部门办公家具统计",toggleable:false,
+				height:"260px",moreText:""'>
 				
 			<div class="charts">
 				<div id="cols_legend_cl"></div>
@@ -361,9 +359,9 @@
 		</div>						
 	</div>
 	
-	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
+	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"310px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"各部门土地统计",toggleable:false,
+			data-dojo-props='region:"left",title:"各部门运输工具统计",toggleable:false,
 				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
 				
 			<div class="charts">
@@ -375,7 +373,7 @@
 			
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"各部门土地统计",toggleable:false,
+			data-dojo-props='region:"center",title:"各部门电子设备统计",toggleable:false,
 				height:"210px",moreText:""'>
 				
 			<div class="charts">

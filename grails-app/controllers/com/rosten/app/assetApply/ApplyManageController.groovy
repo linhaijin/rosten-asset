@@ -379,10 +379,10 @@ class ApplyManageController {
 		
 		//购置年月
 		Calendar cal = Calendar.getInstance();
-		c = Util.strRight(cal.get(Calendar.YEAR), "20") + cal.get(Calendar.MONTH)
+		c = cal.get(Calendar.YEAR).toString().substring(2) + (cal.get(Calendar.MONTH)+1).toString()
 		
 		//资产序号
-		d = config.nowYear + config.nowSN.toString().padLeft(3,"0")
+		d = config.nowSN.toString().padLeft(3,"0")
 		config.nowSN += 1
 		
 		return a + b + c + d
@@ -398,123 +398,119 @@ class ApplyManageController {
 		 */
 		try{
 			int createCardsCount = 0
-			if(ids.size()>0){
-				def config = AssetCode.first()
+			def config = AssetCode.first()
+			
+			ids.each{  
+				def applyNotes = ApplyNotes.get(it)
+				def assetType = applyNotes.userCategory.getRootCategory().categoryName
 				
-				ids.each {  
-					def applyNotes = ApplyNotes.get(it)
-					def assetType = applyNotes.rootAssetCategory
-//					//获取资产编号A代码
-					def assetCount = applyNotes.amount
-					def onePrice = applyNotes.onePrice
+				//获取资产编号
+				def assetCount = applyNotes.amount
+				def onePrice = applyNotes.onePrice
 
-					if(applyNotes.isCreatedCards == "0"){
-						if(assetType.equals("电子设备")){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def deviceCard = new DeviceCards()
-								deviceCard.company = company
-								deviceCard.applyNotes = applyNotes
-								deviceCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								deviceCard.userCategory = applyNotes.userCategory
-								deviceCard.assetName = applyNotes.assetName
-								deviceCard.userDepart = applyNotes.userDepart
-								deviceCard.onePrice = onePrice
-								deviceCard.country = applyNotes.country
-								deviceCard.assetStatus = "已入库"
-								deviceCard.save()
-							}
-						}else if(assetType == "运输工具"){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def carCard = new CarCards()
-								carCard.company = company
-								carCard.applyNotes = applyNotes
-								carCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								carCard.userCategory = applyNotes.userCategory
-								carCard.assetName = applyNotes.assetName
-								carCard.userDepart = applyNotes.userDepart
-								carCard.onePrice = onePrice
-								carCard.country = applyNotes.country
-								carCard.assetStatus = "已入库"
-								carCard.save()
-							}
-							
-						}else if(assetType == "房屋及建筑物"){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def houseCard = new HouseCards()
-								houseCard.company = company
-								houseCard.applyNotes = applyNotes
-								houseCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								houseCard.userCategory = applyNotes.userCategory
-								houseCard.assetName = applyNotes.assetName
-								houseCard.userDepart = applyNotes.userDepart
-								houseCard.onePrice = onePrice
-								houseCard.country = applyNotes.country
-								houseCard.assetStatus = "已入库"
-								houseCard.save()
-							}
-						}else if(assetType == "土地"){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def landCard = new LandCards()
-								landCard.company = company
-								landCard.applyNotes = applyNotes
-								landCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								landCard.userCategory = applyNotes.userCategory
-								landCard.assetName = applyNotes.assetName
-								landCard.userDepart = applyNotes.userDepart
-								landCard.onePrice = onePrice
-								landCard.country = applyNotes.country
-								landCard.assetStatus = "已入库"
-								landCard.save()
-							}
-						}else if(assetType == "图书"){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def bookCard = new BookCards()
-								bookCard.company = company
-								bookCard.applyNotes = applyNotes
-								bookCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								bookCard.userCategory = applyNotes.userCategory
-								bookCard.assetName = applyNotes.assetName
-								bookCard.userDepart = applyNotes.userDepart
-								bookCard.onePrice = onePrice
-								bookCard.country = applyNotes.country
-								bookCard.assetStatus = "已入库"
-								bookCard.save()
-							}
-						}else if(assetType == "办公家具"){
-							/*获取申请信息中的数量，创建相同数量的资产卡片*/
-							for(int i=0;i<assetCount;i++){
-								def furnitureCard = new FurnitureCards()
-								furnitureCard.company = company
-								furnitureCard.applyNotes = applyNotes
-								furnitureCard.registerNum = this.getAssetCardCode(config,applyNotes)
-								furnitureCard.userCategory = applyNotes.userCategory
-								furnitureCard.assetName = applyNotes.assetName
-								furnitureCard.userDepart = applyNotes.userDepart
-								furnitureCard.onePrice = onePrice
-								furnitureCard.country = applyNotes.country
-								furnitureCard.assetStatus = "已入库"
-								furnitureCard.save()
-							}
+				if(applyNotes.isCreatedCards == "0"){
+					if(assetType.equals("电子设备")){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def deviceCard = new DeviceCards()
+							deviceCard.company = company
+							deviceCard.applyNotes = applyNotes
+							deviceCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							deviceCard.userCategory = applyNotes.userCategory
+							deviceCard.assetName = applyNotes.assetName
+							deviceCard.userDepart = applyNotes.userDepart
+							deviceCard.onePrice = onePrice
+							deviceCard.country = applyNotes.country
+							deviceCard.assetStatus = "已入库"
+							deviceCard.save()
 						}
-						applyNotes.isCreatedCards = "1"
-						createCardsCount += 1
-						createCards = "true"
+					}else if(assetType == "运输工具"){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def carCard = new CarCards()
+							carCard.company = company
+							carCard.applyNotes = applyNotes
+							carCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							carCard.userCategory = applyNotes.userCategory
+							carCard.assetName = applyNotes.assetName
+							carCard.userDepart = applyNotes.userDepart
+							carCard.onePrice = onePrice
+							carCard.country = applyNotes.country
+							carCard.assetStatus = "已入库"
+							carCard.save()
+						}
+						
+					}else if(assetType == "房屋及建筑物"){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def houseCard = new HouseCards()
+							houseCard.company = company
+							houseCard.applyNotes = applyNotes
+							houseCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							houseCard.userCategory = applyNotes.userCategory
+							houseCard.assetName = applyNotes.assetName
+							houseCard.userDepart = applyNotes.userDepart
+							houseCard.onePrice = onePrice
+							houseCard.country = applyNotes.country
+							houseCard.assetStatus = "已入库"
+							houseCard.save()
+						}
+					}else if(assetType == "土地"){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def landCard = new LandCards()
+							landCard.company = company
+							landCard.applyNotes = applyNotes
+							landCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							landCard.userCategory = applyNotes.userCategory
+							landCard.assetName = applyNotes.assetName
+							landCard.userDepart = applyNotes.userDepart
+							landCard.onePrice = onePrice
+							landCard.country = applyNotes.country
+							landCard.assetStatus = "已入库"
+							landCard.save()
+						}
+					}else if(assetType == "图书"){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def bookCard = new BookCards()
+							bookCard.company = company
+							bookCard.applyNotes = applyNotes
+							bookCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							bookCard.userCategory = applyNotes.userCategory
+							bookCard.assetName = applyNotes.assetName
+							bookCard.userDepart = applyNotes.userDepart
+							bookCard.onePrice = onePrice
+							bookCard.country = applyNotes.country
+							bookCard.assetStatus = "已入库"
+							bookCard.save()
+						}
+					}else if(assetType == "办公家具"){
+						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+						for(int i=0;i<assetCount;i++){
+							def furnitureCard = new FurnitureCards()
+							furnitureCard.company = company
+							furnitureCard.applyNotes = applyNotes
+							furnitureCard.registerNum = this.getAssetCardCode(config,applyNotes)
+							furnitureCard.userCategory = applyNotes.userCategory
+							furnitureCard.assetName = applyNotes.assetName
+							furnitureCard.userDepart = applyNotes.userDepart
+							furnitureCard.onePrice = onePrice
+							furnitureCard.country = applyNotes.country
+							furnitureCard.assetStatus = "已入库"
+							furnitureCard.save()
+						}
 					}
-					//修改编号配置文档信息，并flush
-					config.save(flush:true)
-					
+					applyNotes.isCreatedCards = "1"
+					createCardsCount += 1
+					createCards = "true"
 				}
-				message = "共有"+createCardsCount+"个资产申请单生成资产卡片！"
-				json = [result:'true',message:message]
-			}else{
-				message = "错误，请联系管理员！"
-				json = [result:'error',message:message]
+				//修改编号配置文档信息，并flush
+				config.save(flush:true)
+				
 			}
+			message = "共有"+createCardsCount+"个资产申请单生成资产卡片！"
+			json = [result:'true',message:message]
 		}catch(Exception e){
 			message = "错误，请联系管理员！"
 			json = [result:'error',message:message]

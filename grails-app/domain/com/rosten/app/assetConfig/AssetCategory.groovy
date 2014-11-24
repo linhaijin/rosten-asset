@@ -57,6 +57,15 @@ class AssetCategory {
 		}
 	}
 	
+	//获取跟节点的分类
+	def getRootCategory(){
+		if(this.parent){
+			return this.getRootCategory(this.parent)
+		}else{
+			return this
+		}
+	}
+	
 	//描述
 	@GridColumn(name="描述")
 	String description

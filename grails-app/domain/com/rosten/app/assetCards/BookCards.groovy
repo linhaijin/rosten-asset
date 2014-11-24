@@ -22,7 +22,7 @@ class BookCards {
 	}
 	//资产编号
 	@GridColumn(name="资产编号",colIdx=1,formatter="bookCards_formatTopic")
-	String registerNum = getFormattedSeriesDate()
+	String registerNum
 	
 	//资产分类名称
 	AssetCategory userCategory

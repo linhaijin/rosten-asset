@@ -40,7 +40,7 @@
             <td>
             	<div class="btn">
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetScrap_search()}'>查询</button>
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetScrap_resetSearch()}'>重置条件</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetScrap_resetSearch()}'>重置</button>
               	</div>
             </td>
           </tr>

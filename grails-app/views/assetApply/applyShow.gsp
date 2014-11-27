@@ -40,31 +40,31 @@
 			assetApply_save = function(object){
 				var allowdepartsName = dijit.byId("allowdepartsName").attr("value");
 				if(allowdepartsName == "" || allowdepartsName == null){
-					alert("注意：请选择申请部门！");
+					rosten.alert("注意：申请部门不能为空！");
 					dijit.byId("allowdepartsName").focus();
 					return;
 				}
 				var allowCategoryName = dijit.byId("allowCategoryName").attr("value");
 				if(allowCategoryName == "" || allowCategoryName == null){
-					alert("注意：请选择资产分类！");
+					rosten.alert("注意：资产分类不能为空！");
 					dijit.byId("allowCategoryName").focus();
 					return;
 				}
 				var assetName = dijit.byId("assetName").attr("value");
 				if(assetName == "" || assetName == null){
-					alert("注意：请填写资产名称！");
+					rosten.alert("注意：资产名称不能为空！");
 					dijit.byId("assetName").focus();
 					return;
 				}
 				var userName = dijit.byId("userName").attr("value");
 				if(userName == "" || userName == null){
-					alert("注意：请填写使用人！");
+					rosten.alert("注意：使用人不能为空！");
 					dijit.byId("userName").focus();
 					return;
 				}
 				var onePrice = dijit.byId("onePrice").attr("value");
-				if(onePrice == 0){
-					alert("注意：单价不能为0.0！");
+				if(onePrice == 0 || onePrice == "" || onePrice == null){
+					rosten.alert("注意：单价不能为0！");
 					dijit.byId("onePrice").focus();
 					return;
 				}
@@ -113,9 +113,9 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${applyNotes?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${applyNotes?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！");
+							rosten.alert("意见填写成功！");
 						}else{
-							rosten.alert("失败!");
+							rosten.alert("意见填写失败!");
 						}	
 					});
 				};
@@ -225,14 +225,22 @@
 						if(data.nextUserName && data.nextUserName!=""){
 							_nextUserName = data.nextUserName;
 						}
-						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
-							//刷新待办事项内容
-							window.opener.showStartGtask("${user?.id}","${company?.id }");
-							
-							if(data.refresh=="true" || data.refresh==true){
-								window.location.reload();
-							}else{
+						if(_nextUserName == "" || _nextUserName == null){
+							rosten.alert("成功，流程已结束！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								rosten.pagequit();
+							}
+						}else{
+							rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
+								
+								if(data.refresh == "true" || data.refresh == true){
+									window.location.reload();
+								}else{
+									rosten.pagequit();
+								}
 							}
 						}
 					}else{
@@ -257,14 +265,22 @@
 						if(data.nextUserName && data.nextUserName!=""){
 							_nextUserName = data.nextUserName;
 						}
-						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
-							//刷新待办事项内容
-							window.opener.showStartGtask("${user?.id}","${company?.id }");
-							
-							if(data.refresh=="true" || data.refresh==true){
-								window.location.reload();
-							}else{
+						if(_nextUserName == "" || _nextUserName == null){
+							rosten.alert("成功，流程已结束！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								rosten.pagequit();
+							}
+						}else{
+							rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
+								
+								if(data.refresh == "true" || data.refresh == true){
+									window.location.reload();
+								}else{
+									rosten.pagequit();
+								}
 							}
 						}
 					}else{

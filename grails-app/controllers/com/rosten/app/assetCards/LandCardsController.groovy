@@ -51,6 +51,15 @@ class LandCardsController {
 		return model
 	}
 	
+	def landCardsSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetCards/landCardsSearch',model:model)
+	}
+	
 	def landCardsAdd ={
 		redirect(action:"landCardsShow",params:params)
 	}
@@ -169,6 +178,14 @@ class LandCardsController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetCardsService.getLandCardsListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -177,11 +194,11 @@ class LandCardsController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetCardsService.getLandCardsDataStore(args)
+			json["gridData"] = assetCardsService.getLandCardsDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = assetCardsService.getLandCardsCount(company)
+			def total = assetCardsService.getLandCardsCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

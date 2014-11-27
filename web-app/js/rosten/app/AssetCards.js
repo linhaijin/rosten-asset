@@ -3,7 +3,7 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
-	//车辆资产
+	//运输工具
 	carCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -48,7 +48,49 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
-	//土地资产
+	carCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("car_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("car_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("car_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("car_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	carCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("car_registerNum").set("value","");
+			registry.byId("car_assetName").set("value","");
+			registry.byId("car_userDepart").set("value","");
+			registry.byId("car_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
+	//土地
 	landCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -91,8 +133,50 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rosten.kernel.getGrid().clearSelected();
 	};
+	
+	landCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("land_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("land_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("land_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("land_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	landCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("land_registerNum").set("value","");
+			registry.byId("land_assetName").set("value","");
+			registry.byId("land_userDepart").set("value","");
+			registry.byId("land_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
 
-	//房屋资产
+	//房屋及建筑物
 	houseCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -136,7 +220,49 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
-	//设备资产
+	houseCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("house_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("house_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("house_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("house_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	houseCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("house_registerNum").set("value","");
+			registry.byId("house_assetName").set("value","");
+			registry.byId("house_userDepart").set("value","");
+			registry.byId("house_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
+	//电子设备
 	deviceCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -209,7 +335,49 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
-	//图书资产
+	deviceCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("device_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("device_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("device_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("device_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	deviceCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("device_registerNum").set("value","");
+			registry.byId("device_assetName").set("value","");
+			registry.byId("device_userDepart").set("value","");
+			registry.byId("device_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
+	//图书
 	bookCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -252,7 +420,49 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
-	//家具资产
+	bookCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("book_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("book_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("book_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("book_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	bookCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("book_registerNum").set("value","");
+			registry.byId("book_assetName").set("value","");
+			registry.byId("book_userDepart").set("value","");
+			registry.byId("book_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
+	//办公家具
 	furnitureCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -295,6 +505,48 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	furnitureCards_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("furniture_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var assetName = registry.byId("furniture_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("furniture_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		var assetStatus = registry.byId("furniture_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	furnitureCards_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("furniture_registerNum").set("value","");
+			registry.byId("furniture_assetName").set("value","");
+			registry.byId("furniture_userDepart").set("value","");
+			registry.byId("furniture_assetStatus").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	
 	/*
 	 * 此功能默认必须存在
 	 */
@@ -306,6 +558,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/carCards/carCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/carCards/carCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/carCards/carCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -316,6 +569,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/landCards/landCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/landCards/landCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/landCards/landCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -326,6 +580,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/houseCards/houseCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/houseCards/houseCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/houseCards/houseCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -336,6 +591,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/deviceCards/deviceCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/deviceCards/deviceCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/deviceCards/deviceCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -346,6 +602,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/bookCards/bookCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/bookCards/bookCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/bookCards/bookCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);
@@ -356,6 +613,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            var naviJson = {
 	                identifier : oString,
 	                actionBarSrc : rosten.webPath + "/furnitureCards/furnitureCardsView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/furnitureCards/furnitureCardsSearchView?companyId=" + companyId,
 	                gridSrc : rosten.webPath + "/furnitureCards/furnitureCardsGrid?companyId=" + companyId
 	            };
 	            rosten.kernel.addRightContent(naviJson);

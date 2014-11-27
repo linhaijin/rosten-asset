@@ -24,7 +24,7 @@ class AssetApplyService {
 		def c = ApplyNotes.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if("zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员") || "admin".equals(user.getUserType())){
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员") || "admin".equals(user.getUserType())){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -52,7 +52,7 @@ class AssetApplyService {
 		}
 		def c = ApplyNotes.createCriteria()
 		def query = {
-			if("zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员") || "admin".equals(user.getUserType())){
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员") || "admin".equals(user.getUserType())){
 				eq("company",company)
 			}else{
 				eq("company",company)

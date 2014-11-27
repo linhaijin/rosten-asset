@@ -44,25 +44,25 @@
 				
 				assetLose_save = function(object){
 					var usedDepartName = dojo.byId("usedDepartName").value;
-					if(usedDepartName == "" && usedDepartName != null){
+					if(usedDepartName == "" || usedDepartName == null){
 						rosten.alert("注意：使用部门不能为空！");
 						document.getElementById("usedDepartName").focus();
 						return;
 					}
 					var usedMan = dojo.byId("usedMan").value;
-					if(usedMan == "" && usedMan != null){
+					if(usedMan == "" || usedMan == null){
 						rosten.alert("注意：使用人不能为空！");
 						document.getElementById("usedMan").focus();
 						return;
 					}
 					var assetTotal = dojo.byId("assetTotal").value;
-					if(assetTotal==0){
+					if(assetTotal == 0 || assetTotal == "" || assetTotal == null){
 						rosten.alert("注意：请添加资产信息！");
 						document.getElementById("assetTotal").focus();
 						return;
 					}
 					var applyDesc = dojo.byId("applyDesc").value;
-					if(applyDesc=="" || applyDesc==null){
+					if(applyDesc == "" || applyDesc == null){
 						rosten.alert("注意：申请理由不能为空！");
 						document.getElementById("applyDesc").focus();
 						return;
@@ -148,7 +148,7 @@
 						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetLose?.status}",flowCode:"${flowCode}"};
 						rosten.readSync(rosten.webPath + "/share/addComment/${assetLose?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
-								rosten.alert("意见已填写！");
+								rosten.alert("意见填写成功！");
 							}else{
 								rosten.alert("意见填写失败!");
 							}	
@@ -251,14 +251,22 @@
 							if(data.nextUserName && data.nextUserName!=""){
 								_nextUserName = data.nextUserName;
 							}
-							rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
-								//刷新待办事项内容
-								window.opener.showStartGtask("${user?.id}","${company?.id }");
-								
-								if(data.refresh=="true" || data.refresh==true){
-									window.location.reload();
-								}else{
+							if(_nextUserName == "" || _nextUserName == null){
+								rosten.alert("成功，流程已结束！").queryDlgClose= function(){
+									//刷新待办事项内容
+									window.opener.showStartGtask("${user?.id}","${company?.id }");
 									rosten.pagequit();
+								}
+							}else{
+								rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
+									//刷新待办事项内容
+									window.opener.showStartGtask("${user?.id}","${company?.id }");
+									
+									if(data.refresh=="true" || data.refresh==true){
+										window.location.reload();
+									}else{
+										rosten.pagequit();
+									}
 								}
 							}
 						}else{
@@ -283,7 +291,7 @@
 							if(data.nextUserName && data.nextUserName!=""){
 								_nextUserName = data.nextUserName;
 							}
-							rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
+							rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -500,11 +508,11 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"460px",marginBottom:"2px",region:"top"'>
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetLose?.seriesNo}" />
-			<g:hiddenField name="applyMan" id="applyMan" value="${assetLose.applyMan==null?user.chinaName:assetLose.applyMan}" />
+			<g:hiddenField name="applyMan" id="applyMan" value="${assetLose?.applyMan == null?user.chinaName:assetLose?.applyMan}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetLose?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -543,7 +551,7 @@
 								value:"${assetLose?.getUsedDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="usedDepartId" value="${assetLose?.usedDepart?.id }" />
-				         	<g:if test="${assetLose.dataStatus=='未审批'}">
+				         	<g:if test="${assetLose?.dataStatus=='未审批'}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 			           		</g:if>
 			           </td>
@@ -553,7 +561,7 @@
                                	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
                                	trim:true,
                                	required:true,
-                               	${assetLose.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${assetLose?.dataStatus!='未审批'?'readOnly:true,':'' }
              					value:"${assetLose?.usedMan}"
                            	'/>
 			            </td>
@@ -577,7 +585,7 @@
 	    						data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
 	                            trim:true,
 	                            required:true,
-	                            ${assetLose.dataStatus!='未审批'?'readOnly:true,':'' }
+	                            ${assetLose?.dataStatus!='未审批'?'readOnly:true,':'' }
 	                            style:{width:"550px",height:"80px"},
 	                            value:"${assetLose?.applyDesc}"
 	                    	'/>
@@ -600,7 +608,7 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;overflow:auto;"'>
+			<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetLoseListGrid" data-dojo-id="assetLoseListGrid"
 					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetLose',action:'assetLoseListDataStore',params:[companyId:company?.id,seriesNo:assetLose?.seriesNo])}"'></div>
 			</div>

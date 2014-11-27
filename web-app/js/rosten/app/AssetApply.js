@@ -46,6 +46,11 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetApply");
 	};
 	
+	assetApply_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("assetLose", rosten.webPath + "/applyManage/assetApplyExport?companyId="+companyId);
+	};
+	
 	assetApply_delete = function(){//删除资产申请
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {

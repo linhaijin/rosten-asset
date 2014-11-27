@@ -370,11 +370,11 @@ class AssetRepairController {
 		def json=[:]
 		
 		def car = CarCards.createCriteria()
-		def land = LandCards.createCriteria()
 		def house = HouseCards.createCriteria()
 		def device = DeviceCards.createCriteria()
-		def book = BookCards.createCriteria()
 		def furniture = FurnitureCards.createCriteria()
+//		def land = LandCards.createCriteria()
+//		def book = BookCards.createCriteria()
 		
 		def seriesNo
 		if(params.seriesNo && params.seriesNo!="" && params.seriesNo!=null){
@@ -431,38 +431,39 @@ class AssetRepairController {
 		def assetList
 		if(params.refreshData){
 			if(!(assetType.equals("") || assetType==null)){
-				if(assetType.equals("car")){
+				if(assetType.equals("car")){//运输工具
 					assetList = car.list(pa,query)
 					totalNum = CarCards.createCriteria().count(query)
-				}else if(assetType.equals("land")){
-					assetList = land.list(pa,query)
-					totalNum = LandCards.createCriteria().count(query)
-				}else if(assetType.equals("house")){
+				}else if(assetType.equals("house")){//房屋及建筑物
 					assetList = house.list(pa,query)
 					totalNum = HouseCards.createCriteria().count(query)
-				}else if(assetType.equals("device")){
+				}else if(assetType.equals("device")){//电子设备
 					assetList = device.list(pa,query)
 					totalNum = DeviceCards.createCriteria().count(query)
-				}else if(assetType.equals("book")){
-					assetList = book.list(pa,query)
-					totalNum = BookCards.createCriteria().count(query)
-				}else if(assetType.equals("furniture")){
+				}else if(assetType.equals("furniture")){//办公家具
 					assetList = furniture.list(pa,query)
 					totalNum = FurnitureCards.createCriteria().count(query)
 				}
+//				else if(assetType.equals("land")){
+//					assetList = land.list(pa,query)
+//					totalNum = LandCards.createCriteria().count(query)
+//				}else if(assetType.equals("book")){
+//					assetList = book.list(pa,query)
+//					totalNum = BookCards.createCriteria().count(query)
+//				}
 			}else{
 				assetList = car.list(pa,query)
 				totalNum += CarCards.createCriteria().count(query)
-				assetList += land.list(pa,query)
-				totalNum += LandCards.createCriteria().count(query)
 				assetList += house.list(pa,query)
 				totalNum += HouseCards.createCriteria().count(query)
 				assetList += device.list(pa,query)
 				totalNum += DeviceCards.createCriteria().count(query)
-				assetList += book.list(pa,query)
-				totalNum += BookCards.createCriteria().count(query)
 				assetList += furniture.list(pa,query)
 				totalNum += FurnitureCards.createCriteria().count(query)
+//				assetList += land.list(pa,query)
+//				totalNum += LandCards.createCriteria().count(query)
+//				assetList += book.list(pa,query)
+//				totalNum += BookCards.createCriteria().count(query)
 			}
 			
 			def idx = 0
@@ -495,11 +496,11 @@ class AssetRepairController {
 	
 	def assetChooseListDataStore = {
 		def car = CarCards.createCriteria()
-		def land = LandCards.createCriteria()
 		def house = HouseCards.createCriteria()
 		def device = DeviceCards.createCriteria()
-		def book = BookCards.createCriteria()
 		def furniture = FurnitureCards.createCriteria()
+//		def land = LandCards.createCriteria()
+//		def book = BookCards.createCriteria()
 		
 		def json=[:]
 		
@@ -561,22 +562,23 @@ class AssetRepairController {
 				if(assetType.equals("car")){
 					assetList = car.list(pa,query)
 					totalNum = CarCards.createCriteria().count(query)
-				}else if(assetType.equals("land")){
-					assetList = land.list(pa,query)
-					totalNum = LandCards.createCriteria().count(query)
 				}else if(assetType.equals("house")){
 					assetList = house.list(pa,query)
 					totalNum = HouseCards.createCriteria().count(query)
 				}else if(assetType.equals("device")){
 					assetList = device.list(pa,query)
 					totalNum = DeviceCards.createCriteria().count(query)
-				}else if(assetType.equals("book")){
-					assetList = book.list(pa,query)
-					totalNum = BookCards.createCriteria().count(query)
 				}else if(assetType.equals("furniture")){
 					assetList = furniture.list(pa,query)
 					totalNum = FurnitureCards.createCriteria().count(query)
 				}
+//				else if(assetType.equals("land")){
+//					assetList = land.list(pa,query)
+//					totalNum = LandCards.createCriteria().count(query)
+//				}else if(assetType.equals("book")){
+//					assetList = book.list(pa,query)
+//					totalNum = BookCards.createCriteria().count(query)
+//				}
 			}
 			
 			def idx = 0
@@ -636,11 +638,11 @@ class AssetRepairController {
 		double totalPrice = 0
 		
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 		
 		def seriesNo_exist
 		def seriesNo_exists
@@ -664,21 +666,6 @@ class AssetRepairController {
 //						carCards.assetStatus = "资产已报修"
 //						carCards.seriesNo = seriesNo
 //						totalPrice = carCards.onePrice
-					}
-				}else if(assetType.equals("land")){
-					landCards = LandCards.get(it)
-					if(landCards){
-						seriesNo_exist = landCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}
-						}else{
-							landCards.assetStatus = "资产已报修"
-							landCards.seriesNo = seriesNo
-							totalPrice = landCards.onePrice
-						}
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
@@ -710,21 +697,6 @@ class AssetRepairController {
 							totalPrice = deviceCards.onePrice
 						}
 					}
-				}else if(assetType.equals("book")){
-					bookCards = BookCards.get(it)
-					if(bookCards){
-						seriesNo_exist = bookCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}
-						}else{
-							bookCards.assetStatus = "资产已报修"
-							bookCards.seriesNo = seriesNo
-							totalPrice = bookCards.onePrice
-						}
-					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
@@ -741,6 +713,37 @@ class AssetRepairController {
 						}
 					}
 				}
+//				else if(assetType.equals("land")){
+//					landCards = LandCards.get(it)
+//					if(landCards){
+//						seriesNo_exist = landCards.seriesNo
+//						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//							seriesNo_exists = seriesNo_exist.split(",")
+//							if(seriesNo in seriesNo_exists){
+//								//undo
+//							}
+//						}else{
+//							landCards.assetStatus = "资产已报修"
+//							landCards.seriesNo = seriesNo
+//							totalPrice = landCards.onePrice
+//						}
+//					}
+//				}else if(assetType.equals("book")){
+//					bookCards = BookCards.get(it)
+//					if(bookCards){
+//						seriesNo_exist = bookCards.seriesNo
+//						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//							seriesNo_exists = seriesNo_exist.split(",")
+//							if(seriesNo in seriesNo_exists){
+//								//undo
+//							}
+//						}else{
+//							bookCards.assetStatus = "资产已报修"
+//							bookCards.seriesNo = seriesNo
+//							totalPrice = bookCards.onePrice
+//						}
+//					}
+//				}
 				assetTotal += totalPrice
 			}
 			message = "操作成功！"
@@ -757,11 +760,11 @@ class AssetRepairController {
 		def assetRepair = new AssetRepair()
 		
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 		
 		double assetTotal = 0
 		double cardsPrice = 0
@@ -790,12 +793,6 @@ class AssetRepairController {
 					carCards.seriesNo = null
 					cardsPrice = carCards.onePrice
 				}
-				landCards = LandCards.get(it)
-				if(landCards){
-					landCards.assetStatus = "已入库"
-					landCards.seriesNo = null
-					cardsPrice = landCards.onePrice
-				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					houseCards.assetStatus = "已入库"
@@ -808,18 +805,24 @@ class AssetRepairController {
 					deviceCards.seriesNo = null
 					cardsPrice = deviceCards.onePrice
 				}
-				bookCards = BookCards.get(it)
-				if(bookCards){
-					bookCards.assetStatus = "已入库"
-					bookCards.seriesNo = null
-					cardsPrice = bookCards.onePrice
-				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					furnitureCards.assetStatus = "已入库"
 					furnitureCards.seriesNo = null
 					cardsPrice = furnitureCards.onePrice
 				}
+//				landCards = LandCards.get(it)
+//				if(landCards){
+//					landCards.assetStatus = "已入库"
+//					landCards.seriesNo = null
+//					cardsPrice = landCards.onePrice
+//				}
+//				bookCards = BookCards.get(it)
+//				if(bookCards){
+//					bookCards.assetStatus = "已入库"
+//					bookCards.seriesNo = null
+//					cardsPrice = bookCards.onePrice
+//				}
 				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
@@ -842,11 +845,11 @@ class AssetRepairController {
 			categoryIds = categoryId.split(",")
 		}
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 
 		def typeArr = []
 		if(categoryIds.size()>0){
@@ -856,10 +859,6 @@ class AssetRepairController {
 				if(carCards){
 					typeArr<<"car"
 				}
-				landCards = LandCards.get(it)
-				if(landCards){
-					typeArr<<"land"
-				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					typeArr<<"house"
@@ -868,14 +867,18 @@ class AssetRepairController {
 				if(deviceCards){
 					typeArr<<"device"
 				}
-				bookCards = BookCards.get(it)
-				if(bookCards){
-					typeArr<<"book"
-				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					typeArr<<"furniture"
 				}
+//				landCards = LandCards.get(it)
+//				if(landCards){
+//					typeArr<<"land"
+//				}
+//				bookCards = BookCards.get(it)
+//				if(bookCards){
+//					typeArr<<"book"
+//				}
 			}
 			typeArr = typeArr.unique()
 			if(typeArr.size()==1){
@@ -956,7 +959,7 @@ class AssetRepairController {
 					
 					def args = [:]
 					args["type"] = "【资产报修】"
-					args["content"] = "请您审核编号为  【" + assetRepair.seriesNo +  "】 的资产报修信息"
+					args["content"] = "请您审核编号为  【" + assetRepair.seriesNo +  "】 的资产报修申请信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = assetRepair.id
 					args["user"] = nextUser
@@ -1070,7 +1073,7 @@ class AssetRepairController {
 				//增加待办事项
 				def args = [:]
 				args["type"] = "【资产报修】"
-				args["content"] = "编号为  【" + assetRepair.seriesNo +  "】 的资产报修信息被退回，请查看！"
+				args["content"] = "编号为  【" + assetRepair.seriesNo +  "】 的资产报修申请信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = assetRepair.id
 				args["user"] = user
@@ -1127,7 +1130,7 @@ class AssetRepairController {
 		OutputStream os = response.outputStream
 		def company = Company.get(params.companyId)
 		response.setContentType('application/vnd.ms-excel')
-		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报修信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报修申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
 		//查询条件
 //		def searchArgs =[:]

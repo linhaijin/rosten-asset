@@ -45,37 +45,37 @@
 				
 				var usedDepartName = dojo.byId("usedDepartName").value;
 				if(usedDepartName == "" || usedDepartName == null){
-					alert("注意：使用部门不能为空！");
+					rosten.alert("注意：使用部门不能为空！");
 					document.getElementById("usedDepartName").focus();
 					return;
 				}
 				var usedMan = dojo.byId("usedMan").value;
 				if(usedMan == "" || usedMan == null){
-					alert("注意：使用人不能为空！");
+					rosten.alert("注意：使用人不能为空！");
 					document.getElementById("usedMan").focus();
 					return;
 				}
 				var repairReason = dojo.byId("repairReason").value;
 				if(repairReason == "" || repairReason == null){
-					alert("注意：报修原因不能为空！");
+					rosten.alert("注意：报修原因不能为空！");
 					document.getElementById("repairReason").focus();
 					return;
 				}
 				var contacts = dojo.byId("contacts").value;
 				if(contacts == "" || contacts == null){
-					alert("注意：联系人不能为空！");
+					rosten.alert("注意：联系人不能为空！");
 					document.getElementById("contacts").focus();
 					return;
 				}
 				var contactPhone = dojo.byId("contactPhone").value;
 				if(contactPhone == "" || contactPhone == null){
-					alert("注意：联系电话不能为空！");
+					rosten.alert("注意：联系电话不能为空！");
 					document.getElementById("contactPhone").focus();
 					return;
 				}
 				var assetTotal = dojo.byId("assetTotal").value;
-				if(assetTotal==0){
-					alert("注意：请添加资产信息！");
+				if(assetTotal == 0 || assetTotal == "" || assetTotal == null){
+					rosten.alert("注意：请添加资产信息！");
 					return;
 				}
 
@@ -102,7 +102,7 @@
 					handleAs : "json",
 					load : function(response,args) {
 						if(response.result=="false"){//rensult为false，资产列表为不同类型资产
-							alert("注意：资产列表只能为同类型资产！");
+							rosten.alert("注意：资产列表只能为同类型资产！");
 							return;
 						}else{//rensult为true，资产列表为同类型资产，继续
 							//增加对多次单击的次数----2014-9-4
@@ -140,7 +140,7 @@
 						}
 					},
 					error : function(response,args) {
-						alert(response.message);
+						rosten.alert(response.message);
 						return;
 					}
 				};
@@ -158,7 +158,7 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetRepair?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${assetRepair?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("意见已填写！");
+							rosten.alert("意见填写成功！");
 						}else{
 							rosten.alert("意见填写失败!");
 						}	
@@ -261,14 +261,22 @@
 						if(data.nextUserName && data.nextUserName!=""){
 							_nextUserName = data.nextUserName;
 						}
-						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
-							//刷新待办事项内容
-							window.opener.showStartGtask("${user?.id}","${company?.id }");
-							
-							if(data.refresh=="true" || data.refresh==true){
-								window.location.reload();
-							}else{
+						if(_nextUserName == "" || _nextUserName == null){
+							rosten.alert("成功，流程已结束！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								rosten.pagequit();
+							}
+						}else{
+							rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
+								
+								if(data.refresh=="true" || data.refresh==true){
+									window.location.reload();
+								}else{
+									rosten.pagequit();
+								}
 							}
 						}
 					}else{
@@ -293,11 +301,11 @@
 						if(data.nextUserName && data.nextUserName!=""){
 							_nextUserName = data.nextUserName;
 						}
-						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
+						rosten.alert("成功，已发送至< " + _nextUserName +" >！").queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${user?.id}","${company?.id }");
 							
-							if(data.refresh=="true" || data.refresh==true){
+							if(data.refresh == "true" || data.refresh == true){
 								window.location.reload();
 							}else{
 								rosten.pagequit();
@@ -350,7 +358,7 @@
 			var grid = dijit.byId("assetChooseListGrid");
 			var selected = grid.getSelected();
 			if (selected.length == 0) {
-				alert("请在资产列表中选择数据！");
+				rosten.alert("请在资产列表中选择数据！");
 				return;
 			}
 			
@@ -422,12 +430,12 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败，请联系管理员!");
+						rosten.alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
 				error : function(response,args) {
-					alert(response.message);
+					rosten.alert(response.message);
 					return;
 				}
 			};
@@ -439,7 +447,7 @@
 			var grid = dijit.byId("assetRepairListGrid");
 			var selected = grid.getSelected();
 			if (selected.length == 0) {
-				alert("请在资产列表中选择数据！");
+				rosten.alert("请在资产列表中选择数据！");
 				return;
 			}
 			
@@ -485,12 +493,12 @@
 						grid_twice.url = url_twice;
 						grid_twice.refresh();
 					}else{//rensult为false，处理失败
-						alert("操作失败，请联系管理员!");
+						rosten.alert("操作失败，请联系管理员!");
 						return;
 					}
 				},
 				error : function(response,args) {
-					alert(response.message);
+					rosten.alert(response.message);
 					return;
 				}
 			};
@@ -506,11 +514,11 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"610px",marginBottom:"2px",region:"top"'>
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"570px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
-			<g:hiddenField name="applyMan" id="applyMan" value="${assetRepair.applyMan==null?user.chinaName:assetRepair.applyMan}" />
+			<g:hiddenField name="applyMan" id="applyMan" value="${assetRepair?.applyMan == null?user.chinaName:assetRepair?.applyMan}" />
 			<g:hiddenField id="assetTotal" data-dojo-type="dijit/form/ValidationTextBox" name="assetTotal" value="${String.format("%.2f", assetRepair?.assetTotal)}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${assetRepair?.id }"' />
@@ -550,7 +558,7 @@
 								value:"${assetRepair?.getUsedDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="usedDepartId" value="${assetRepair?.usedDepart?.id }" />
-				         	<g:if test="${assetRepair.dataStatus=='未审批'}">
+				         	<g:if test="${assetRepair?.dataStatus=='未审批'}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 			           		</g:if>
 			           </td>
@@ -560,7 +568,7 @@
                                	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
              					value:"${assetRepair?.usedMan}"
                            	'/>
 			            </td>
@@ -572,7 +580,7 @@
                                	data-dojo-props='id:"repairReason",name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
              					value:"${assetRepair?.repairReason}"
                            	'/>
 			            </td>
@@ -593,7 +601,7 @@
                                	data-dojo-props='name:"contacts",${fieldAcl.isReadOnly("contacts")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
              					value:"${assetRepair.contacts==null?user.chinaName:assetRepair.contacts}"
                            	'/>
 			            </td>
@@ -603,7 +611,7 @@
 	    						data-dojo-props='name:"contactPhone",${fieldAcl.isReadOnly("contactPhone")},
 	                            trim:true,
 	                            required:true,
-	                            ${assetRepair.dataStatus!='未审批'?'readOnly:true,':'' }
+	                            ${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
 	                            value:"${assetRepair?.contactPhone}"
 	                         '/>
 						</td>
@@ -698,7 +706,7 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:300px;padding:2px;overflow:auto;"'>
+			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetRepairListGrid" data-dojo-id="assetRepairListGrid"
 					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>
 			</div>

@@ -1,6 +1,7 @@
 package com.rosten.app.assetChange
 
 import com.rosten.app.util.GridUtil
+import com.rosten.app.system.UserGroup
 
 class AssetChangeService {
 	def springSecurityService
@@ -21,14 +22,21 @@ class AssetChangeService {
 	
 	def getAllAssetScrap ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetScrap.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			eq("company",company)
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
@@ -44,13 +52,20 @@ class AssetChangeService {
 	
 	def getAssetScrapCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetScrap.createCriteria()
 		def query = { 
-			eq("company",company)
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
@@ -80,14 +95,21 @@ class AssetChangeService {
 	
 	def getAllAssetAllocate ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetAllocate.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			eq("company",company)
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("originalDepart") || k.equals("newDepart")){
@@ -103,13 +125,20 @@ class AssetChangeService {
 	
 	def getAssetAllocateCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetAllocate.createCriteria()
 		def query = { 
-			eq("company",company) 
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("originalDepart") || k.equals("newDepart")){
@@ -139,14 +168,21 @@ class AssetChangeService {
 	
 	def getAllAssetLose ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetLose.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			eq("company",company)
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
@@ -162,13 +198,20 @@ class AssetChangeService {
 	
 	def getAssetLoseCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetLose.createCriteria()
 		def query = { 
-			eq("company",company) 
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
@@ -198,14 +241,21 @@ class AssetChangeService {
 	
 	def getAllAssetRepair ={offset,max,company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetRepair.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			eq("company",company)
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
@@ -221,13 +271,20 @@ class AssetChangeService {
 	
 	def getAssetRepairCount ={company,searchArgs->
 		def user = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(user).collect { elem ->
+			elem.group.groupName
+		}
 		def c = AssetRepair.createCriteria()
 		def query = { 
-			eq("company",company) 
-			or{
-				eq("drafter",user)
-				eq("currentUser",user)
-				eq("status","已结束")
+			if("xhzcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+				eq("company",company)
+			}else{
+				eq("company",company)
+				or{
+					eq("drafter",user)
+					eq("currentUser",user)
+					eq("status","已结束")
+				}
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){

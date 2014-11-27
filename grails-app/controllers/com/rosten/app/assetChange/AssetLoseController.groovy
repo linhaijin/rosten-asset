@@ -62,9 +62,15 @@ class AssetLoseController {
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
+					case entity.status.contains("处理"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("完成",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
+						break;
 					default :
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 				}
 			}
@@ -371,11 +377,11 @@ class AssetLoseController {
 		def json=[:]
 		
 		def car = CarCards.createCriteria()
-		def land = LandCards.createCriteria()
 		def house = HouseCards.createCriteria()
 		def device = DeviceCards.createCriteria()
-		def book = BookCards.createCriteria()
 		def furniture = FurnitureCards.createCriteria()
+//		def land = LandCards.createCriteria()
+//		def book = BookCards.createCriteria()
 		
 		def seriesNo
 		if(params.seriesNo && params.seriesNo!="" && params.seriesNo!=null){
@@ -432,38 +438,39 @@ class AssetLoseController {
 		def assetList
 		if(params.refreshData){
 			if(!(assetType.equals("") || assetType==null)){
-				if(assetType.equals("car")){
+				if(assetType.equals("car")){//运输工具
 					assetList = car.list(pa,query)
 					totalNum = CarCards.createCriteria().count(query)
-				}else if(assetType.equals("land")){
-					assetList = land.list(pa,query)
-					totalNum = LandCards.createCriteria().count(query)
-				}else if(assetType.equals("house")){
+				}else if(assetType.equals("house")){//房屋及建筑物
 					assetList = house.list(pa,query)
 					totalNum = HouseCards.createCriteria().count(query)
-				}else if(assetType.equals("device")){
+				}else if(assetType.equals("device")){//电子设备
 					assetList = device.list(pa,query)
 					totalNum = DeviceCards.createCriteria().count(query)
-				}else if(assetType.equals("book")){
-					assetList = book.list(pa,query)
-					totalNum = BookCards.createCriteria().count(query)
-				}else if(assetType.equals("furniture")){
+				}else if(assetType.equals("furniture")){//办公家具
 					assetList = furniture.list(pa,query)
 					totalNum = FurnitureCards.createCriteria().count(query)
 				}
+//				else if(assetType.equals("land")){
+//					assetList = land.list(pa,query)
+//					totalNum = LandCards.createCriteria().count(query)
+//				}else if(assetType.equals("book")){
+//					assetList = book.list(pa,query)
+//					totalNum = BookCards.createCriteria().count(query)
+//				}
 			}else{
 				assetList = car.list(pa,query)
 				totalNum += CarCards.createCriteria().count(query)
-				assetList += land.list(pa,query)
-				totalNum += LandCards.createCriteria().count(query)
 				assetList += house.list(pa,query)
 				totalNum += HouseCards.createCriteria().count(query)
 				assetList += device.list(pa,query)
 				totalNum += DeviceCards.createCriteria().count(query)
-				assetList += book.list(pa,query)
-				totalNum += BookCards.createCriteria().count(query)
 				assetList += furniture.list(pa,query)
 				totalNum += FurnitureCards.createCriteria().count(query)
+//				assetList += land.list(pa,query)
+//				totalNum += LandCards.createCriteria().count(query)
+//				assetList += book.list(pa,query)
+//				totalNum += BookCards.createCriteria().count(query)
 			}
 			
 			def idx = 0
@@ -496,11 +503,11 @@ class AssetLoseController {
 	
 	def assetChooseListDataStore = {
 		def car = CarCards.createCriteria()
-		def land = LandCards.createCriteria()
 		def house = HouseCards.createCriteria()
 		def device = DeviceCards.createCriteria()
-		def book = BookCards.createCriteria()
 		def furniture = FurnitureCards.createCriteria()
+//		def land = LandCards.createCriteria()
+//		def book = BookCards.createCriteria()
 		
 		def json=[:]
 		
@@ -543,9 +550,12 @@ class AssetLoseController {
 					eq("company",companyEntity)
 					or{
 						eq("assetStatus","已入库")
-						eq("assetStatus","资产已调拨")
-						eq("assetStatus","资产已报损")
-						eq("assetStatus","资产已报修")
+						like("assetStatus","%资产已调拨%")
+						like("assetStatus","%资产已报损%")
+						like("assetStatus","%资产已报修%")
+//						eq("assetStatus","资产已调拨")
+//						eq("assetStatus","资产已报损")
+//						eq("assetStatus","资产已报修")
 					}
 				}
 			}
@@ -557,22 +567,23 @@ class AssetLoseController {
 				if(assetType.equals("car")){
 					assetList = car.list(pa,query)
 					totalNum = CarCards.createCriteria().count(query)
-				}else if(assetType.equals("land")){
-					assetList = land.list(pa,query)
-					totalNum = LandCards.createCriteria().count(query)
 				}else if(assetType.equals("house")){
 					assetList = house.list(pa,query)
 					totalNum = HouseCards.createCriteria().count(query)
 				}else if(assetType.equals("device")){
 					assetList = device.list(pa,query)
 					totalNum = DeviceCards.createCriteria().count(query)
-				}else if(assetType.equals("book")){
-					assetList = book.list(pa,query)
-					totalNum = BookCards.createCriteria().count(query)
 				}else if(assetType.equals("furniture")){
 					assetList = furniture.list(pa,query)
 					totalNum = FurnitureCards.createCriteria().count(query)
 				}
+//				else if(assetType.equals("land")){
+//					assetList = land.list(pa,query)
+//					totalNum = LandCards.createCriteria().count(query)
+//				}else if(assetType.equals("book")){
+//					assetList = book.list(pa,query)
+//					totalNum = BookCards.createCriteria().count(query)
+//				}
 			}
 			
 			def idx = 0
@@ -632,11 +643,11 @@ class AssetLoseController {
 		double totalPrice = 0
 		
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 		
 		def seriesNo_exist
 		def seriesNo_exists
@@ -664,25 +675,6 @@ class AssetLoseController {
 //						carCards.assetStatus = "资产已报失"
 //						carCards.seriesNo = seriesNo
 //						totalPrice = carCards.onePrice
-					}
-				}else if(assetType.equals("land")){
-					landCards = LandCards.get(it)
-					if(landCards){
-						seriesNo_exist = landCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								landCards.assetStatus += ",资产已报失"
-								landCards.seriesNo += ","+seriesNo
-								totalPrice = landCards.onePrice
-							}
-						}else{
-							landCards.assetStatus = "资产已报失"
-							landCards.seriesNo = seriesNo
-							totalPrice = landCards.onePrice
-						}
 					}
 				}else if(assetType.equals("house")){
 					houseCards = HouseCards.get(it)
@@ -722,25 +714,6 @@ class AssetLoseController {
 							totalPrice = deviceCards.onePrice
 						}
 					}
-				}else if(assetType.equals("book")){
-					bookCards = BookCards.get(it)
-					if(bookCards){
-						seriesNo_exist = bookCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								bookCards.assetStatus += ",资产已报失"
-								bookCards.seriesNo += ","+seriesNo
-								totalPrice = bookCards.onePrice
-							}
-						}else{
-							bookCards.assetStatus = "资产已报失"
-							bookCards.seriesNo = seriesNo
-							totalPrice = bookCards.onePrice
-						}
-					}
 				}else if(assetType.equals("furniture")){
 					furnitureCards = FurnitureCards.get(it)
 					if(furnitureCards){
@@ -761,6 +734,45 @@ class AssetLoseController {
 						}
 					}
 				}
+//				else if(assetType.equals("land")){
+//					landCards = LandCards.get(it)
+//					if(landCards){
+//						seriesNo_exist = landCards.seriesNo
+//						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//							seriesNo_exists = seriesNo_exist.split(",")
+//							if(seriesNo in seriesNo_exists){
+//								//undo
+//							}else{
+//								landCards.assetStatus += ",资产已报失"
+//								landCards.seriesNo += ","+seriesNo
+//								totalPrice = landCards.onePrice
+//							}
+//						}else{
+//							landCards.assetStatus = "资产已报失"
+//							landCards.seriesNo = seriesNo
+//							totalPrice = landCards.onePrice
+//						}
+//					}
+//				}else if(assetType.equals("book")){
+//					bookCards = BookCards.get(it)
+//					if(bookCards){
+//						seriesNo_exist = bookCards.seriesNo
+//						if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//							seriesNo_exists = seriesNo_exist.split(",")
+//							if(seriesNo in seriesNo_exists){
+//								//undo
+//							}else{
+//								bookCards.assetStatus += ",资产已报失"
+//								bookCards.seriesNo += ","+seriesNo
+//								totalPrice = bookCards.onePrice
+//							}
+//						}else{
+//							bookCards.assetStatus = "资产已报失"
+//							bookCards.seriesNo = seriesNo
+//							totalPrice = bookCards.onePrice
+//						}
+//					}
+//				}
 				assetTotal += totalPrice
 			}
 			message = "操作成功！"
@@ -782,11 +794,11 @@ class AssetLoseController {
 		}
 		
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 		
 		double assetTotal = 0
 		double cardsPrice = 0
@@ -845,45 +857,6 @@ class AssetLoseController {
 								carCards.seriesNo = seriesNo_new
 								carCards.assetStatus = assetStatus_new
 								cardsPrice = carCards.onePrice
-							}
-						}else{
-							//undo
-						}
-					}
-//					carCards.assetStatus = "已入库"
-//					carCards.seriesNo = null
-//					cardsPrice = carCards.onePrice
-				}
-				landCards = LandCards.get(it)
-				if(landCards){
-					seriesNo_exist = landCards.seriesNo
-					assetStatus_exitst = landCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
-						if(seriesNo in seriesNo_exists){
-							if(seriesNo_exists.size() == 1){
-								landCards.assetStatus = "已入库"
-								landCards.seriesNo = null
-								cardsPrice = landCards.onePrice
-							}else{
-								for(int i=0;i<seriesNo_exists.size();i++){
-									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
-									}
-								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								landCards.seriesNo = seriesNo_new
-								landCards.assetStatus = assetStatus_new
-								cardsPrice = landCards.onePrice
 							}
 						}else{
 							//undo
@@ -962,42 +935,6 @@ class AssetLoseController {
 						}
 					}
 				}
-				bookCards = BookCards.get(it)
-				if(bookCards){
-					seriesNo_exist = bookCards.seriesNo
-					assetStatus_exitst = bookCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
-						if(seriesNo in seriesNo_exists){
-							if(seriesNo_exists.size() == 1){
-								bookCards.assetStatus = "已入库"
-								bookCards.seriesNo = null
-								cardsPrice = bookCards.onePrice
-							}else{
-								for(int i=0;i<seriesNo_exists.size();i++){
-									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
-									}
-								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								bookCards.seriesNo = seriesNo_new
-								bookCards.assetStatus = assetStatus_new
-								cardsPrice = bookCards.onePrice
-							}
-						}else{
-							//undo
-						}
-					}
-				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					seriesNo_exist = furnitureCards.seriesNo
@@ -1034,6 +971,78 @@ class AssetLoseController {
 						}
 					}
 				}
+//				landCards = LandCards.get(it)
+//				if(landCards){
+//					seriesNo_exist = landCards.seriesNo
+//					assetStatus_exitst = landCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							if(seriesNo_exists.size() == 1){
+//								landCards.assetStatus = "已入库"
+//								landCards.seriesNo = null
+//								cardsPrice = landCards.onePrice
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "资产已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								landCards.seriesNo = seriesNo_new
+//								landCards.assetStatus = assetStatus_new
+//								cardsPrice = landCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
+//				bookCards = BookCards.get(it)
+//				if(bookCards){
+//					seriesNo_exist = bookCards.seriesNo
+//					assetStatus_exitst = bookCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							if(seriesNo_exists.size() == 1){
+//								bookCards.assetStatus = "已入库"
+//								bookCards.seriesNo = null
+//								cardsPrice = bookCards.onePrice
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "资产已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								bookCards.seriesNo = seriesNo_new
+//								bookCards.assetStatus = assetStatus_new
+//								cardsPrice = bookCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
 				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
@@ -1054,11 +1063,11 @@ class AssetLoseController {
 			categoryIds = categoryId.split(",")
 		}
 		def carCards
-		def landCards
 		def houseCards
 		def deviceCards
-		def bookCards
 		def furnitureCards
+//		def landCards
+//		def bookCards
 
 		def typeArr = []
 		if(categoryIds.size()>0){
@@ -1068,10 +1077,6 @@ class AssetLoseController {
 				if(carCards){
 					typeArr<<"car"
 				}
-				landCards = LandCards.get(it)
-				if(landCards){
-					typeArr<<"land"
-				}
 				houseCards = HouseCards.get(it)
 				if(houseCards){
 					typeArr<<"house"
@@ -1080,14 +1085,18 @@ class AssetLoseController {
 				if(deviceCards){
 					typeArr<<"device"
 				}
-				bookCards = BookCards.get(it)
-				if(bookCards){
-					typeArr<<"book"
-				}
 				furnitureCards = FurnitureCards.get(it)
 				if(furnitureCards){
 					typeArr<<"furniture"
 				}
+//				landCards = LandCards.get(it)
+//				if(landCards){
+//					typeArr<<"land"
+//				}
+//				bookCards = BookCards.get(it)
+//				if(bookCards){
+//					typeArr<<"book"
+//				}
 			}
 			typeArr = typeArr.unique()
 			if(typeArr.size()==1){
@@ -1167,7 +1176,7 @@ class AssetLoseController {
 					
 					def args = [:]
 					args["type"] = "【资产报失】"
-					args["content"] = "请您审核编号为  【" + assetLose.seriesNo +  "】 的资产报失信息"
+					args["content"] = "请您审核编号为  【" + assetLose.seriesNo +  "】 的资产报失申请信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = assetLose.id
 					args["user"] = nextUser
@@ -1281,7 +1290,7 @@ class AssetLoseController {
 				//增加待办事项
 				def args = [:]
 				args["type"] = "【资产报失】"
-				args["content"] = "编号为  【" + assetLose.seriesNo +  "】 的资产报失信息被退回，请查看！"
+				args["content"] = "编号为  【" + assetLose.seriesNo +  "】 的资产报失申请信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = assetLose.id
 				args["user"] = user
@@ -1338,7 +1347,7 @@ class AssetLoseController {
 		OutputStream os = response.outputStream
 		def company = Company.get(params.companyId)
 		response.setContentType('application/vnd.ms-excel')
-		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报失信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报失申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
 		//查询条件
 //		def searchArgs =[:]

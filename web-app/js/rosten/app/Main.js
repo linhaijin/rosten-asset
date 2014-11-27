@@ -755,7 +755,7 @@ define(["dojo/_base/kernel"
     
     main.assetApplyCallback = function(data){
     	if (data.result == "true" || data.result == true) {
-            rosten.alert("成功：资产卡片已生成!");
+            rosten.alert("成功：资产卡片已生成，请前去完善卡片资料!");
             rosten.kernel.refreshGrid();
         } else {
             rosten.alert("失败：资产卡片未生成!");

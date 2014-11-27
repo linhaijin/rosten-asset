@@ -50,6 +50,15 @@ class FurnitureCardsController {
 		return model
 	}
 	
+	def furnitureCardsSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		render(view:'/assetCards/furnitureCardsSearch',model:model)
+	}
+	
 	def furnitureCardsAdd ={
 		redirect(action:"furnitureCardsShow",params:params)
 	}
@@ -167,6 +176,14 @@ class FurnitureCardsController {
 		if(params.refreshHeader){
 			json["gridHeader"] = assetCardsService.getFurnitureCardsListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -175,11 +192,11 @@ class FurnitureCardsController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = assetCardsService.getFurnitureCardsDataStore(args)
+			json["gridData"] = assetCardsService.getFurnitureCardsDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = assetCardsService.getFurnitureCardsCount(company)
+			def total = assetCardsService.getFurnitureCardsCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

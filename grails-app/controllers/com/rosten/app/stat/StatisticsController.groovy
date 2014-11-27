@@ -44,7 +44,7 @@ class StatisticsController {
 			}.sum()
 			
 			lastIndex = Util.obj2str(index).padLeft(3,"0")
-			sMap = ["id":lastIndex,"name":depart.departName,"type":"ysgj","money":furTotal?furTotal/10000:0]
+			sMap = ["id":lastIndex,"name":depart.departName,"type":"bgjj","money":furTotal?furTotal/10000:0]
 			index += 1
 			json.items+=sMap
 			

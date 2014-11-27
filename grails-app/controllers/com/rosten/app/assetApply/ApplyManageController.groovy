@@ -33,6 +33,9 @@ import com.rosten.app.share.FlowLog
 import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
 
+import com.rosten.app.export.ExcelExport
+import com.rosten.app.export.WordExport
+
 class ApplyManageController {
 	def mineApplySearchView ={
 		def model =[:]
@@ -58,40 +61,40 @@ class ApplyManageController {
 	def shareService
 	def startService
 	
-	/*机构代码转化列表*/
-	def getRegions = {
-		def regions = []
-		regions<<[name:'协会本部',orgno:'01']
-		regions<<[name:'舟山办事处',orgno:'02']
-		regions<<[name:'普陀办事处',orgno:'03']
-		regions<<[name:'岱山办事处',orgno:'04']
-		regions<<[name:'嵊泗办事处',orgno:'05']
-		regions<<[name:'定海办事处',orgno:'06']
-		regions<<[name:'台州办事处',orgno:'07']
-		regions<<[name:'温岭办事处',orgno:'08']
-		regions<<[name:'玉环办事处',orgno:'09']
-		regions<<[name:'路桥办事处',orgno:'10']
-		regions<<[name:'椒江办事处',orgno:'11']
-		regions<<[name:'临海办事处',orgno:'12']
-		regions<<[name:'三门办事处',orgno:'13']
-		regions<<[name:'温州办事处',orgno:'14']
-		regions<<[name:'瑞安办事处',orgno:'15']
-		regions<<[name:'苍南办事处',orgno:'16']
-		regions<<[name:'平阳办事处',orgno:'17']
-		regions<<[name:'乐清办事处',orgno:'18']
-		regions<<[name:'洞头办事处',orgno:'19']
-		regions<<[name:'嘉善办事处',orgno:'20']
-		regions<<[name:'平湖办事处',orgno:'21']
-		regions<<[name:'淳安办事处',orgno:'22']
-		regions<<[name:'上虞办事处',orgno:'23']
-		regions<<[name:'海盐办事处',orgno:'24']
-		regions<<[name:'台州服务中心本级',orgno:'61']
-		regions<<[name:'台州服务中心松门服务部',orgno:'62']
-		regions<<[name:'舟山服务中心',orgno:'63']
-		regions<<[name:'温州服务中心',orgno:'64']
-		
-		return regions
-	}
+//	/*机构代码转化列表*/
+//	def getRegions = {
+//		def regions = []
+//		regions<<[name:'协会本部',orgno:'01']
+//		regions<<[name:'舟山办事处',orgno:'02']
+//		regions<<[name:'普陀办事处',orgno:'03']
+//		regions<<[name:'岱山办事处',orgno:'04']
+//		regions<<[name:'嵊泗办事处',orgno:'05']
+//		regions<<[name:'定海办事处',orgno:'06']
+//		regions<<[name:'台州办事处',orgno:'07']
+//		regions<<[name:'温岭办事处',orgno:'08']
+//		regions<<[name:'玉环办事处',orgno:'09']
+//		regions<<[name:'路桥办事处',orgno:'10']
+//		regions<<[name:'椒江办事处',orgno:'11']
+//		regions<<[name:'临海办事处',orgno:'12']
+//		regions<<[name:'三门办事处',orgno:'13']
+//		regions<<[name:'温州办事处',orgno:'14']
+//		regions<<[name:'瑞安办事处',orgno:'15']
+//		regions<<[name:'苍南办事处',orgno:'16']
+//		regions<<[name:'平阳办事处',orgno:'17']
+//		regions<<[name:'乐清办事处',orgno:'18']
+//		regions<<[name:'洞头办事处',orgno:'19']
+//		regions<<[name:'嘉善办事处',orgno:'20']
+//		regions<<[name:'平湖办事处',orgno:'21']
+//		regions<<[name:'淳安办事处',orgno:'22']
+//		regions<<[name:'上虞办事处',orgno:'23']
+//		regions<<[name:'海盐办事处',orgno:'24']
+//		regions<<[name:'台州服务中心本级',orgno:'61']
+//		regions<<[name:'台州服务中心松门服务部',orgno:'62']
+//		regions<<[name:'舟山服务中心',orgno:'63']
+//		regions<<[name:'温州服务中心',orgno:'64']
+//		
+//		return regions
+//	}
 	
 	def assetApplyForm ={
 		def webPath = request.getContextPath() + "/"
@@ -110,9 +113,15 @@ class ApplyManageController {
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
+					case entity.status.contains("打印"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("完成",webPath +imgPath + "submit.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
+						break;
 					default :
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 				}
 			}
@@ -148,6 +157,7 @@ class ApplyManageController {
 		actionList << createAction("生成资产卡片",imgPath + "init.gif","assetCards_create")
 		actionList << createAction("财务对接",imgPath + "s_open.png",strname + "_docking")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -309,7 +319,7 @@ class ApplyManageController {
 			ids.each{
 				def applyNotes = ApplyNotes.get(it)
 				if(applyNotes){
-					if("zcgly" in userGroups || currentUser.getAllRolesValue().contains("资产管理员")){
+					if("xhzcgly" in userGroups || currentUser.getAllRolesValue().contains("资产管理员")){
 						applyNotes.delete(flush: true)
 						json = [result:'true']
 					}else{
@@ -455,36 +465,6 @@ class ApplyManageController {
 							houseCard.assetStatus = "已入库"
 							houseCard.save()
 						}
-					}else if(assetType == "土地"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-						for(int i=0;i<assetCount;i++){
-							def landCard = new LandCards()
-							landCard.company = company
-							landCard.applyNotes = applyNotes
-							landCard.registerNum = this.getAssetCardCode(config,applyNotes)
-							landCard.userCategory = applyNotes.userCategory
-							landCard.assetName = applyNotes.assetName
-							landCard.userDepart = applyNotes.userDepart
-							landCard.onePrice = onePrice
-							landCard.country = applyNotes.country
-							landCard.assetStatus = "已入库"
-							landCard.save()
-						}
-					}else if(assetType == "图书"){
-						/*获取申请信息中的数量，创建相同数量的资产卡片*/
-						for(int i=0;i<assetCount;i++){
-							def bookCard = new BookCards()
-							bookCard.company = company
-							bookCard.applyNotes = applyNotes
-							bookCard.registerNum = this.getAssetCardCode(config,applyNotes)
-							bookCard.userCategory = applyNotes.userCategory
-							bookCard.assetName = applyNotes.assetName
-							bookCard.userDepart = applyNotes.userDepart
-							bookCard.onePrice = onePrice
-							bookCard.country = applyNotes.country
-							bookCard.assetStatus = "已入库"
-							bookCard.save()
-						}
 					}else if(assetType == "办公家具"){
 						/*获取申请信息中的数量，创建相同数量的资产卡片*/
 						for(int i=0;i<assetCount;i++){
@@ -501,6 +481,37 @@ class ApplyManageController {
 							furnitureCard.save()
 						}
 					}
+//					else if(assetType == "土地"){
+//						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+//						for(int i=0;i<assetCount;i++){
+//							def landCard = new LandCards()
+//							landCard.company = company
+//							landCard.applyNotes = applyNotes
+//							landCard.registerNum = this.getAssetCardCode(config,applyNotes)
+//							landCard.userCategory = applyNotes.userCategory
+//							landCard.assetName = applyNotes.assetName
+//							landCard.userDepart = applyNotes.userDepart
+//							landCard.onePrice = onePrice
+//							landCard.country = applyNotes.country
+//							landCard.assetStatus = "已入库"
+//							landCard.save()
+//						}
+//					}else if(assetType == "图书"){
+//						/*获取申请信息中的数量，创建相同数量的资产卡片*/
+//						for(int i=0;i<assetCount;i++){
+//							def bookCard = new BookCards()
+//							bookCard.company = company
+//							bookCard.applyNotes = applyNotes
+//							bookCard.registerNum = this.getAssetCardCode(config,applyNotes)
+//							bookCard.userCategory = applyNotes.userCategory
+//							bookCard.assetName = applyNotes.assetName
+//							bookCard.userDepart = applyNotes.userDepart
+//							bookCard.onePrice = onePrice
+//							bookCard.country = applyNotes.country
+//							bookCard.assetStatus = "已入库"
+//							bookCard.save()
+//						}
+//					}
 					applyNotes.isCreatedCards = "1"
 					createCardsCount += 1
 					createCards = "true"
@@ -830,5 +841,28 @@ class ApplyManageController {
 			json["result"] = false
 		}
 		render json as JSON
+	}
+	
+	def assetApplyExport = {
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		
+		//查询条件
+//		def searchArgs =[:]
+//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
+		def c = ApplyNotes.createCriteria()
+
+		def applyNotesList = c.list{
+			
+			eq("company",company)
+			eq("status","已结束")
+		}
+		def excel = new ExcelExport()
+		excel.assetApplyDc(os,applyNotesList)
 	}
 }

@@ -58,11 +58,11 @@ class AssetCategory {
 	}
 	
 	//获取跟节点的分类
-	def getRootCategory(){
-		if(this.parent){
-			return this.getRootCategory(this.parent)
+	def getRootCategory(obj){
+		if(obj.parent){
+			return this.getRootCategory(obj.parent)
 		}else{
-			return this
+			return obj
 		}
 	}
 	

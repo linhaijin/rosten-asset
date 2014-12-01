@@ -127,14 +127,16 @@ class CarCards {
 	String remark
 	
 	//从资产建账创建卡片转为资产申请创建卡片
-	static belongsTo = [company:Company,applyNotes:ApplyNotes]
-//	static belongsTo = [company:Company,carRegister:CarRegister]
+	ApplyNotes applyNotes
+	
+	static belongsTo = [company:Company]
 	
     static constraints = {
+		applyNotes nullable:true,blank:true
 		registerNum nullable:false ,blank: false, unique: true
-		userCategory nullable:false,blank:false
+		userCategory nullable:true,blank:true
 		assetName nullable:false,blank:false
-		userDepart nullable:false,blank:false
+		userDepart nullable:true,blank:true
 		userStatus nullable:false,blank:false
 		assetSource nullable:false,blank:false
 		costCategory nullable:false,blank:false

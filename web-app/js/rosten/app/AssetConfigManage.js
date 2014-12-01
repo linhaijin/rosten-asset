@@ -4,6 +4,14 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	asset_import = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/assetConfig/importAsset/"+ companyId, {
+            onLoadFunction : function() {
+
+            }
+        });
+	};
 	assetCategory_formatTitle = function(value,rowIndex){
 		return "<a href=\"javascript:assetCategory_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};

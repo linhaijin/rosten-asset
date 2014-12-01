@@ -177,32 +177,29 @@
              						value:"${String.format("%.2f", carCards?.onePrice)}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>事业收入（元）：</div></td>
+					    <td><div align="right">事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"undertakingRevenue",name:"undertakingRevenue",${fieldAcl.isReadOnly("undertakingRevenue")},
                                		trim:true,
-                               		required:true,
              						value:"${carCards?.undertakingRevenue}"
                            	'/>
 			            </td>
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>财政拨款（元）：</div></td>
+					    <td><div align="right">财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"fiscalAppropriation",name:"fiscalAppropriation",${fieldAcl.isReadOnly("fiscalAppropriation")},
                                		trim:true,
-                               		required:true,
              						value:"${carCards?.fiscalAppropriation}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>其他资金（元）：</div></td>
+					    <td><div align="right">其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"otherFund",name:"otherFund",${fieldAcl.isReadOnly("otherFund")},
                                		trim:true,
-                               		required:true,
              						value:"${carCards?.otherFund}"
                            	'/>
 			            </td>

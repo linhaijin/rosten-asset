@@ -99,7 +99,7 @@ class HouseCards {
 	//坐落位置
 	String houseLocated
 	
-	//采购人
+	//负责人
 	String purchaser
 	
 	//国别
@@ -120,7 +120,7 @@ class HouseCards {
 	@GridColumn(name="资产状态",colIdx=8)
 	String assetStatus = "新建"
 	
-	//资产操作号
+	//资产操作号，规格型号
 	String seriesNo
 	
 	//建筑面积
@@ -130,14 +130,16 @@ class HouseCards {
 	String remark
 	
 	//从资产建账创建卡片转为资产申请创建卡片
-	static belongsTo = [company:Company,applyNotes:ApplyNotes]
-//	static belongsTo = [company:Company,houseRegister:HouseRegister]
+	ApplyNotes applyNotes
+	
+	static belongsTo = [company:Company]
 	
     static constraints = {
+		applyNotes nullable:true,blank:true
 		registerNum nullable:false ,blank: false, unique: true
-		userCategory nullable:false,blank:false
+		userCategory nullable:true,blank:true
 		assetName nullable:false,blank:false
-		userDepart nullable:false,blank:false
+		userDepart nullable:true,blank:true
 		userStatus nullable:false,blank:false
 		assetSource nullable:false,blank:false
 		costCategory nullable:false,blank:false

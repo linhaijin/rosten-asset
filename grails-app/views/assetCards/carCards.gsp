@@ -220,7 +220,7 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>采购人：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"purchaser",name:"purchaser",${fieldAcl.isReadOnly("purchaser")},

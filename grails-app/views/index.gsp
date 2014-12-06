@@ -313,7 +313,7 @@
 					<ul>
 						<g:each in="${servicesList}">
 							<li>
-								<a href="javascript:${it.functionName }('${it.functionArgs }')">
+								<a href="javascript:${it.functionName }('${it.functionArgs?it.functionArgs:it.functionUrl }')">
 									<img width="39px" height="39px" src="${it.imgUrl }"></img>
 									<h5>${it.serviceName }</h5>
 								</a>

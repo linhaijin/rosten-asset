@@ -4,6 +4,16 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	//2014-12-06 修复资产卡片分类信息
+	asset_repair = function(){
+		rosten.readSyncNoTime(rosten.webPath + "/assetConfig/assetCategoryRepair", {},function(data){
+			if(data.result==true || data.result == "true"){
+				rosten.alert("修复成功！");
+			}else{
+				rosten.alert("失败！");
+			}
+		});
+	};
 	asset_import = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.kernel.createRostenShowDialog(rosten.webPath + "/assetConfig/importAsset/"+ companyId, {

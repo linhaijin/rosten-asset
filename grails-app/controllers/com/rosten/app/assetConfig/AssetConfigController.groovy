@@ -20,6 +20,86 @@ class AssetConfigController {
 	
 	def imgPath ="images/rosten/actionbar/"
 	
+	//2014-12-06 修复资产 卡片信息-----仅供管理员使用
+	private def getRostenCategoryByName={rootCategory,categoryName->
+		def _category
+		rootCategory.children.each{
+			if(it.categoryName.equals(categoryName)){
+				_category =  it
+			}
+		}
+		return _category
+	}
+	def assetCategoryRepair ={
+		def json
+		try{
+			def currentUser = (User) springSecurityService.getCurrentUser()
+			def company = currentUser.company
+			
+			//办公家具
+			def bgjj = AssetCategory.findByCategoryCode("furniture")
+			def jj_bgsb = this.getRostenCategoryByName(bgjj,"办公设备")
+			def jj_gdzc = this.getRostenCategoryByName(bgjj,"固定资产")
+			
+			FurnitureCards.findAllByCompany(company).each{
+				def _name = it.getCategoryName()
+				if(!_name.equals("办公设备") && !_name.equals("固定资产")){
+					//通过资产编号判断是否为办公设备或者固定资产
+					def _n = it.registerNum.substring(0, 1)
+					if(_n.equals("1")){
+						//固定资产
+						if(jj_gdzc){
+							it.userCategory = jj_gdzc
+							it.save()
+						}
+						
+					}else if(_n.equals("2")){
+						//办公设备
+						if(jj_bgsb){
+							it.userCategory = jj_bgsb
+							it.save()
+						}
+					}
+					
+				}
+			}
+			
+			//电子设备
+			def dzsb = AssetCategory.findByCategoryCode("device")
+			def dzsb_bgsb = this.getRostenCategoryByName(dzsb,"办公设备")
+			def dzsb_gdzc = this.getRostenCategoryByName(dzsb,"固定资产")
+			
+			DeviceCards.findAllByCompany(company).each{
+				def _name = it.getCategoryName()
+				if(!_name.equals("办公设备") && !_name.equals("固定资产")){
+					//通过资产编号判断是否为办公设备或者固定资产
+					def _n = it.registerNum.substring(0, 1)
+					if(_n.equals("1")){
+						//固定资产
+						if(dzsb_gdzc){
+							it.userCategory = dzsb_gdzc
+							it.save()
+						}
+						
+					}else if(_n.equals("2")){
+						//办公设备
+						if(dzsb_bgsb){
+							it.userCategory = dzsb_bgsb
+							it.save()
+						}
+					}
+					
+				}
+			}
+			
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	//---------------------------------------------------------
+	
 	//2014-11-30批量导入固定资产
 	def importAsset ={
 		def model =[:]
@@ -203,6 +283,12 @@ class AssetConfigController {
 		actionList << createAction("保存",imgPath + "Save.gif",strname + "_save")
 		actionList << createAction("批量导入资产",imgPath + "back.png","asset_import")
 		
+		//2014-12-06 修复资产看片分类信息
+		def currentUser = springSecurityService.getCurrentUser()
+		if("admin".equals(currentUser.getUserType())){
+			actionList << createAction("修复资产卡片分类",imgPath + "init.gif","asset_repair")
+		
+		}
 		render actionList as JSON
 	}
 	def assetCodeConfigSave ={
@@ -403,19 +489,23 @@ class AssetConfigController {
 			isRead = "yes"
 		}
 		
+		//获取跟节点资产分类
+		
+		
 		if(params.id){
 			assetCategory = AssetCategory.get(params.id)
 			assetCategory.properties = params
 			assetCategory.clearErrors()
 			def company = Company.get(params.companyId)
 			
+			//2014-12-05去除重名判断功能
 			//判断部门名称是否已经存在
-			def _assetCategory = AssetCategory.findByCompanyAndCategoryName(company,params.categoryName)
-			if(_assetCategory && !params.id.equals(_assetCategory.id)){
-				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
-				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:params.companyId,"isRead":isRead])
-				return
-			}
+//			def _assetCategory = AssetCategory.findByCompanyAndCategoryName(company,params.categoryName)
+//			if(_assetCategory && !params.id.equals(_assetCategory.id)){
+//				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
+//				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:params.companyId,"isRead":isRead])
+//				return
+//			}
 			
 			if(assetCategory.save(flush:true)){
 				flash.refreshTree = true;
@@ -432,14 +522,15 @@ class AssetConfigController {
 			def company = Company.get(params.companyId)
 			assetCategory.company = company
 			
+			//2014-12-05去除重名判断功能
 			//判断是否已经存在
 			def _assetCategory = AssetCategory.findByCompanyAndCategoryName(company,params.categoryName)
-			if(_assetCategory){
-				//已经存在
-				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
-				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:company.id,"isRead":isRead])
-				return
-			}
+//			if(_assetCategory){
+//				//已经存在
+//				flash.message = "<"+params.categoryName+">已经存在，请重新输入！"
+//				render(view:'/assetConfig/assetCategoryEdit',model:[assetCategory:assetCategory,parentId:params.parentId,companyId:company.id,"isRead":isRead])
+//				return
+//			}
 			
 			if(params.parentId){
 				def parent = AssetCategory.get(params.parentId)
@@ -488,7 +579,7 @@ class AssetConfigController {
 		dataList.each{
 			def sMap = ["id":it.id,"name":it.categoryName,"parentId":it.parent?.id,"children":[]]
 			def childMap
-			it.children.each{item->
+			it.getSortChildren().each{item->
 				childMap = ["_reference":item.id]
 				sMap.children += childMap
 			}

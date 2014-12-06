@@ -6,6 +6,7 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.assetConfig.AssetCategory;
 import com.rosten.app.system.Company
 import com.rosten.app.util.SystemUtil
+import com.rosten.app.util.Util
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -69,6 +70,15 @@ class AssetCategory {
 	//描述
 	@GridColumn(name="描述")
 	String description
+	
+	//按排序号顺序获取部门
+	def getSortChildren(){
+		return this.children.unique().sort{e1,e2->
+			def _1 = (e1.serialNo && !e1.serialNo.equals(""))?Util.obj2int(e1.serialNo):100
+			def _2 = (e2.serialNo && !e2.serialNo.equals(""))?Util.obj2int(e2.serialNo):100
+			return _1 - _2
+		}
+	}
 	
 	List children
 	

@@ -149,7 +149,12 @@
 						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetScrap?.status}",flowCode:"${flowCode}"};
 						rosten.readSync(rosten.webPath + "/share/addComment/${assetScrap?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
-								rosten.alert("意见填写成功！");
+								rosten.alert("意见填写成功！").queryDlgClose= function(){
+									var selectWidget = rosten_tabContainer.selectedChildWidget;
+									if(selectWidget.get("id")=="flowComment"){
+										rosten_tabContainer.selectedChildWidget.refresh();
+									}
+								};
 							}else{
 								rosten.alert("意见填写失败!");
 							}		
@@ -523,7 +528,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
+<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetScrap?.seriesNo}" />
@@ -669,3 +674,4 @@
 	</div>
 </div>
 </body>
+</html>

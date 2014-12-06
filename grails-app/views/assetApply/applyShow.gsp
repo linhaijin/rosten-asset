@@ -113,7 +113,12 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${applyNotes?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${applyNotes?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("意见填写成功！");
+							rosten.alert("意见填写成功！").queryDlgClose= function(){
+								var selectWidget = rosten_tabContainer.selectedChildWidget;
+								if(selectWidget.get("id")=="flowComment"){
+									rosten_tabContainer.selectedChildWidget.refresh();
+								}
+							};
 						}else{
 							rosten.alert("意见填写失败!");
 						}	
@@ -303,7 +308,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"850px",margin:"0 auto"}' >
+<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"850px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:450px;padding:0px">
 			<g:hiddenField name="registerNum_form" value="${applyNotes?.registerNum}" />

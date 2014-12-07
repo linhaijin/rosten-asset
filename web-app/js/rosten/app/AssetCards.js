@@ -93,28 +93,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	carCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("car_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("car_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("car_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("car_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("carCards", rosten.webPath + "/carCards/carCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("carCards", rosten.webPath + "/carCards/carCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
 	//土地
@@ -205,28 +213,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	landCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("land_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("land_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("land_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("land_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsExport?companyId="+companyId+"&registerNum="+registerNum+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 
 	//房屋及建筑物
@@ -317,28 +333,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	houseCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("house_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("house_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("house_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("house_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("houseCards", rosten.webPath + "/houseCards/houseCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("houseCards", rosten.webPath + "/houseCards/houseCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
 	//电子设备
@@ -436,28 +460,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	deviceCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("device_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("device_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("device_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("device_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("deviceCards", rosten.webPath + "/deviceCards/deviceCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("deviceCards", rosten.webPath + "/deviceCards/deviceCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
 	//图书
@@ -547,28 +579,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	bookCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("book_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("book_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("book_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("book_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("bookCards", rosten.webPath + "/bookCards/bookCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("bookCards", rosten.webPath + "/bookCards/bookCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
 	//办公家具
@@ -658,28 +698,36 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	furnitureCards_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
 		
 		var registerNum = registry.byId("furniture_registerNum");
 		if(registerNum.get("value")!=""){
 			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
 		}
 		
 		var category = registry.byId("furniture_category");
 		if(category.get("value")!=""){
 			category = category.get("value");
+			qcategory = "&category="+category;
 		}
 		
 		var assetName = registry.byId("furniture_assetName");
 		if(assetName.get("value")!=""){
 			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
 		}
 		
 		var userDepart = registry.byId("furniture_userDepart");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("furnitureCards", rosten.webPath + "/furnitureCards/furnitureCardsExport?companyId="+companyId+"&registerNum="+registerNum+"&category="+category+"&assetName="+assetName+"&userDepart="+userDepart);
+		rosten.openNewWindow("furnitureCards", rosten.webPath + "/furnitureCards/furnitureCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
 	/*

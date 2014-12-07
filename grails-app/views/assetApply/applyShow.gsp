@@ -379,7 +379,7 @@
                                	trim:true,
                                	required:true,
                                	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
-             					value:"${applyNotes?.getFormattedUser()}"
+             					value:"${applyNotes?.userName}"
                            	'/>
 			           	</td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>

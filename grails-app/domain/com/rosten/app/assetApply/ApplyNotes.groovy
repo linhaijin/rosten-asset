@@ -16,6 +16,9 @@ import com.rosten.app.assetCards.DeviceCards
 import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
 
+import com.rosten.app.gtask.Gtask
+import com.rosten.app.share.*
+
 class ApplyNotes {
 	String id
 	
@@ -244,6 +247,15 @@ class ApplyNotes {
 				item.delete()
 			}
 			FurnitureCards.findAllByApplyNotes(this).each{item->
+				item.delete()
+			}
+			Gtask.findAllByContentId(this.id).each{item->
+				item.delete()
+			}
+			FlowComment.findAllByBelongToId(this.id).each{item->
+				item.delete()
+			}
+			FlowLog.findAllByBelongToId(this.id).each{item->
 				item.delete()
 			}
 			session.flush()

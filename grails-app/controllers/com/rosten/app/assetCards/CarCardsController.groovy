@@ -12,6 +12,7 @@ import com.rosten.app.system.UserGroup
 
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetApply.ApplyNotes
+import com.rosten.app.barcode.Barcode
 
 import com.rosten.app.export.ExcelExport
 
@@ -242,5 +243,18 @@ class CarCardsController {
 		}
 		def excel = new ExcelExport()
 		excel.carCardsDc(os,carCardsList)
+	}
+	
+	def getBarcode = {
+		def _util = new Barcode()
+		byte[] b = new byte[1024];
+		int len = -1;
+		InputStream imageStream=new ByteArrayInputStream( _util.txmStr("123ABC456"));
+		
+		while ((len = imageStream.read(b, 0, 1024)) != -1) {
+		  response.outputStream.write(b, 0, len);
+		}
+		response.outputStream.flush()
+		response.outputStream.close()
 	}
 }

@@ -61,15 +61,15 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:370px;padding:0px">
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"600px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='height:"510px",marginBottom:"2px",region:"top"'>
+		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="CardsNum_form" value="${carCards?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${carCards?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"410px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"500px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产编号：</div></td>
@@ -250,8 +250,16 @@
 			            </td>
 					</tr>
 					<tr>
+						 <td ><div align="right">条形码：</div></td>
+						 <td colspan="3">
+					    	<div style="text-align:left">
+								<img src="${createLink(controller:'carCards',action:'getBarcode',params:[])}" width="280" height="80" style="left:0px; top:0px;">
+							</div>
+					    </td>
+					</tr>
+					<tr>
 						 <td ><div align="right">备注：</div></td>
-						  <td colspan="3">
+						 <td colspan="3">
 					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='id:"remark",name:"remark",
                                		style:{width:"550px",height:"150px"},

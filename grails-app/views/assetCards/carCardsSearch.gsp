@@ -26,7 +26,7 @@
             	<div id="car_category" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:"",style:{width:"140px"}'>
 	            	<g:each in="${categoryList}" var="item">
-	                	<option value="${item.categoryName }">${item.categoryName }</option>
+	                	<option value="${item.id }">${item.categoryName }</option>
 	                </g:each>
 	            </div>
             </td>

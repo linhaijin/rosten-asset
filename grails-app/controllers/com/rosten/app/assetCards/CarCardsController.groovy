@@ -67,7 +67,9 @@ class CarCardsController {
 		
 		def company = Company.get(params.companyId)
 		model["DepartList"] = Depart.findAllByCompany(company)
-		model["categoryList"] = AssetCategory.findAllByCompany(company)
+		
+		def parentCategory = AssetCategory.findByCategoryCode("car")
+		model["categoryList"] = AssetCategory.findAllByCompanyAndParent(company,parentCategory)
 		
 		render(view:'/assetCards/carCardsSearch',model:model)
 	}
@@ -193,7 +195,10 @@ class CarCardsController {
 		//增加查询条件
 		def searchArgs =[:]
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
-		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		
+		def parentCategory = AssetCategory.findByCategoryCode("car")
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryNameAndParent(company,params.category,parentCategory)
+		
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
 		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		

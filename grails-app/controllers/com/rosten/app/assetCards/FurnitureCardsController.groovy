@@ -66,7 +66,9 @@ class FurnitureCardsController {
 		
 		def company = Company.get(params.companyId)
 		model["DepartList"] = Depart.findAllByCompany(company)
-		model["categoryList"] = AssetCategory.findAllByCompany(company)
+		
+		def parentCategory = AssetCategory.findByCategoryCode("furniture")
+		model["categoryList"] = AssetCategory.findAllByCompanyAndParent(company,parentCategory)
 		
 		render(view:'/assetCards/furnitureCardsSearch',model:model)
 	}
@@ -192,7 +194,10 @@ class FurnitureCardsController {
 		//增加查询条件
 		def searchArgs =[:]
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
-		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		
+		def parentCategory = AssetCategory.findByCategoryCode("furniture")
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryNameAndParent(company,params.category,parentCategory)
+		
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
 		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		

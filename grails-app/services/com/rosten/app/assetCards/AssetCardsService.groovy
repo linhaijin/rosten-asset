@@ -25,13 +25,13 @@ class AssetCardsService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
 			}
-			order("createDate", "desc")
+			order("registerNum", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -41,7 +41,7 @@ class AssetCardsService {
 		def query = { 
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -119,13 +119,13 @@ class AssetCardsService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
 			}
-			order("createDate", "desc")
+			order("registerNum", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -135,7 +135,7 @@ class AssetCardsService {
 		def query = { 
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -166,13 +166,13 @@ class AssetCardsService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
 			}
-			order("createDate", "desc")
+			order("registerNum", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -182,7 +182,7 @@ class AssetCardsService {
 		def query = { 
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
@@ -260,13 +260,13 @@ class AssetCardsService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
 			}
-			order("createDate", "desc")
+			order("registerNum", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -276,7 +276,7 @@ class AssetCardsService {
 		def query = { 
 			eq("company",company)
 			searchArgs.each{k,v->
-				if(k.equals("category") || k.equals("userDepart")){
+				if(k.equals("userCategory") || k.equals("userDepart")){
 					eq(k,v)
 				}else{
 					like(k,"%" + v + "%")

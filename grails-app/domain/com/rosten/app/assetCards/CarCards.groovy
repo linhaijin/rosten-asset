@@ -35,6 +35,14 @@ class CarCards {
 		}
 	}
 	
+	def getCategoryCode(){
+		if(userCategory){
+			return userCategory.allCode
+		}else{
+			return "qt"
+		}
+	}
+	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
 	String assetName
@@ -80,6 +88,9 @@ class CarCards {
 		}
 	}
 	
+	//规格型号
+	String specifications 
+	
 	//采购组织形式
 	String organizationalType
 	
@@ -99,7 +110,7 @@ class CarCards {
 	//存放地点
 	String storagePosition
 	
-	//采购人
+	//负责人
 	String purchaser
 	
 	//国别
@@ -145,6 +156,7 @@ class CarCards {
 		undertakingRevenue nullable:true,blank:true
 		fiscalAppropriation nullable:true,blank:true
 		otherFund nullable:true,blank:true
+		specifications nullable:true,blank:true
 		organizationalType nullable:true,blank:true
 		storagePosition nullable:true,blank:true
 		purchaser nullable:true,blank:true

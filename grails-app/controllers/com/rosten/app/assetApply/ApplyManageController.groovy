@@ -849,18 +849,25 @@ class ApplyManageController {
 		response.setContentType('application/vnd.ms-excel')
 		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
-		//查询条件
-//		def searchArgs =[:]
-//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
-//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
-//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
 		
 		def c = ApplyNotes.createCriteria()
 
 		def applyNotesList = c.list{
-			
 			eq("company",company)
 			eq("status","已结束")
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
 		}
 		def excel = new ExcelExport()
 		excel.assetApplyDc(os,applyNotesList)

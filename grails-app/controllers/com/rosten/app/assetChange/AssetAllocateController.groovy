@@ -1142,11 +1142,12 @@ class AssetAllocateController {
 		response.setContentType('application/vnd.ms-excel')
 		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产调拨申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
-		//查询条件
-//		def searchArgs =[:]
-//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
-//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
-//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
+		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
 		
 		def c = AssetAllocate.createCriteria()
 
@@ -1154,6 +1155,13 @@ class AssetAllocateController {
 			
 			eq("company",company)
 			eq("status","已结束")
+			searchArgs.each{k,v->
+				if(k.equals("originalDepart") || k.equals("newDepart")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
 		}
 		def excel = new ExcelExport()
 		excel.assetAllocateDc(os,assetAllocateList)

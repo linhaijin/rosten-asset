@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>车辆资产</title>
+    <title>运输工具资产</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;
@@ -78,7 +78,7 @@
                                	data-dojo-props='id:"registerNum",name:"registerNum",${fieldAcl.isReadOnly("registerNum")},
                                		trim:true,
                                		required:true,
-                               		disabled:"disabled",
+                               		readOnly:true,
              						value:"${carCards?.registerNum}"
                            	'/>
 			            </td>
@@ -104,8 +104,19 @@
              						value:"${carCards?.assetName}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
-					   <td width="250">
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>规格型号：</div></td>
+					    <td>
+					    	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='id:"specifications",name:"specifications",${fieldAcl.isReadOnly("specifications")},
+                               		trim:true,
+                               		required:true,
+             						value:"${carCards?.specifications}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
+					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='id:"allowdepartsName",name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               		trim:true,
@@ -114,9 +125,7 @@
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${carCards?.userDepart?.id }" />
 							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
-			           </td>
-					</tr>
-					<tr>
+			           	</td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用状况：</div></td>
 					    <td>
 					    	<select id="userStatus" data-dojo-type="dijit/form/FilteringSelect"
@@ -132,7 +141,9 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产来源：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>资产来源：</div></td>
 					    <td>
                            	<select id="assetSource" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='id:"assetSource",name:"assetSource",${fieldAcl.isReadOnly("assetSource")},
@@ -147,8 +158,6 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>价值类型：</div></td>
 					    <td>
 					    	<input id="costCategory" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -158,7 +167,9 @@
              						value:"${carCards?.costCategory}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>购买日期：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>购买日期：</div></td>
 					    <td>
 					    	<input id="buyDate" data-dojo-type="dijit/form/DateTextBox" 
 		                 		data-dojo-props='id:"buyDate",name:"buyDate",${fieldAcl.isReadOnly("buyDate")},
@@ -166,8 +177,6 @@
 								value:"${carCards?.getFormattedShowBuyDate()}"
 		                '/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -177,7 +186,9 @@
              						value:"${String.format("%.2f", carCards?.onePrice)}"
                            	'/>
 			            </td>
-					    <td><div align="right">事业收入（元）：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"undertakingRevenue",name:"undertakingRevenue",${fieldAcl.isReadOnly("undertakingRevenue")},
@@ -185,8 +196,6 @@
              						value:"${carCards?.undertakingRevenue}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right">财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -195,7 +204,9 @@
              						value:"${carCards?.fiscalAppropriation}"
                            	'/>
 			            </td>
-					    <td><div align="right">其他资金（元）：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"otherFund",name:"otherFund",${fieldAcl.isReadOnly("otherFund")},
@@ -203,8 +214,6 @@
              						value:"${carCards?.otherFund}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right">采购组织形式：</div></td>
 					    <td>
 					    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
@@ -220,24 +229,15 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='id:"purchaser",name:"purchaser",${fieldAcl.isReadOnly("purchaser")},
                                		trim:true,
                                		required:true,
              						value:"${carCards?.purchaser}"
-                           	'/>
-			            </td>
-					</tr>
-					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>国别：</div></td>
-					    <td>
-					    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='id:"country",name:"country",${fieldAcl.isReadOnly("country")},
-                               		trim:true,
-                               		required:true,
-             						value:"${carCards?.country}"
                            	'/>
 			            </td>
 						<td><div align="right">存放地点：</div></td>

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>家具资产</title>
+    <title>办公家具资产</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;

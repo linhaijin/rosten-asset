@@ -48,7 +48,29 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetApply_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("assetLose", rosten.webPath + "/applyManage/assetApplyExport?companyId="+companyId);
+		var qregisterNum = "";
+		var qassetName = "";
+		var qcategory = "";
+		
+		var registerNum = registry.byId("s_registerNum");
+		if(registerNum.get("value")!=""){
+			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var assetName = registry.byId("s_assetName");
+		if(assetName.get("value")!=""){
+			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var category = registry.byId("s_category");
+		if(category.get("value")!=""){
+			category = category.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyExport?companyId="+companyId+qregisterNum+qassetName+qcategory);
 	};
 	
 	assetApply_delete = function(){//删除资产申请

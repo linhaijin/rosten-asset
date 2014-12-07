@@ -1170,11 +1170,12 @@ class AssetScrapController {
 		response.setContentType('application/vnd.ms-excel')
 		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报损申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
-		//查询条件
-//		def searchArgs =[:]
-//		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
-//		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
-//		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		def c = AssetScrap.createCriteria()
 
@@ -1182,29 +1183,13 @@ class AssetScrapController {
 			
 			eq("company",company)
 			eq("status","已结束")
-			
-//			searchArgs.each{k,v->
-//				if(k.equals("departName")){
-//					departs{
-//						like(k,"%" + v + "%")
-//					}
-//				}else if(k.equals("username")){
-//					createAlias('user', 'a')
-//					like("a.username","%" + v + "%")
-//					
-//				}else{
-//					like(k,"%" + v + "%")
-//				}
-//			}
-			
-//			if("staffAdd".equals(params.type)){
-//				not {'in'("status",["在职","退休","离职"])}
-//				order("createDate", "desc")
-//			}else{
-//				'in'("status",["在职","退休","离职"])
-//				order("createDate", "desc")
-//			}
-			
+			searchArgs.each{k,v->
+				if(k.equals("usedDepart")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
 		}
 		def excel = new ExcelExport()
 		excel.assetScrapDc(os,assetScrapList)

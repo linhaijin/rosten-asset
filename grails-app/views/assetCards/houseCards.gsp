@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>房屋资产</title>
+    <title>房屋及建筑物资产</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;
@@ -271,6 +271,16 @@
     						</textarea>
 					    </td>
 					</tr>
+					
+					<tr>
+						<td ><div align="right">条形码：</div></td>
+						<td colspan="3">
+					    	<img src='${request.getContextPath()}/com/rosten/app/barcode/BarcodeServlet?msg=123456&type=code39&res=300&hrfont=宋体&hrsize=3.5mm'  height='60px'  width='180px'/>
+					    </td>
+					</tr>
+					
+					
+					
 				</table>
 			</div>
 		</form>

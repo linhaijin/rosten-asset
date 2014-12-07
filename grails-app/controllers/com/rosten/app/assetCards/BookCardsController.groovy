@@ -3,12 +3,17 @@ package com.rosten.app.assetCards
 import grails.converters.JSON
 
 import com.rosten.app.util.FieldAcl
-import com.rosten.app.system.Company
-import com.rosten.app.system.User
 import com.rosten.app.util.Util
+
+import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
+import com.rosten.app.system.User
+import com.rosten.app.system.UserGroup
+
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetApply.ApplyNotes
+
+import com.rosten.app.export.ExcelExport
 
 class BookCardsController {
 
@@ -18,13 +23,17 @@ class BookCardsController {
 	def imgPath ="images/rosten/actionbar/"
 	
 	def bookCardsForm ={
+		//增加资产管理员群组的控制权限
 		def currentUser = springSecurityService.getCurrentUser()
+		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
+		  elem.group.groupName
+		}
 		def webPath = request.getContextPath() + "/"
 		def strname = "bookCards"
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		if(currentUser.getAllRolesValue().contains("系统管理员") || currentUser.getAllRolesValue().contains("资产管理员")){
+		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
 		}
 		
@@ -36,8 +45,9 @@ class BookCardsController {
 		def strname = "bookCards"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 //		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+//		actionList << createAction("入库",imgPath + "submit.png",strname + "_submit")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
-//		actionList << createAction("提交",imgPath + "submit.png",strname + "_submit")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -56,6 +66,7 @@ class BookCardsController {
 		
 		def company = Company.get(params.companyId)
 		model["DepartList"] = Depart.findAllByCompany(company)
+		model["categoryList"] = AssetCategory.findAllByCompany(company)
 		
 		render(view:'/assetCards/bookCardsSearch',model:model)
 	}
@@ -181,9 +192,9 @@ class BookCardsController {
 		//增加查询条件
 		def searchArgs =[:]
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
 		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
-		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 		
 		if(params.refreshData){
 			def args =[:]
@@ -201,5 +212,35 @@ class BookCardsController {
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
+	}
+	
+	def bookCardsExport = {
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("图书资产卡片信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		
+		def c = BookCards.createCriteria()
+
+		def bookCardsList = c.list{
+			eq("company",company)
+			eq("status","已结束")
+			searchArgs.each{k,v->
+				if(k.equals("category") || k.equals("userDepart")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		def excel = new ExcelExport()
+		excel.bookCardsDc(os,bookCardsList)
 	}
 }

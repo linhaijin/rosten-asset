@@ -21,6 +21,15 @@
                 	data-dojo-props='trim:true,style:{width:"140px"}
                '/>
             </td>
+            <th width="7%">资产分类</th>
+            <td width="15%">
+            	<div id="land_category" data-dojo-type="dijit/form/ComboBox"
+	                data-dojo-props='trim:true,value:"",style:{width:"140px"}'>
+	            	<g:each in="${categoryList}" var="item">
+	                	<option value="${item.categoryName }">${item.categoryName }</option>
+	                </g:each>
+	            </div>
+            </td>
             <th width="7%">资产名称</th>
             <td width="15%">
             	<input id="land_assetName" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -35,12 +44,6 @@
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
 	            </div>
-            </td>
-            <th width="7%">资产状态</th>
-            <td width="15%">
-            	<input id="land_assetStatus" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,style:{width:"140px"}
-               '/>
             </td>
             <td>
             	<div class="btn">

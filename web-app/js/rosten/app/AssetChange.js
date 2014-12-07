@@ -13,25 +13,28 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
 	assetScrap_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		 /*
-		 var content = {};
-			
+		var qseriesNo = "";
+		var qusedDepart = "";
+		var qusedMan = "";
+		
 		var seriesNo = registry.byId("scrap_seriesNo");
 		if(seriesNo.get("value")!=""){
-			content.seriesNo = seriesNo.get("value");
+			seriesNo = seriesNo.get("value");
+			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
-		var applyMan = registry.byId("scrap_applyMan");
-		if(applyMan.get("value")!=""){
-			content.applyMan = applyMan.get("value");
+		var usedDepart = registry.byId("scrap_usedDepart");
+		if(usedDepart.get("value")!=""){
+			usedDepart = usedDepart.get("value");
+			qusedDepart = "&usedDepart="+usedDepart;
 		}
 		
-		var applyDept = registry.byId("scrap_applyDept");
-		if(applyDept.get("value")!=""){
-			content.applyDept = applyDept.get("value");
+		var usedMan = registry.byId("scrap_usedMan");
+		if(usedMan.get("value")!=""){
+			usedMan = usedMan.get("value");
+			qusedMan = "&usedMan="+usedMan;
 		}
-		*/
-		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId);
+		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
 	};
 	
 	assetScrap_delete = function(){
@@ -106,7 +109,22 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetAllocate_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId);
+		
+		var seriesNo = registry.byId("allocate_seriesNo");
+		if(seriesNo.get("value")!=""){
+			seriesNo = seriesNo.get("value");
+		}
+		
+		var originalDepart = registry.byId("allocate_originalDepart");
+		if(originalDepart.get("value")!=""){
+			originalDepart = originalDepart.get("value");
+		}
+		
+		var newDepart = registry.byId("allocate_newDepart");
+		if(newDepart.get("value")!=""){
+			newDepart = newDepart.get("value");
+		}
+		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId+"&seriesNo="+seriesNo+"&originalDepart="+originalDepart+"&newDepart="+newDepart);
 	};
 	
 	assetAllocate_delete = function(){
@@ -187,7 +205,23 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetLose_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseExport?companyId="+companyId);
+		
+		var seriesNo = registry.byId("lose_seriesNo");
+		if(seriesNo.get("value")!=""){
+			seriesNo = seriesNo.get("value");
+		}
+		
+		var usedDepart = registry.byId("lose_usedDepart");
+		if(usedDepart.get("value")!=""){
+			usedDepart = usedDepart.get("value");
+		}
+		
+		var usedMan = registry.byId("lose_usedMan");
+		if(usedMan.get("value")!=""){
+			usedMan = usedMan.get("value");
+		}
+		
+		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
 	};
 	
 	assetLose_delete = function(){
@@ -262,7 +296,23 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetRepair_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairExport?companyId="+companyId);
+		
+		var seriesNo = registry.byId("repair_seriesNo");
+		if(seriesNo.get("value")!=""){
+			seriesNo = seriesNo.get("value");
+		}
+		
+		var usedDepart = registry.byId("repair_usedDepart");
+		if(usedDepart.get("value")!=""){
+			usedDepart = usedDepart.get("value");
+		}
+		
+		var usedMan = registry.byId("repair_usedMan");
+		if(usedMan.get("value")!=""){
+			usedMan = usedMan.get("value");
+		}
+		
+		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
 	};
 	
 	assetRepair_delete = function(){

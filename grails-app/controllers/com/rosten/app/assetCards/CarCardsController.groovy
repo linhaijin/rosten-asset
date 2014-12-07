@@ -246,10 +246,14 @@ class CarCardsController {
 	}
 	
 	def getBarcode = {
+		def registerNum
+		if(params.registerNum && !"".equals(params.registerNum)){
+			registerNum = params.registerNum
+		}
 		def _util = new Barcode()
 		byte[] b = new byte[1024];
 		int len = -1;
-		InputStream imageStream=new ByteArrayInputStream( _util.txmStr("123ABC456"));
+		InputStream imageStream = new ByteArrayInputStream(_util.txmStr(registerNum));
 		
 		while ((len = imageStream.read(b, 0, 1024)) != -1) {
 		  response.outputStream.write(b, 0, len);

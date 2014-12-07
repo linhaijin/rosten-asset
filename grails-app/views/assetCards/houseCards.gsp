@@ -60,15 +60,15 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:400px;padding:0px">
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"630px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='height:"540px",marginBottom:"2px",region:"top"'>
+		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="CardsNum_form" value="${houseCards?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${houseCards?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"440px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"530px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产编号：</div></td>
@@ -77,7 +77,7 @@
                                	data-dojo-props='name:"registerNum",${fieldAcl.isReadOnly("registerNum")},
                                		trim:true,
                                		required:true,
-                               		disabled:"disabled",
+                               		readOnly:true,
              						value:"${houseCards?.registerNum}"
                            	'/>
 			            </td>
@@ -103,8 +103,19 @@
              						value:"${houseCards?.assetName}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
-					   <td width="250">
+			            <td><div align="right"><span style="color:red">*&nbsp;</span>规格型号：</div></td>
+					    <td>
+					    	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='id:"specifications",name:"specifications",${fieldAcl.isReadOnly("specifications")},
+                               		trim:true,
+                               		required:true,
+             						value:"${houseCards?.specifications}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
+					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
 				               		trim:true,
@@ -113,9 +124,7 @@
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${houseCards?.userDepart?.id }" />
 							<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
-			           </td>
-					</tr>
-					<tr>
+			           	</td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用状况：</div></td>
 					    <td>
 					    	<select id="userStatus" data-dojo-type="dijit/form/FilteringSelect"
@@ -129,7 +138,9 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产来源：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>资产来源：</div></td>
 					    <td>
                            	<select id="assetSource" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"assetSource",trim:true,required:true,
@@ -142,8 +153,6 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>价值类型：</div></td>
 					    <td>
 					    	<input id="costCategory" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -153,15 +162,15 @@
              						value:"${houseCards?.costCategory}"
                            	'/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>购买日期：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>购买日期：</div></td>
 					    <td>
 					    	<input id="buyDate" data-dojo-type="dijit/form/DateTextBox" 
 		                 	data-dojo-props='name:"buyDate",trim:true,${fieldAcl.isReadOnly("buyDate")},
 								value:"${houseCards?.getFormattedShowBuyDate()}"
 		                '/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -171,7 +180,9 @@
              						value:"${String.format("%.2f", houseCards?.onePrice)}"
                            	'/>
 			            </td>
-					    <td><div align="right">事业收入（元）：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"undertakingRevenue",${fieldAcl.isReadOnly("undertakingRevenue")},
@@ -179,8 +190,6 @@
              						value:"${houseCards?.undertakingRevenue}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right">财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -189,7 +198,9 @@
              						value:"${houseCards?.fiscalAppropriation}"
                            	'/>
 			            </td>
-					    <td><div align="right">其他资金（元）：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"otherFund",${fieldAcl.isReadOnly("otherFund")},
@@ -197,8 +208,6 @@
              						value:"${houseCards?.otherFund}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 					    <td><div align="right">采购组织形式：</div></td>
 					    <td>
 					    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
@@ -212,24 +221,15 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"purchaser",${fieldAcl.isReadOnly("purchaser")},
                                		trim:true,
                                		required:true,
              						value:"${houseCards?.purchaser}"
-                           	'/>
-			            </td>
-					</tr>
-					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>国别：</div></td>
-					    <td>
-					    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"country",${fieldAcl.isReadOnly("country")},
-                               		trim:true,
-                               		required:true,
-             						value:"${houseCards?.country}"
                            	'/>
 			            </td>
 						<td><div align="right">坐落位置：</div></td>
@@ -243,7 +243,7 @@
 					</tr>
 					<tr>
 						<td><div align="right">建筑面积（m<SUP>2</SUP>）：</div></td>
-					    <td>
+					    <td colspan="3">
 					    	<input id="houseArea" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"houseArea",${fieldAcl.isReadOnly("houseArea")},
                                		trim:true,
@@ -251,15 +251,15 @@
                            	'/>
                            	
 			            </td>
-			            <td><div align="right">规格型号：</div></td>
-					    <td>
-					    	<input id="seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
-                               		trim:true,
-             						value:"${houseCards?.seriesNo}"
-                           	'/>
-			            </td>
 			        </tr>
+			        <tr>
+						 <td ><div align="right">条形码：</div></td>
+						 <td colspan="3">
+					    	<div style="text-align:left">
+								<img src="${createLink(controller:'houseCards',action:'getBarcode',params:[registerNum:houseCards?.registerNum])}" width="280" height="80" style="left:0px; top:0px;">
+							</div>
+					    </td>
+					</tr>
 			        <tr>
 						<td ><div align="right">备注：</div></td>
 						<td colspan="3">
@@ -271,16 +271,6 @@
     						</textarea>
 					    </td>
 					</tr>
-					
-					<tr>
-						<td ><div align="right">条形码：</div></td>
-						<td colspan="3">
-					    	<img src='${request.getContextPath()}/com/rosten/app/barcode/BarcodeServlet?msg=123456&type=code39&res=300&hrfont=宋体&hrsize=3.5mm'  height='60px'  width='180px'/>
-					    </td>
-					</tr>
-					
-					
-					
 				</table>
 			</div>
 		</form>

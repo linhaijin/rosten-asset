@@ -118,9 +118,9 @@ class HouseCards {
 	
 	//资产卡片状态
 	@GridColumn(name="资产状态",colIdx=8)
-	String assetStatus = "新建"
+	String assetStatus = "已入库"
 	
-	//资产操作号，规格型号
+	//资产操作号
 	String seriesNo
 	
 	//建筑面积

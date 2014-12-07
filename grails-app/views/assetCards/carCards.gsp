@@ -253,7 +253,7 @@
 						 <td ><div align="right">条形码：</div></td>
 						 <td colspan="3">
 					    	<div style="text-align:left">
-								<img src="${createLink(controller:'carCards',action:'getBarcode',params:[])}" width="280" height="80" style="left:0px; top:0px;">
+								<img src="${createLink(controller:'carCards',action:'getBarcode',params:[registerNum:carCards?.registerNum])}" width="280" height="80" style="left:0px; top:0px;">
 							</div>
 					    </td>
 					</tr>

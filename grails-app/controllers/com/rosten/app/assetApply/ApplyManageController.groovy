@@ -412,7 +412,7 @@ class ApplyManageController {
 			
 			ids.each{  
 				def applyNotes = ApplyNotes.get(it)
-				def assetType = applyNotes.userCategory.getRootCategory().categoryName
+				def assetType = applyNotes.userCategory.getRootCategory(applyNotes.userCategory).categoryName
 				
 				//获取资产编号
 				def assetCount = applyNotes.amount

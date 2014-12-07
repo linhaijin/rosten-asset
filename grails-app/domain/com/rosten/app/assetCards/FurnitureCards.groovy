@@ -123,6 +123,9 @@ class FurnitureCards {
 	//资产操作号
 	String seriesNo
 	
+	//规格型号
+	String specifications
+	
 	//备注
 	String remark
 	
@@ -151,6 +154,7 @@ class FurnitureCards {
 		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
+		specifications nullable:true,blank:true
 		remark nullable:true,blank:true
     }
 	

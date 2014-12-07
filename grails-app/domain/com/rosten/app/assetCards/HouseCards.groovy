@@ -126,6 +126,9 @@ class HouseCards {
 	//建筑面积
 	Double houseArea = 0
 	
+	//规格型号
+	String specifications
+	
 	//备注
 	String remark
 	
@@ -155,6 +158,7 @@ class HouseCards {
 		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false
 		seriesNo nullable:true,blank:true
+		specifications nullable:true,blank:true
 		remark nullable:true,blank:true
     }
 	

@@ -170,7 +170,7 @@ class AssetConfigController {
 							cardEntity.assetName = mc
 							cardEntity.onePrice = Util.obj2Double(jz)
 							cardEntity.houseLocated = dd
-							cardEntity.seriesNo = xh
+							cardEntity.specifications = xh
 							cardEntity.purchaser = zrr
 							cardEntity.createDate = Util.convertToTimestamp(sj)
 							cardEntity.remark = bz
@@ -189,7 +189,7 @@ class AssetConfigController {
 							cardEntity.assetName = mc
 							cardEntity.onePrice = Util.obj2Double(jz)
 							cardEntity.storagePosition = dd
-							cardEntity.seriesNo = xh
+							cardEntity.specifications = xh
 							cardEntity.purchaser = zrr
 							cardEntity.buyDate = Util.convertToTimestamp(sj)
 							cardEntity.remark = bz
@@ -208,7 +208,7 @@ class AssetConfigController {
 							cardEntity.assetName = mc
 							cardEntity.onePrice = Util.obj2Double(jz)
 							cardEntity.storagePosition = dd
-							cardEntity.seriesNo = xh
+							cardEntity.specifications = xh
 							cardEntity.purchaser = zrr
 							cardEntity.buyDate = Util.convertToTimestamp(sj)
 							cardEntity.remark = bz
@@ -227,7 +227,7 @@ class AssetConfigController {
 							cardEntity.assetName = mc
 							cardEntity.onePrice = Util.obj2Double(jz)
 							cardEntity.storagePosition = dd
-							cardEntity.seriesNo = xh
+							cardEntity.specifications = xh
 							cardEntity.purchaser = zrr
 							cardEntity.buyDate = Util.convertToTimestamp(sj)
 							cardEntity.remark = bz

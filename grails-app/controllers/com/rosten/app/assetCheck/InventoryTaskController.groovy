@@ -9,6 +9,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
 import com.rosten.app.assetConfig.AssetCategory
+import com.rosten.app.assetCards.*
 
 class InventoryTaskController {
 	def assetCheckService
@@ -23,6 +24,192 @@ class InventoryTaskController {
 		model["action"] = action
 		return model
 	}
+	
+	//2014-12-08-增加资产核查菜单---------------------------------------
+	def assetHcView ={
+		def actionList =[]
+		def strname = "assetCheck"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
+	def assetHcSearchView ={
+		def model =[:]
+		
+		def company = Company.get(params.companyId)
+		model["DepartList"] = Depart.findAllByCompany(company)
+		
+		def _list =[]
+		
+		AssetCategory.findAllByCompany(company).each{
+			if(it.parent){
+				_list << it.categoryName
+			}
+		}
+		
+		model["categoryList"] = _list.unique()
+		
+		render(view:'/assetCheck/assetCheckSearch',model:model)
+	}
+	def assetHcGrid ={
+		def company = Company.get(params.companyId)
+		def json=[:]
+		if(params.refreshHeader){
+			def _gridHeader =[]
+
+			_gridHeader << ["name":"序号","width":"30px","colIdx":0,"field":"rowIndex"]
+			_gridHeader << ["name":"资产编号","width":"auto","colIdx":1,"field":"registerNum","formatter":"assetCard_formatTopic"]
+			_gridHeader << ["name":"资产分类","width":"auto","colIdx":2,"field":"userCategory"]
+			_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
+			_gridHeader << ["name":"归属部门","width":"auto","colIdx":4,"field":"userDepart"]
+			_gridHeader << ["name":"使用人","width":"auto","colIdx":5,"field":"purchaser"]
+			_gridHeader << ["name":"使用状况","width":"auto","colIdx":6,"field":"userStatus"]
+			_gridHeader << ["name":"购置日期","width":"130px","colIdx":7,"field":"buyDate"]
+			_gridHeader << ["name":"价格","width":"auto","colIdx":8,"field":"onePrice"]
+			_gridHeader << ["name":"资产状态","width":"auto","colIdx":9,"field":"assetStatus"]
+
+			json["gridHeader"] = _gridHeader
+		}
+		
+		def searchArgs =[:]
+		
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = params.category
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		
+		def totalNum = 0
+		if(params.refreshData){
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+
+			def offset = (nowPage-1) * perPageNum
+			def max  = perPageNum
+
+			def _json = [identifier:'id',label:'name',items:[]]
+			
+			def allList =[]
+			
+			allList += HouseCards.createCriteria().list{
+				eq("company",company)
+					searchArgs.each{k,v->
+						if(k.equals("userCategory")){
+							createAlias('userCategory', 'a')
+							like("a.categoryName","%" + v + "%")
+						}else if(k.equals("userDepart")){
+							eq(k,v)
+						}else{
+							like(k,"%" + v + "%")
+						}
+				}
+				order("registerNum", "desc")
+			}
+			allList += CarCards.createCriteria().list{
+				eq("company",company)
+					searchArgs.each{k,v->
+						if(k.equals("userCategory")){
+							createAlias('userCategory', 'a')
+							like("a.categoryName","%" + v + "%")
+						}else if(k.equals("userDepart")){
+							eq(k,v)
+						}else{
+							like(k,"%" + v + "%")
+						}
+				}
+				order("registerNum", "desc")
+			}
+			allList += DeviceCards.createCriteria().list{
+				eq("company",company)
+					searchArgs.each{k,v->
+						if(k.equals("userCategory")){
+							createAlias('userCategory', 'a')
+							like("a.categoryName","%" + v + "%")
+						}else if(k.equals("userDepart")){
+							eq(k,v)
+						}else{
+							like(k,"%" + v + "%")
+						}
+				}
+				order("registerNum", "desc")
+			}
+			allList += FurnitureCards.createCriteria().list{
+				eq("company",company)
+					searchArgs.each{k,v->
+						if(k.equals("userCategory")){
+							createAlias('userCategory', 'a')
+							like("a.categoryName","%" + v + "%")
+						}else if(k.equals("userDepart")){
+							eq(k,v)
+						}else{
+							like(k,"%" + v + "%")
+						}
+				}
+				order("registerNum", "desc")
+			}
+			
+			totalNum = allList.size()
+			
+			if(totalNum>0){
+				def idx = 0
+				if(offset!=null) idx=offset
+				
+				def lastIndex = offset+max -1
+				if(lastIndex >totalNum-1){
+					lastIndex = totalNum -1
+				}
+				
+				
+				allList[offset..lastIndex].each{
+					
+					def sMap =[:]
+					sMap["rowIndex"] = idx+1
+					sMap["id"] = it.id
+					sMap["registerNum"] = it.registerNum
+					sMap["userCategory"] = it.getCategoryName()
+					sMap["assetName"] = it.assetName
+					sMap["userDepart"] = it.getDepartName()
+					sMap["purchaser"] = it.purchaser
+					sMap["userStatus"] = it.userStatus
+					sMap["buyDate"] = it.getFormattedBuyDate()
+					sMap["onePrice"] = it.onePrice
+					sMap["assetStatus"] = it.assetStatus
+					sMap["userCategoryId"] = it.userCategory?.id
+					
+					_json.items+=sMap
+					idx += 1
+				}
+			}			
+
+			json["gridData"] = _json
+		}
+		
+		if(params.refreshPageControl){
+			json["pageControl"] = ["total":totalNum.toString()]
+		}
+		render json as JSON
+	}
+	
+	def assetCardShow ={
+		def category = AssetCategory.get(params.categoryId)
+		def rootCategory = category.getRootCategory(category)
+		switch(rootCategory.categoryCode){
+			case "house":	//房屋及建筑物
+				redirect(controller: "houseCards",action:"houseCardsShow",params:params)
+				break
+			case "car":	//运输工具
+				redirect(controller: "carCards",action:"carCardsShow",params:params)
+				break
+			case "furniture":	//办公家具
+				redirect(controller: "furnitureCards",action:"furnitureCardsShow",params:params)
+				break
+			case "device":	//电子设备
+				redirect(controller: "deviceCards",action:"deviceCardsShow",params:params)
+				break
+		}
+	}
+	
+	//------------------------------------------------------------
 	
 	def assetCheckForm = {
 		def webPath = request.getContextPath() + "/"

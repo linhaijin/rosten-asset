@@ -88,6 +88,9 @@ class ApplyNotes {
 	
 	//是否列入年度预算
 	boolean isInYearPlan = true
+	def getFormattedIsInYearPlan(){
+		return isInYearPlan?"是":"否"
+	}
 	
 	//参考厂家或供应商
 	String factory
@@ -127,9 +130,6 @@ class ApplyNotes {
 			return ""
 		}
 	}
-	
-	//国别
-	String country = "中国"
 	
 	static belongsTo = [company:Company]
 	
@@ -207,7 +207,6 @@ class ApplyNotes {
 		onePrice nullable:false,blank:false
 		usedBy nullable:false,blank:false
 		applyStatus nullable:false,blank:false
-		country nullable:true,blank:true
 		
 		specifications nullable:true,blank:true
 		isInYearPlan nullable:true,blank:true

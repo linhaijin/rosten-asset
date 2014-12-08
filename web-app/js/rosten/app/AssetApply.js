@@ -10,6 +10,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		if (unids == "")
 			return;
 		rosten.openNewWindow("assetApplyPrint", rosten.webPath + "/applyManage/assetApplyPrint/" + unids);
+		rosten.kernel.refreshGrid();
 	}
 	//------------------------------------------------------------------------------------
 	

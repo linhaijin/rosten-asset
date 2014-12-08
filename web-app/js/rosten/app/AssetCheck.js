@@ -4,20 +4,59 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	assetCheck_search = function(){
+		var content = {};
+		
+		var registerNum = registry.byId("check_registerNum");
+		if(registerNum.get("value")!=""){
+			content.registerNum = registerNum.get("value");
+		}
+		
+		var category = registry.byId("check_category");
+		if(category.get("value")!=""){
+			content.category = category.get("value");
+		}
+		
+		var assetName = registry.byId("check_assetName");
+		if(assetName.get("value")!=""){
+			content.assetName = assetName.get("value");
+		}
+		
+		var userDepart = registry.byId("check_userDepart");
+		if(userDepart.get("value")!=""){
+			content.userDepart = userDepart.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
 	
-//	startPd = function(){
-//		rosten.openNewWindow("startPd", rosten.webPath + "/demo/startPd");	
-//	};
-//	endPd = function(){
-//		rosten.kernel.setHref(rosten.webPath + "/demo/endPd", "endPd");
-//	};
-//	addRw = function(){
-//		rosten.kernel.createRostenShowDialog(rosten.webPath + "/demo/addRw", {
-//            onLoadFunction : function() {
-//
-//            }
-//        });
-//	};
+	assetCheck_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("check_registerNum").set("value","");
+			registry.byId("check_category").set("value","");
+			registry.byId("check_assetName").set("value","");
+			registry.byId("check_userDepart").set("value","");
+			
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
+	assetCard_formatTopic =function(value,rowIndex){
+		return "<a href=\"javascript:assetCard_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	}
+	assetCard_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var categoryId = rosten.kernel.getGridItemValue(rowIndex,"userCategoryId");
+		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCardShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&categoryId=" + categoryId);
+		rosten.kernel.getGrid().clearSelected();
+	};
 	
 	//盘点任务发布
 	assetCheck_add = function(){//新建盘点任务
@@ -124,12 +163,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	            };
 	            rosten.kernel.addRightContent(naviJson);
 	            break;
-//			case "assetRwfb":
-//				rosten.kernel.setHref(rosten.webPath + "/demo/fbrw", oString);
-//	            break;
-//			case "myPdrw":
-//				rosten.kernel.setHref(rosten.webPath + "/demo/myPdrw", oString);
-//	            break;
+			case "assetHc"://资产核查
+				var naviJson = {
+	                identifier : oString,
+	                actionBarSrc : rosten.webPath + "/inventoryTask/assetHcView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/inventoryTask/assetHcSearchView?companyId=" + companyId,
+	                gridSrc : rosten.webPath + "/inventoryTask/assetHcGrid?companyId=" + companyId
+	            };
+	            rosten.kernel.addRightContent(naviJson);
+	
+	            break;
 			
 		}
 		

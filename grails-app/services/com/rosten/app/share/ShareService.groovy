@@ -4,6 +4,21 @@ import com.rosten.app.system.SystemCode
 
 class ShareService {
 	
+	def getCommentByStatus ={dealId,status->
+		def _list =[]
+		def commentList = FlowComment.findAllByBelongToIdAndStatus(dealId,status,[sort: "createDate", order: "desc"])
+		if(commentList && commentList.size()>0){
+			commentList.each{
+				def map =[:]
+				map["name"] = it.user.getChinaName()
+				map["content"]= it.content
+				map["date"]= it.getFormattedCreatedDate()
+				_list << map
+			}
+			
+		}
+		return _list
+	}
 	def addFlowLog ={ belongToId,flowCode,currentUser,content ->
 		//添加日志
 		def _log = new FlowLog()

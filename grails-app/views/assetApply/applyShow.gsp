@@ -39,36 +39,21 @@
 			});
 			
 			assetApply_save = function(object){
-				var allowdepartsName = dijit.byId("allowdepartsName").attr("value");
-				if(allowdepartsName == "" || allowdepartsName == null){
-					rosten.alert("注意：申请部门不能为空！");
-					dijit.byId("allowdepartsName").focus();
+
+				var formWidget = registry.byId("rosten_form");
+				if(!formWidget.validate()){
+					rosten.alert("请正确填写相关信息！");
 					return;
 				}
-				var allowCategoryName = dijit.byId("allowCategoryName").attr("value");
-				if(allowCategoryName == "" || allowCategoryName == null){
-					rosten.alert("注意：资产分类不能为空！");
-					dijit.byId("allowCategoryName").focus();
-					return;
-				}
-				var assetName = dijit.byId("assetName").attr("value");
-				if(assetName == "" || assetName == null){
-					rosten.alert("注意：资产名称不能为空！");
-					dijit.byId("assetName").focus();
-					return;
-				}
-				var userName = dijit.byId("userName").attr("value");
-				if(userName == "" || userName == null){
-					rosten.alert("注意：使用人不能为空！");
-					dijit.byId("userName").focus();
-					return;
-				}
-				var onePrice = dijit.byId("onePrice").attr("value");
+				
+				var onePrice = registry.byId("onePrice").attr("value");
 				if(onePrice == 0 || onePrice == "" || onePrice == null){
 					rosten.alert("注意：单价不能为0！");
-					dijit.byId("onePrice").focus();
+					registry.byId("onePrice").focus();
 					return;
 				}
+				
+				
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -311,13 +296,13 @@
 
 <div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"850px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="height:450px;padding:0px">
+		<form id="rosten_form" name="rosten_form" data-dojo-type="dijit/form/Form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="registerNum_form" value="${applyNotes?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${applyNotes?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",height:"220px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"申请信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
@@ -361,26 +346,27 @@
 				         	</g:if>
 							
 			           	</td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产名称：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
 					    <td>
-					    	<input id="assetName" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"assetName",${fieldAcl.isReadOnly("assetName")},
-                               	trim:true,
-                               	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
-             					value:"${applyNotes?.assetName}"
-                           	'/>
-			            </td>
-					</tr>
-					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
-					   	<td>
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"userName",${fieldAcl.isReadOnly("userName")},
                                	trim:true,
                                	required:true,
                                	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
              					value:"${applyNotes?.userName}"
+                           	'/>
+					    	
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>资产名称：</div></td>
+					   	<td>
+					    	<input id="assetName" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"assetName",${fieldAcl.isReadOnly("assetName")},
+                               	trim:true,
+                               	required:true,
+                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+             					value:"${applyNotes?.assetName}"
                            	'/>
 			           	</td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>
@@ -405,8 +391,40 @@
              					value:"${String.format("%.0f", applyNotes?.onePrice)}"
                            	'/>
 			            </td>
-			            <td></td>
-			            <td></td>
+			            <td><div align="right">规格型号：</div></td>
+			            <td>
+			            	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"specifications",${fieldAcl.isReadOnly("specifications")},
+                               	trim:true,
+             					value:"${ applyNotes?.specifications}"
+                           	'/>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>需求时间：</div></td>
+			            <td>
+			            	<input id="regDate" data-dojo-type="dijit/form/DateTextBox" 
+				                	data-dojo-props='name:"regDate",${fieldAcl.isReadOnly("regDate")},
+				                	trim:true,required:true,missingMessage:"请正确填写时间！",invalidMessage:"请正确填写时间！",
+				                	value:"${applyNotes?.getFormattedRegDate()}"
+				               '/>
+			            </td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>是否列入年度预算：</div></td>
+					    <td>
+					    	<input id="isInYearPlan1" data-dojo-type="dijit/form/RadioButton"
+				           		data-dojo-props='name:"isInYearPlan",type:"radio",${fieldAcl.isReadOnly("isInYearPlan")},
+				           			<g:if test="${applyNotes?.isInYearPlan==true }">checked:true,</g:if>
+									value:"true"
+			              	'/>
+							<label for="isInYearPlan1">是</label>
+						
+			              	<input id="isInYearPlan2" data-dojo-type="dijit/form/RadioButton"
+			           			data-dojo-props='name:"isInYearPlan",type:"radio",${fieldAcl.isReadOnly("isInYearPlan")},
+			           			<g:if test="${applyNotes?.isInYearPlan==false }">checked:true,</g:if>
+								value:"false"
+			              	'/>
+							<label for="isInYearPlan2">否</label>
+			            </td>
 					</tr>
 					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>用途：</div></td>
@@ -423,6 +441,7 @@
 					
 					</tr>
 				</table>
+				<div style="clear:both;"></div>
 			</div>
 		</form>
 	</div>

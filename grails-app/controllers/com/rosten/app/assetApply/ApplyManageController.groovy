@@ -106,6 +106,48 @@ class ApplyManageController {
 				def map =[:]
 				map["assetApply"] = assetApply
 				
+				//所有意见默认取最后一次意见
+				
+				//获取部门负责人意见
+				def bmyj = shareService.getCommentByStatus(assetApply.id,"部门领导审核")
+				if(bmyj && bmyj.size()>0){
+					map["departComment"]= bmyj[0]
+				}else{
+					map["departComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取后勤意见
+				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤审核")
+				if(hqyj && hqyj.size()>0){
+					map["hqComment"]= hqyj[0]
+				}else{
+					map["hqComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取财务意见
+				def cwyj = shareService.getCommentByStatus(assetApply.id,"财务审核")
+				if(cwyj && cwyj.size()>0){
+					map["cwComment"]= cwyj[0]
+				}else{
+					map["cwComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取秘书长意见
+				def mszyj = shareService.getCommentByStatus(assetApply.id,"秘书长审批")
+				if(mszyj && mszyj.size()>0){
+					map["mszComment"]= mszyj[0]
+				}else{
+					map["mszComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取理事长意见
+				def lszyj = shareService.getCommentByStatus(assetApply.id,"理事长审批")
+				if(lszyj && lszyj.size()>0){
+					map["lszComment"]= lszyj[0]
+				}else{
+					map["lszComment"] = [content:"",date:"",name:""]
+				}
+				
 				word.singlePrint(response,"zcsqb.xml",assetApply.assetName,map)
 			}else{
 //				word.downloadZzkhbZip(response,params.id)
@@ -137,6 +179,8 @@ class ApplyManageController {
 						actionList << createAction("完成",webPath +imgPath + "submit.png",strname + "_submit")
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
+					case entity.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 					default :
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
@@ -253,6 +297,14 @@ class ApplyManageController {
 		}
 		applyNotes.properties = params
 		applyNotes.clearErrors()
+		
+		//需求时间处理
+		applyNotes.regDate = Util.convertToTimestamp(params.regDate)
+		if(params.isInYearPlan.equals("true")){
+			applyNotes.isInYearPlan = true
+		}else{
+			applyNotes.isInYearPlan = false
+		}
 		
 		//特殊字段信息处理
 		def assetCategory = AssetCategory.get(params.allowCategoryId)

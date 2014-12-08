@@ -230,6 +230,12 @@ class AssetController {
 			model.serialNo = 11
 			
 			resource = new Resource()
+			resource.resourceName = "资产卡片查询"
+			resource.url = "assetHc"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "盘点任务发布"
 			resource.url = "assetRwfb"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"

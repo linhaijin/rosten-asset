@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@page import="com.rosten.app.util.Util"%>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -401,7 +402,7 @@
                                	trim:true,
                                	required:true,
                                	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
-             					value:"${String.format("%.2f", applyNotes?.onePrice)}"
+             					value:"${String.format("%.0f", applyNotes?.onePrice)}"
                            	'/>
 			            </td>
 			            <td></td>

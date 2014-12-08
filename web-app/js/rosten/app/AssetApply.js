@@ -4,6 +4,15 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	//2014-12-08 增加审批单打印功能--------------------------------------------------------------
+	assetApply_print = function(){
+		var unids = rosten.getGridUnid("single");
+		if (unids == "")
+			return;
+		rosten.openNewWindow("assetApplyPrint", rosten.webPath + "/applyManage/assetApplyPrint/" + unids);
+	}
+	//------------------------------------------------------------------------------------
+	
 	mineApply_search = function(){
 		var content = {};
 		

@@ -3,6 +3,35 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
+	
+	
+	//2014-12-08 增加条形码打印功能--------------------------------------------------------------
+	carCards_printTxm = function(){
+		var unids = rosten.getGridUnid("multi");
+		if (unids == "")
+			return;
+		rosten.openNewWindow("carCardsPrintTxm", rosten.webPath + "/carCards/carCardsPrintTxm/" + unids);
+	}
+	deviceCards_printTxm = function(){
+		var unids = rosten.getGridUnid("multi");
+		if (unids == "")
+			return;
+		rosten.openNewWindow("deviceCardsPrintTxm", rosten.webPath + "/deviceCards/deviceCardsPrintTxm/" + unids);
+	}
+	furnitureCards_printTxm = function(){
+		var unids = rosten.getGridUnid("multi");
+		if (unids == "")
+			return;
+		rosten.openNewWindow("furnitureCardsPrintTxm", rosten.webPath + "/furnitureCards/furnitureCardsPrintTxm/" + unids);
+	}
+	houseCards_printTxm = function(){
+		var unids = rosten.getGridUnid("multi");
+		if (unids == "")
+			return;
+		rosten.openNewWindow("houseCardsPrintTxm", rosten.webPath + "/houseCards/houseCardsPrintTxm/" + unids);
+	}
+	//------------------------------------------------------------------------------------
+	
 	//运输工具
 	carCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");

@@ -8,14 +8,12 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User
 import com.rosten.app.assetConfig.AssetCategory
-
 import com.rosten.app.assetCards.CarCards
 import com.rosten.app.assetCards.LandCards
 import com.rosten.app.assetCards.HouseCards
 import com.rosten.app.assetCards.DeviceCards
 import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
-
 import com.rosten.app.gtask.Gtask
 import com.rosten.app.share.*
 
@@ -67,8 +65,6 @@ class ApplyNotes {
 	
 	//资产分类根（最大类）名称
 	String rootAssetCategory
-//		@GridColumn(name="设备分类",colIdx=2)
-//		String assetCategory = "办公用品"
 	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=5)
@@ -86,14 +82,15 @@ class ApplyNotes {
 	
 	@GridColumn(name="单价（元）",colIdx=7,width="80px")
 	Double onePrice = 0
-//	def getOnePrice(){
-//		if(onePrice != 0){
-//			return getDoubleFormat(onePrice)
-//		}else{
-//			return 0.00
-//		}
-//	}
 	
+	//规格型号
+	String specifications
+	
+	//是否列入年度预算
+	boolean isInYearPlan = true
+	
+	//参考厂家或供应商
+	String factory
 	
 	//用途
 	@GridColumn(name="用途",colIdx=8,width="80px")
@@ -120,6 +117,7 @@ class ApplyNotes {
 		}
 	}
 	
+	//需求时间
 	Date regDate = new Date()
 	def getFormattedRegDate(){
 		if(regDate!=null){
@@ -210,6 +208,10 @@ class ApplyNotes {
 		usedBy nullable:false,blank:false
 		applyStatus nullable:false,blank:false
 		country nullable:true,blank:true
+		
+		specifications nullable:true,blank:true
+		isInYearPlan nullable:true,blank:true
+		factory nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true

@@ -96,6 +96,25 @@ class ApplyManageController {
 //		return regions
 //	}
 	
+	//2014-12-08--增加审批单打印功能--------------------------------------------------
+	def assetApplyPrint ={
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				def assetApply = ApplyNotes.get(params.id)
+				def map =[:]
+				map["assetApply"] = assetApply
+				
+				word.singlePrint(response,"zcsqb.xml",assetApply.assetName,map)
+			}else{
+//				word.downloadZzkhbZip(response,params.id)
+			}
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	
 	def assetApplyForm ={
 		def webPath = request.getContextPath() + "/"
 		def strname = "assetApply"
@@ -143,6 +162,7 @@ class ApplyManageController {
 		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+			actionList << createAction("打印审批单",imgPath + "word_print.png",strname + "_print")
 		}
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		

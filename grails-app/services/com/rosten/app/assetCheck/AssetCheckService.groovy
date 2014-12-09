@@ -38,7 +38,7 @@ class AssetCheckService {
 	//我的盘点任务
 	def getMyTaskListLayout ={
 		def gridUtil = new GridUtil()
-		return gridUtil.buildLayoutJSON(new InventoryTask())
+		return gridUtil.buildLayoutJSON(new MyTask())
 	}
 	
 	def getMyTaskDataStore ={params->
@@ -52,23 +52,30 @@ class AssetCheckService {
 	
 	def getAllMyTask ={offset,max,company->
 		def user = springSecurityService.getCurrentUser()
-		def c = InventoryTask.createCriteria()
+		def c = MyTask.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			
 			//匹配盘点任务接收人
-			eq("receiveMan",user.chinaName)
+			if(!"admin".equals(user.getUserTypeName())){
+				eq("user",user)
+			}
+			
 		}
 		return c.list(pa,query)
 	}
 	
 	def getMyTaskCount ={company->
 		def user = springSecurityService.getCurrentUser()
-		def c = InventoryTask.createCriteria()
+		def c = MyTask.createCriteria()
 		def query = {
 			eq("company",company)
 			//匹配盘点任务接收人
-			eq("receiveMan",user.chinaName)
+			if(!"admin".equals(user.getUserTypeName())){
+				eq("user",user)
+				
+			}
 		}
 		return c.count(query)
 	}

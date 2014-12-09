@@ -13,22 +13,34 @@ import java.util.Date
 class TaskCards {
 	String id
 	
-	//盘点任务ID
-	String taskId
+	//盘点任务
+	MyTask myTask
 	
-	//资产卡片ID
-	String cardsId
+	//资产卡片编号
+	@GridColumn(name="资产编号",colIdx=1)
+	String cardsRegisterNum
+	
+	//资产卡片名称
+	@GridColumn(name="资产名称",colIdx=2)
+	String cardsName
+	
+	//原始数量
+	@GridColumn(name="原始数量",colIdx=3)
+	int OldNumber = 1
+	
+	//当前数量
+	@GridColumn(name="盘点数量",colIdx=5)
+	int nowNumber = 0
 	
 	//盘点结果
-	String result
+	@GridColumn(name="盘点结果",colIdx=6)
+	String result = "盘亏"
 	
 	//备注
+	@GridColumn(name="备注",colIdx=7)
 	String remark
 
     static constraints = {
-		taskId nullable:false,blank:false
-		cardsId nullable:false,blank:false
-		result nullable:true,blank:true
 		remark nullable:true,blank:true
     }
 	

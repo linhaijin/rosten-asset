@@ -46,6 +46,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			break;
 		}	
 	};
+	
+	myTask_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:myTask_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	}
+	myTask_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var categoryId = rosten.kernel.getGridItemValue(rowIndex,"userCategoryId");
+		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCardShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&categoryId=" + categoryId);
+		rosten.kernel.getGrid().clearSelected();
+	};
 	assetCard_formatTopic =function(value,rowIndex){
 		return "<a href=\"javascript:assetCard_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	}

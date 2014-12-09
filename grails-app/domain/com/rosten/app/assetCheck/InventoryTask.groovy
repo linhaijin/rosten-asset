@@ -40,24 +40,32 @@ class InventoryTask {
 	}
 	
 	//盘点部门
-	Depart inventoryDepart
+	boolean isAllDepart = true
+	
 	@GridColumn(name="盘点部门",colIdx=3)
 	def getDepartName(){
-		if(inventoryDepart){
-			return inventoryDepart.departName
+		if(isAllDepart){
+			return "全部"
 		}else{
-			return ""
+			def _list = inventoryDeparts.collect { elem ->
+				elem.departName
+			}
+			return _list.join(",")
 		}
 	}
 	
 	//盘点资产类型
-	AssetCategory inventoryCategory
+	boolean isAllCategory = true
+	
 	@GridColumn(name="资产盘点类型",colIdx=4)
 	def getCategoryName(){
-		if(inventoryCategory){
-			return inventoryCategory.categoryName
+		if(isAllCategory){
+			return "全部"
 		}else{
-			return ""
+			def _list = inventoryCategorys.collect { elem ->
+				elem.categoryName
+			}
+			return _list.unique().join(",")
 		}
 	}
 	
@@ -129,23 +137,16 @@ class InventoryTask {
 	
 	static belongsTo = [company:Company]
 	
+	static hasMany=[myTasks:MyTask,inventoryDeparts:Depart,inventoryCategorys:AssetCategory]
+	
     static constraints = {
 		taskNum nullable:false ,blank: false, unique: true
-		makeDate nullable:false,blank:false
-		inventoryDepart nullable:false,blank:false
-		inventoryCategory nullable:false,blank:false
-		sendMan nullable:false,blank:false
-		startDate nullable:false,blank:false
-		endDate nullable:false,blank:false
-		runStatus nullable:false,blank:false
-		receiveMan nullable:false,blank:false
-		completeStatus nullable:false,blank:false
-		taskStatus nullable:false,blank:false
+		taskDesc nullable:true,blank:true
     }
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_INV_TASK"
+		table "ROSTEN_TASK_INV"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

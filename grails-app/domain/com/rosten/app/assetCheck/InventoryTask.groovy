@@ -9,6 +9,8 @@ import java.util.Date
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.util.SystemUtil
+import com.rosten.app.system.User
+
 /**
  * 资产盘点任务
  * @author ercjlo
@@ -44,29 +46,44 @@ class InventoryTask {
 	
 	@GridColumn(name="盘点部门",colIdx=3)
 	def getDepartName(){
-		if(isAllDepart){
-			return "全部"
-		}else{
+		if(isAllDepart) return "全部"
+		if(inventoryDeparts){
 			def _list = inventoryDeparts.collect { elem ->
 				elem.departName
 			}
 			return _list.join(",")
+		}else return ""
+	}
+	def getDepartId(){
+		if(inventoryDeparts){
+			def _list = inventoryDeparts.collect { elem ->
+				elem.id
+			}
+			return _list.join(",")
 		}
 	}
+	
 	
 	//盘点资产类型
 	boolean isAllCategory = true
 	
 	@GridColumn(name="资产盘点类型",colIdx=4)
 	def getCategoryName(){
-		if(isAllCategory){
-			return "全部"
-		}else{
+		if(isAllCategory) return "全部"
+		if(inventoryCategorys){
 			def _list = inventoryCategorys.collect { elem ->
 				elem.categoryName
 			}
 			return _list.unique().join(",")
-		}
+		}else return ""
+	}
+	def getCategoryId(){
+		if(inventoryCategorys){
+			def _list = inventoryCategorys.collect { elem ->
+				elem.id
+			}
+			return _list.join(",")
+		}else return ""
 	}
 	
 	//任务发布人
@@ -108,6 +125,15 @@ class InventoryTask {
 	@GridColumn(name="任务接收人",colIdx=9)
 	String receiveMan
 	
+	def getReceiveManId(){
+		if(receiveUsers){
+			def _list = receiveUsers.collect { elem ->
+				elem.id
+			}
+			return _list.join(",")
+		}else return ""
+	}
+	
 	//任务完成状态
 	String completeStatus = 0
 	@GridColumn(name="任务完成状态",colIdx=10)
@@ -137,7 +163,7 @@ class InventoryTask {
 	
 	static belongsTo = [company:Company]
 	
-	static hasMany=[myTasks:MyTask,inventoryDeparts:Depart,inventoryCategorys:AssetCategory]
+	static hasMany=[myTasks:MyTask,inventoryDeparts:Depart,inventoryCategorys:AssetCategory,receiveUsers:User]
 	
     static constraints = {
 		taskNum nullable:false ,blank: false, unique: true

@@ -4,6 +4,41 @@ import com.rosten.app.util.GridUtil
 
 class AssetCheckService {
 	def springSecurityService
+	
+	//盘点卡片信息-----------------------------------------------------
+	def getTaskCardsListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new TaskCards())
+	}
+	
+	def getTaskCardsDataStore ={params->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllTaskCards(offset,max,params.company,params.myTask)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	def getAllTaskCards ={offset,max,company,myTask->
+		def c = TaskCards.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+			eq("myTask",myTask)
+		}
+		return c.list(pa,query)
+	}
+	def getTaskCardsCount ={company,myTask->
+		def c = TaskCards.createCriteria()
+		def query = {
+			eq("company",company)
+			eq("myTask",myTask)
+		}
+		return c.count(query)
+	}
+	//-------------------------------------------------------------
+	
 	//盘点任务发布
 	def getInventoryTaskListLayout ={
 		def gridUtil = new GridUtil()
@@ -58,7 +93,7 @@ class AssetCheckService {
 			eq("company",company)
 			
 			//匹配盘点任务接收人
-			if(!"admin".equals(user.getUserTypeName())){
+			if(!"admin".equals(user.getUserType())){
 				eq("user",user)
 			}
 			
@@ -72,7 +107,7 @@ class AssetCheckService {
 		def query = {
 			eq("company",company)
 			//匹配盘点任务接收人
-			if(!"admin".equals(user.getUserTypeName())){
+			if(!"admin".equals(user.getUserType())){
 				eq("user",user)
 				
 			}

@@ -5,6 +5,7 @@ import com.rosten.app.util.SystemUtil
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import com.rosten.app.system.Company
 /**
  * 资产盘点任务与卡片关联
  * @author ercjlo
@@ -43,6 +44,7 @@ class TaskCards {
     static constraints = {
 		remark nullable:true,blank:true
     }
+	static belongsTo = [company:Company]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

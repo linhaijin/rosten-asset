@@ -132,7 +132,11 @@ define(["dojo/_base/lang",
                 registry.byId(inputName).attr("value", _data.join(","));
             }
             if( inputId !=undefined){
-                registry.byId(inputId).attr("value",_data_1.join(","));
+                if(registry.byId(inputId)){
+            		registry.byId(inputId).attr("value", _data_1.join(","));
+            	}else{
+            		dom.byId(inputId).value = _data_1.join(",");
+            	}
             }
         }; 
         return rosten[id];
@@ -175,6 +179,7 @@ define(["dojo/_base/lang",
             	
             }
         };
+        return rosten[id];
     };
     application.selectAssetCategory = function(url,type,inputName,inputId) {
         var id = "sys_departDialog";
@@ -214,6 +219,7 @@ define(["dojo/_base/lang",
             	
             }
         };
+        return rosten[id];
     };
     application.addAttachShowNew = function(node,jsonObj){
 		var div = document.createElement("div");

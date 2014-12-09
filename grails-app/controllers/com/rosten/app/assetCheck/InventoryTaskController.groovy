@@ -8,6 +8,8 @@ import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
+import com.rosten.app.system.UserGroup
+import com.rosten.app.system.Group1
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetCards.*
 
@@ -24,6 +26,76 @@ class InventoryTaskController {
 		model["action"] = action
 		return model
 	}
+	
+	//2014-12-10----增加myTask页面
+	def myTaskShow ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
+		def company = Company.get(params.companyId)
+		
+		def myTask = new MyTask()
+		if(params.id){
+			myTask = MyTask.get(params.id)
+		}
+		
+		model["user"] = currentUser
+		model["company"] = company
+		model["myTask"] = myTask
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		
+		render(view:'/assetCheck/myTaskShow',model:model)
+	}
+	def myTaskForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("数据导入盘点",webPath + imgPath + "word_open.png","pddr")
+		actionList << createAction("扫描枪盘点",webPath + imgPath + "changeStatus.gif","zdpd")
+		actionList << createAction("结束盘点",webPath + imgPath + "qx.png","zdpd_ok")
+		render actionList as JSON
+	}
+	def taskItemGrid ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		def myTask = MyTask.get(params.id)
+		println myTask.id
+		
+		if(params.refreshHeader){
+			json["gridHeader"] = assetCheckService.getTaskCardsListLayout()
+		}
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			args["myTask"] = myTask
+			json["gridData"] = assetCheckService.getTaskCardsDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = assetCheckService.getTaskCardsCount(company,myTask)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	def zdpd ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		
+		render(view:'/assetCheck/zdpd',model:model)
+	}
+	
+	//----------------------------------------------------
 	
 	//2014-12-08-增加资产核查菜单---------------------------------------
 	def assetHcView ={
@@ -267,8 +339,6 @@ class InventoryTaskController {
 		def inventoryTask = new InventoryTask()
 		if(params.id){
 			inventoryTask = InventoryTask.get(params.id)
-		}else{
-			inventoryTask.sendMan = currentUser
 		}
 		
 		model["user"] = currentUser
@@ -297,21 +367,36 @@ class InventoryTaskController {
 		inventoryTask.clearErrors()
 		
 		//特殊字段信息处理
-		if(params.allowdepartsId.equals("")){
-			inventoryTask.inventoryDepart = params.allowdepartsName
+		if(params.isAllDepart.equals("true")){
+			inventoryTask.isAllDepart = true
 		}else{
-			inventoryTask.inventoryDepart = Depart.get(params.allowdepartsId)
+			inventoryTask.isAllDepart = false
+			
+			params.allowdepartsId.split(",").each{
+				def depart = Depart.get(it)
+				inventoryTask.addToInventoryDeparts(depart)
+			}
+			
+			params.allowusersId.split(",").each{
+				def user = User.get(it)
+				inventoryTask.addToReceiveUsers(user)
+			}
 		}
 		
-		if(params.allowCategoryId.equals("")){
-			inventoryTask.inventoryCategory = params.allowCategoryName
+		if(params.isAllCategory.equals("true")){
+			inventoryTask.isAllCategory = true
+			
 		}else{
-			inventoryTask.inventoryCategory = AssetCategory.get(params.allowCategoryId)
+			inventoryTask.isAllCategory = false
+			params.allowCategoryId.split(",").each{
+				def category = AssetCategory.get(it)
+				inventoryTask.addToInventoryCategorys(category)
+			}
 		}
 		
-		if(!params.taskNum_form.equals("")){
-			inventoryTask.taskNum = params.taskNum_form
-		}
+		inventoryTask.makeDate = Util.convertToTimestamp(params.makeDate)
+		inventoryTask.startDate = Util.convertToTimestamp(params.startDate)
+		inventoryTask.endDate = Util.convertToTimestamp(params.endDate)
 		
 		if(inventoryTask.save(flush:true)){
 			json["result"] = "true"
@@ -327,21 +412,115 @@ class InventoryTaskController {
 	def assetCheckRun ={
 		def ids = params.id.split(",")
 		def json
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
 		try{
-			ids.each{
-				def inventoryTask = InventoryTask.get(it)
+			ids.each{_id ->
+				def inventoryTask = InventoryTask.get(_id)
 				if(inventoryTask){
+					//创建相关的myTask任务--------------------------------------------
+					def dealUsers =[]
+					def zcglyUsers = UserGroup.findAllByGroup(Group1.findByGroupName("zcgly")).collect { elem ->
+						elem.user
+					 }
+					dealUsers += zcglyUsers
+					
+					//协会本部资产管理员----------------------------------
+					def xhzcglyUser =  UserGroup.findAllByGroup(Group1.findByGroupName("xhzcgly")).collect { elem ->
+						elem.user
+					 }
+					
+					def _myTask = new MyTask()
+					_myTask.user = xhzcglyUser[0]
+					_myTask.company = company
+					_myTask.inventoryTask = inventoryTask
+					_myTask.save()
+					inventoryTask.addToMyTasks(_myTask)
+					//-----------------------------------------------
+					
+					def mytaskList = []
+					dealUsers.unique().each{
+						if(!it.equals(xhzcglyUser[0])){
+							def myTask = new MyTask()
+							myTask.user = it
+							myTask.company = company
+							myTask.inventoryTask = inventoryTask
+							myTask.save()
+							inventoryTask.addToMyTasks(myTask)
+							mytaskList << myTask
+						}
+					}
+					
+					//获取所有的资产信息-----------------------------------------
+					def dealAssetCards =[]
+					if(inventoryTask.isAllDepart){
+						//所有部门的资产均需要处理
+						if(inventoryTask.isAllCategory){
+							dealAssetCards +=  CarCards.list()
+							dealAssetCards +=  DeviceCards.list()
+							dealAssetCards +=  HouseCards.list()
+							dealAssetCards +=  FurnitureCards.list()
+						}else{
+							inventoryTask.inventoryCategorys.each{category->
+								dealAssetCards +=  CarCards.findAllByUserCategory(category)
+								dealAssetCards +=  DeviceCards.findAllByUserCategory(category)
+								dealAssetCards +=  HouseCards.findAllByUserCategory(category)
+								dealAssetCards +=  FurnitureCards.findAllByUserCategory(category)
+							}
+						}
+					}else{
+						inventoryTask.inventoryDeparts.each{
+							if(inventoryTask.isAllCategory){
+								dealAssetCards += CarCards.findAllByUserDepart(it)
+								dealAssetCards += DeviceCards.findAllByUserDepart(it)
+								dealAssetCards += HouseCards.findAllByUserDepart(it)
+								dealAssetCards += FurnitureCards.findAllByUserDepart(it)
+							}else{
+								inventoryTask.inventoryCategorys.each{category->
+									dealAssetCards += CarCards.findAllByUserDepartAndUserCategory(it,category)
+									dealAssetCards += DeviceCards.findAllByUserDepartAndUserCategory(it,category)
+									dealAssetCards += HouseCards.findAllByUserDepartAndUserCategory(it,category)
+									dealAssetCards += FurnitureCards.findAllByUserDepartAndUserCategory(it,category)
+								}
+							}
+						}
+					}
+					
+					//创建对应的TaskCards
+					dealAssetCards.each{
+						def taskCards = new TaskCards()
+						taskCards.myTask = this.getMyTaskByCardsDepart(mytaskList,_myTask,it.userDepart)
+						taskCards.cardsRegisterNum = it.registerNum
+						taskCards.cardsName = it.assetName
+						taskCards.company = company
+						taskCards.save()
+						
+					}
+					
 					inventoryTask.runStatus = params.runStatus
 					inventoryTask.taskStatus = params.taskStatus
+					
+					inventoryTask.save()
 				}
 			}
 			json = [result:'true']
 		}catch(Exception e){
+			println e
 			json = [result:'error']
 		}
 		render json as JSON
 	}
-	
+	private def getMyTaskByCardsDepart={mytaskList,defaultTask,departEntity ->
+		def _task = defaultTask
+		mytaskList.each{
+			if(departEntity?.isSubDepart){
+				if(departEntity in it.user.getAllDepartEntity()){
+					_task = it
+				}
+			}
+		}
+		return _task
+	}
 	def assetCheckDelete = {
 		def ids = params.id.split(",")
 		def json

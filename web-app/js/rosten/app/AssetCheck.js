@@ -54,8 +54,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		var categoryId = rosten.kernel.getGridItemValue(rowIndex,"userCategoryId");
-		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCardShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&categoryId=" + categoryId);
+		rosten.openNewWindow("myTask", rosten.webPath + "/inventoryTask/myTaskShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rosten.kernel.getGrid().clearSelected();
 	};
 	assetCard_formatTopic =function(value,rowIndex){
@@ -82,7 +81,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		_1.callback = function() {
 			var runStatus = rosten.getGridSelectedValue("getRunStatusLabel");
 			if(runStatus == "已启动"){
-				alert("注意：该任务已经启动！");
+				rosten.alert("注意：该任务已经启动！");
 				return;
 			}
 			var unids = rosten.getGridUnid("single");
@@ -95,7 +94,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				content.taskStatus = "1";
 				content.id = unids;
 			}
-			rosten.read(rosten.webPath + "/inventoryTask/assetCheckRun", content,rosten.submitCallback);
+			rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/assetCheckRun", content,rosten.submitCallback);
 		};
 	};
 	

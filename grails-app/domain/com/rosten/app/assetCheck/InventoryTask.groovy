@@ -172,7 +172,7 @@ class InventoryTask {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_TASK_INV"
+		table "RS_TSK_IV"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

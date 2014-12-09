@@ -73,7 +73,7 @@ class MyTask {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_TASK_MY"
+		table "RS_TSK_MY"
 		
 	}
 	def beforeDelete(){

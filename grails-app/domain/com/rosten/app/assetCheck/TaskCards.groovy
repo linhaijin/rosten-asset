@@ -48,7 +48,7 @@ class TaskCards {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_TASK_CARDS"
+		table "RS_TSK_CAD"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

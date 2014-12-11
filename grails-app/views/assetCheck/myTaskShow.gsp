@@ -46,7 +46,7 @@
 				});
 				//盘点导入
 				pddr = function(){
-
+					
 				};
 				//扫描枪盘点
 				zdpd = function(){
@@ -54,7 +54,64 @@
 				};
 				//结束盘点
 				zdpd_ok = function(){
-
+					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_ok/${myTask?.id }",{},function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！").queryDlgClose= function(){
+								page_quit();
+							};
+						}else{
+							rosten.alert("失败!");
+						}
+					});
+				};
+				//资产查询
+				zdpd_search = function(){
+					var registerNum = registry.byId("registerNum").attr("value");
+					if(registerNum == null || registerNum == "" ){
+						rosten.alert("注意：资产编号不能为空！");
+						registry.byId("registerNum").focus();
+						return;
+					}
+					
+					var content ={};
+					content.id = registerNum;
+					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_search",{},function(data){
+						if(data.result=="true" || data.result == true){
+							registry.byId("registerNum").set("value",data.registerNum);
+							registry.byId("assetName").set("value",data.assetName);
+							registry.byId("specifications").set("value",data.specifications);
+							registry.byId("buyDate").set("value",data.buyDate);
+							registry.byId("onePrice").set("value",data.onePrice);
+							registry.byId("storagePosition").set("value",data.storagePosition);
+							registry.byId("purchaser").set("value",data.purchaser);
+							registry.byId("depart").set("value",data.depart);
+						}else{
+							rosten.alert("未找到对应资产或未在此次核查范围，请核查!");
+						}
+					});
+				};
+				//资产盘点，入库
+				zdpd_pdrk = function(){
+					var registerNum = registry.byId("registerNum").attr("value");
+					if(registerNum == null || registerNum == "" ){
+						rosten.alert("注意：资产编号不能为空！");
+						registry.byId("registerNum").focus();
+						return;
+					}
+					
+					var content ={};
+					content.id = registerNum;
+					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_pdrk",{},function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！").queryDlgClose= function(){
+								rosten.variable.dialog.hide();
+								rosten.variable.dialog.destroy()
+							};
+						}else{
+							rosten.alert("失败!");
+						}
+					});
+					
 				};
 				
 				page_quit = function(){

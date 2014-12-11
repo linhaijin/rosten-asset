@@ -47,16 +47,16 @@ class InventoryTask {
 	@GridColumn(name="盘点部门",colIdx=3)
 	def getDepartName(){
 		if(isAllDepart) return "全部"
-		if(inventoryDeparts){
-			def _list = inventoryDeparts.collect { elem ->
+		if(invDepts){
+			def _list = invDepts.collect { elem ->
 				elem.departName
 			}
 			return _list.join(",")
 		}else return ""
 	}
 	def getDepartId(){
-		if(inventoryDeparts){
-			def _list = inventoryDeparts.collect { elem ->
+		if(invDepts){
+			def _list = invDepts.collect { elem ->
 				elem.id
 			}
 			return _list.join(",")
@@ -70,16 +70,16 @@ class InventoryTask {
 	@GridColumn(name="资产盘点类型",colIdx=4)
 	def getCategoryName(){
 		if(isAllCategory) return "全部"
-		if(inventoryCategorys){
-			def _list = inventoryCategorys.collect { elem ->
+		if(invCates){
+			def _list = invCates.collect { elem ->
 				elem.categoryName
 			}
 			return _list.unique().join(",")
 		}else return ""
 	}
 	def getCategoryId(){
-		if(inventoryCategorys){
-			def _list = inventoryCategorys.collect { elem ->
+		if(invCates){
+			def _list = invCates.collect { elem ->
 				elem.id
 			}
 			return _list.join(",")
@@ -126,8 +126,8 @@ class InventoryTask {
 	String receiveMan
 	
 	def getReceiveManId(){
-		if(receiveUsers){
-			def _list = receiveUsers.collect { elem ->
+		if(recUsers){
+			def _list = recUsers.collect { elem ->
 				elem.id
 			}
 			return _list.join(",")
@@ -163,7 +163,7 @@ class InventoryTask {
 	
 	static belongsTo = [company:Company]
 	
-	static hasMany=[myTasks:MyTask,inventoryDeparts:Depart,inventoryCategorys:AssetCategory,receiveUsers:User]
+	static hasMany=[myTasks:MyTask,invDepts:Depart,invCates:AssetCategory,recUsers:User]
 	
     static constraints = {
 		taskNum nullable:false ,blank: false, unique: true

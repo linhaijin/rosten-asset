@@ -62,7 +62,6 @@ class InventoryTaskController {
 		def json=[:]
 		def company = Company.get(params.companyId)
 		def myTask = MyTask.get(params.id)
-		println myTask.id
 		
 		if(params.refreshHeader){
 			json["gridHeader"] = assetCheckService.getTaskCardsListLayout()
@@ -95,6 +94,86 @@ class InventoryTaskController {
 		render(view:'/assetCheck/zdpd',model:model)
 	}
 	
+	def zdpd_search ={
+		//资产查询
+		def json =[:]
+		
+		def entity = TaskCards.findByCardsRegisterNum(params.id)
+		
+		if(entity){
+			//通过种类获取对应的卡片详细信息
+			
+			def _entity
+			switch (entity.cardCategory){
+				case "car":
+					_entity = CarCards.findByRegisterNum(params.id)
+					break
+				case "furniture":
+					_entity = FurnitureCards.findByRegisterNum(params.id)
+					break
+				case "device":
+					_entity = DeviceCards.findByRegisterNum(params.id)
+					break
+				case "house":
+					_entity = HouseCards.findByRegisterNum(params.id)
+					break
+			}
+			
+			json["registerNum"] = _entity?.registerNum
+			json["assetName"] = _entity?.assetName
+			json["specifications"] = _entity?.specifications
+			json["buyDate"] = _entity?.getFormattedShowBuyDate()
+			json["onePrice"] = _entity?.onePrice
+			json["storagePosition"] = _entity?.storagePosition
+			json["purchaser"] = _entity?.purchaser
+			json["depart"] = _entity?.getDepartName()
+			
+			json["result"] = "true"
+		}else{
+			json["result"] = "error"
+		}
+		render json as JSON
+	}
+	def zdpd_ok ={
+		//结束盘点
+		def json =[:]
+		
+		def myTask = MyTask.get(params.id)
+		
+		if(myTask){
+			myTask.status = "已完成"
+			if(myTask.save()){
+				json["result"] = "true"
+			}else{
+				json["result"] = "error"
+			}
+			
+		}else{
+			json["result"] = "error"
+		}
+		render json as JSON
+		
+	}
+	def zdpd_pdrk ={
+		//盘点入库
+		def json =[:]
+		
+		def _entity = TaskCards.findByCardsRegisterNum(params.id)
+		
+		if(_entity){
+			_entity.nowNumber = 1
+			_entity.result = "在盘"
+			
+			if(_entity.save()){
+				json["result"] = "true"
+			}else{
+				json["result"] = "error"
+			}
+		}else{
+			json["result"] = "error"
+		}
+		render json as JSON
+	}
 	//----------------------------------------------------
 	
 	//2014-12-08-增加资产核查菜单---------------------------------------
@@ -151,7 +230,8 @@ class InventoryTaskController {
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
 		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
-		def totalNum = 0
+		def totalNum = 0	//总条目数
+		def totalMoney = 0	//总金额
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
 			int nowPage =  Util.str2int(params.showPageNum)
@@ -221,6 +301,9 @@ class InventoryTaskController {
 			}
 			
 			totalNum = allList.size()
+			totalMoney = allList.collect { _item ->
+				_item.onePrice
+			}.sum()
 			
 			if(totalNum>0){
 				def idx = 0
@@ -251,13 +334,13 @@ class InventoryTaskController {
 					_json.items+=sMap
 					idx += 1
 				}
-			}			
+			}
 
 			json["gridData"] = _json
 		}
 		
 		if(params.refreshPageControl){
-			json["pageControl"] = ["total":totalNum.toString()]
+			json["pageControl"] = ["total":totalNum.toString(),"endHtml":"总金额共<span style=\"color:red;margin-left:2px;margin-right:2px\">" + Util.DoubleToFormat(totalMoney/10000,2) + "</span>万元"]
 		}
 		render json as JSON
 	}
@@ -461,7 +544,7 @@ class InventoryTaskController {
 							dealAssetCards +=  HouseCards.list()
 							dealAssetCards +=  FurnitureCards.list()
 						}else{
-							inventoryTask.inventoryCategorys.each{category->
+							inventoryTask.invCates.each{category->
 								dealAssetCards +=  CarCards.findAllByUserCategory(category)
 								dealAssetCards +=  DeviceCards.findAllByUserCategory(category)
 								dealAssetCards +=  HouseCards.findAllByUserCategory(category)
@@ -469,14 +552,14 @@ class InventoryTaskController {
 							}
 						}
 					}else{
-						inventoryTask.inventoryDeparts.each{
+						inventoryTask.invDepts.each{
 							if(inventoryTask.isAllCategory){
 								dealAssetCards += CarCards.findAllByUserDepart(it)
 								dealAssetCards += DeviceCards.findAllByUserDepart(it)
 								dealAssetCards += HouseCards.findAllByUserDepart(it)
 								dealAssetCards += FurnitureCards.findAllByUserDepart(it)
 							}else{
-								inventoryTask.inventoryCategorys.each{category->
+								inventoryTask.invCates.each{category->
 									dealAssetCards += CarCards.findAllByUserDepartAndUserCategory(it,category)
 									dealAssetCards += DeviceCards.findAllByUserDepartAndUserCategory(it,category)
 									dealAssetCards += HouseCards.findAllByUserDepartAndUserCategory(it,category)
@@ -493,6 +576,10 @@ class InventoryTaskController {
 						taskCards.cardsRegisterNum = it.registerNum
 						taskCards.cardsName = it.assetName
 						taskCards.company = company
+						
+						def rootCategory = taskCards.userCategory.getRootCategory(taskCards.userCategory)
+						taskCards.cardCategory = rootCategory.categoryCode
+						
 						taskCards.save()
 						
 					}

@@ -111,6 +111,12 @@ this._renderLink();
 this.totalCount.innerHTML=this.pageControl.total;
 this.totalPages.innerHTML=this.pageControl.totalpages;
 this.gotopage.setAttribute("value",this.pageControl.page);
+if(_22.frontHtml){
+this.controlFront.innerHTML=_22.frontHtml;
+}
+if(_22.endHtml){
+this.controlEnd.innerHTML=_22.endHtml;
+}
 if(this.showPageControl){
 _5.set(this.loadingimg,"display","none");
 }

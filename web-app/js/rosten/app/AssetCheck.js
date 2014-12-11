@@ -115,10 +115,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetCheck_start = function(){//开始盘点任务
 		var unids = rosten.getGridUnid("single");
+		if (unids == ""){
+			rosten.alert("注意：请在列表中选择数据！");
+			return;
+		}
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         var taskStatus = "2";
-        rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckStart?companyId=" + companyId + "&userid=" + userid + "&taskId=" +unids + "&taskStatus=" + taskStatus);
+        rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/myTaskShow/" + unids + "?companyId=" + companyId + "&userid=" + userid + "&taskStatus=" + taskStatus);
 	};
 	
 	assetCheck_complete = function(){//完成盘点任务

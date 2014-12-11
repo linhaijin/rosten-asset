@@ -17,6 +17,9 @@ class TaskCards {
 	//盘点任务
 	MyTask myTask
 	
+	//盘点卡片种类
+	String cardCategory	
+	
 	//资产卡片编号
 	@GridColumn(name="资产编号",colIdx=1)
 	String cardsRegisterNum
@@ -42,6 +45,7 @@ class TaskCards {
 	String remark
 
     static constraints = {
+		cardCategory nullable:true,blank:true
 		remark nullable:true,blank:true
     }
 	static belongsTo = [company:Company]

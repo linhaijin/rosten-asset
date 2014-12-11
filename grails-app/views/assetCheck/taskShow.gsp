@@ -38,12 +38,12 @@
 
 					connect.connect(registry.byId("isAllDepart1"),"onClick",function(){
 						domStyle.set(dom.byId("departShowTr"),"display","none");
-						domStyle.set(dom.byId("receiveManShowTr"),"display","none");
+						//domStyle.set(dom.byId("receiveManShowTr"),"display","none");
 					});
 
 					connect.connect(registry.byId("isAllDepart2"),"onClick",function(){
 						domStyle.set(dom.byId("departShowTr"),"display","");
-						domStyle.set(dom.byId("receiveManShowTr"),"display","");
+						//domStyle.set(dom.byId("receiveManShowTr"),"display","");
 					});
 
 					connect.connect(registry.byId("isAllCategory1"),"onClick",function(){

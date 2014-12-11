@@ -46,7 +46,7 @@
 				});
 				//盘点导入
 				pddr = function(){
-					
+					rosten.variable.dialog = new ShowDialog({src:rosten.webPath + "/inventoryTask/zddr"});
 				};
 				//扫描枪盘点
 				zdpd = function(){
@@ -75,7 +75,7 @@
 					
 					var content ={};
 					content.id = registerNum;
-					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_search",{},function(data){
+					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_search",content,function(data){
 						if(data.result=="true" || data.result == true){
 							registry.byId("registerNum").set("value",data.registerNum);
 							registry.byId("assetName").set("value",data.assetName);
@@ -101,11 +101,12 @@
 					
 					var content ={};
 					content.id = registerNum;
-					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_pdrk",{},function(data){
+					rosten.readSyncNoTime(rosten.webPath + "/inventoryTask/zdpd_pdrk",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("成功！").queryDlgClose= function(){
 								rosten.variable.dialog.hide();
 								rosten.variable.dialog.destroy()
+								taskItemGrid.refresh();
 							};
 						}else{
 							rosten.alert("失败!");

@@ -1,9 +1,12 @@
 package com.rosten.app.assetCheck
 
 import grails.converters.JSON
+import jxl.Sheet;
+import jxl.Workbook;
 
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.GridUtil
+import com.rosten.app.util.SystemUtil
 import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
@@ -53,9 +56,14 @@ class InventoryTaskController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("数据导入盘点",webPath + imgPath + "word_open.png","pddr")
-		actionList << createAction("扫描枪盘点",webPath + imgPath + "changeStatus.gif","zdpd")
-		actionList << createAction("结束盘点",webPath + imgPath + "qx.png","zdpd_ok")
+		
+		def myTask = MyTask.get(params.id)
+		if("未完成".equals(myTask.status)){
+			actionList << createAction("数据导入盘点",webPath + imgPath + "word_open.png","pddr")
+			actionList << createAction("扫描枪盘点",webPath + imgPath + "changeStatus.gif","zdpd")
+			actionList << createAction("结束盘点",webPath + imgPath + "qx.png","zdpd_ok")
+		}
+		
 		render actionList as JSON
 	}
 	def taskItemGrid ={
@@ -139,7 +147,6 @@ class InventoryTaskController {
 		def json =[:]
 		
 		def myTask = MyTask.get(params.id)
-		
 		if(myTask){
 			myTask.status = "已完成"
 			if(myTask.save()){
@@ -173,6 +180,56 @@ class InventoryTaskController {
 			json["result"] = "error"
 		}
 		render json as JSON
+	}
+	def zddr ={
+		def model =[:]
+		render(view:'/assetCheck/zddr',model:model)
+	}
+	def zddrSubmit ={
+		def ostr
+		try{
+			SystemUtil sysUtil = new SystemUtil()
+			def currentUser = (User) springSecurityService.getCurrentUser()
+			def company = currentUser.company
+			
+			def f = request.getFile("uploadedfile")
+			if (!f.empty) {
+				
+				def uploadPath
+				def companyPath = company?.shortName
+				if(companyPath == null){
+					uploadPath = sysUtil.getUploadPath("template")+"/"
+				}else{
+					uploadPath = sysUtil.getUploadPath(company?.shortName + "/template") + "/"
+				}
+				
+				//添加附件信息
+				String name = f.getOriginalFilename()//获得文件原始的名称
+				def realName = sysUtil.getRandName(name)
+				def filePath = new File(uploadPath,realName)
+				f.transferTo(filePath)
+				
+				//解析上传的excel文件
+				Sheet sourceSheet = Workbook.getWorkbook(filePath).getSheet(0);
+				int sourceRowCount = sourceSheet.getRows();//获得源excel的行数
+				
+				for(int i=1;i<sourceRowCount;i++){
+					String zcbh =sourceSheet.getCell(1, i).getContents();	//资产编号
+					def _entity = TaskCards.findByCardsRegisterNum(zcbh)
+					
+					_entity.nowNumber = 1
+					_entity.result = "在盘"
+					
+					_entity.save()
+				}
+				
+				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.variable.dialog.hide();_parent.rosten.variable.dialog.destroy();_parent.taskItemGrid.refresh();}</script>"
+			}
+		}catch(Exception e){
+			println e
+			ostr = "<script>window.parent.rosten.alert('导入失败');</script>"
+		}
+		render ostr
 	}
 	//----------------------------------------------------
 	

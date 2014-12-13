@@ -342,32 +342,30 @@ public class ExcelExport {
 			wwb = Workbook.createWorkbook(os);
 			ws = wwb.createSheet("数据导出", 0);
 			
-			ws.mergeCells(0, 0, 10, 0);
+			ws.mergeCells(0, 0, 8, 0);
 			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
 			
 			ws.addCell(new Label(0, 1, "科室名称"));
-			ws.addCell(new Label(1, 1, "类别代码"));
-			ws.addCell(new Label(2, 1, "资产类别"));
-			ws.addCell(new Label(3, 1, "资产代码"));
-			ws.addCell(new Label(4, 1, "资产名称"));
-			ws.addCell(new Label(5, 1, "原值（元）"));
-			ws.addCell(new Label(6, 1, "开始使用日期"));
-			ws.addCell(new Label(7, 1, "存放地点"));
-			ws.addCell(new Label(8, 1, "规格型号"));
-			ws.addCell(new Label(9, 1, "负责人"));
+			ws.addCell(new Label(1, 1, "资产类别"));
+			ws.addCell(new Label(2, 1, "资产代码"));
+			ws.addCell(new Label(3, 1, "资产名称"));
+			ws.addCell(new Label(4, 1, "原值（元）"));
+			ws.addCell(new Label(5, 1, "开始使用日期"));
+			ws.addCell(new Label(6, 1, "存放地点"));
+			ws.addCell(new Label(7, 1, "规格型号"));
+			ws.addCell(new Label(8, 1, "负责人"));
 
 			if(carCardsList != null && carCardsList.size() > 0){
 				for(int i=0;i<carCardsList.size();i++){
 					ws.addCell(new Label(0, i+2, (String)carCardsList.get(i).getDepartName()));
-					ws.addCell(new Label(1, i+2, (String)carCardsList.get(i).getCategoryCode()));
-					ws.addCell(new Label(2, i+2, (String)carCardsList.get(i).getCategoryName()));
-					ws.addCell(new Label(3, i+2, (String)carCardsList.get(i).getRegisterNum()));
-					ws.addCell(new Label(4, i+2, (String)carCardsList.get(i).getAssetName()));
-					ws.addCell(new Label(5, i+2, carCardsList.get(i).getOnePrice().toString()));
-					ws.addCell(new Label(6, i+2, (String)carCardsList.get(i).getFormattedShowBuyDate()));
-					ws.addCell(new Label(7, i+2, (String)carCardsList.get(i).getStoragePosition()));
-					ws.addCell(new Label(8, i+2, (String)carCardsList.get(i).getSpecifications()));
-					ws.addCell(new Label(9, i+2, (String)carCardsList.get(i).getPurchaser()));
+					ws.addCell(new Label(1, i+2, (String)carCardsList.get(i).getCategoryName()));
+					ws.addCell(new Label(2, i+2, (String)carCardsList.get(i).getRegisterNum()));
+					ws.addCell(new Label(3, i+2, (String)carCardsList.get(i).getAssetName()));
+					ws.addCell(new Label(4, i+2, carCardsList.get(i).getOnePrice().toString()));
+					ws.addCell(new Label(5, i+2, (String)carCardsList.get(i).getFormattedShowBuyDate()));
+					ws.addCell(new Label(6, i+2, (String)carCardsList.get(i).getStoragePosition()));
+					ws.addCell(new Label(7, i+2, (String)carCardsList.get(i).getSpecifications()));
+					ws.addCell(new Label(8, i+2, (String)carCardsList.get(i).getPurchaser()));
 				}
 			}
 			
@@ -387,16 +385,184 @@ public class ExcelExport {
 	
 	//电子设备导出
 	public String deviceCardsDc(OutputStream os,List<DeviceCards> deviceCardsList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0, 0, 8, 0);
+			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "科室名称"));
+			ws.addCell(new Label(1, 1, "资产类别"));
+			ws.addCell(new Label(2, 1, "资产代码"));
+			ws.addCell(new Label(3, 1, "资产名称"));
+			ws.addCell(new Label(4, 1, "原值（元）"));
+			ws.addCell(new Label(5, 1, "开始使用日期"));
+			ws.addCell(new Label(6, 1, "存放地点"));
+			ws.addCell(new Label(7, 1, "规格型号"));
+			ws.addCell(new Label(8, 1, "负责人"));
+
+			if(deviceCardsList != null && deviceCardsList.size() > 0){
+				for(int i=0;i<deviceCardsList.size();i++){
+					ws.addCell(new Label(0, i+2, (String)deviceCardsList.get(i).getDepartName()));
+					ws.addCell(new Label(1, i+2, (String)deviceCardsList.get(i).getCategoryName()));
+					ws.addCell(new Label(2, i+2, (String)deviceCardsList.get(i).getRegisterNum()));
+					ws.addCell(new Label(3, i+2, (String)deviceCardsList.get(i).getAssetName()));
+					ws.addCell(new Label(4, i+2, deviceCardsList.get(i).getOnePrice().toString()));
+					ws.addCell(new Label(5, i+2, (String)deviceCardsList.get(i).getFormattedShowBuyDate()));
+					ws.addCell(new Label(6, i+2, (String)deviceCardsList.get(i).getStoragePosition()));
+					ws.addCell(new Label(7, i+2, (String)deviceCardsList.get(i).getSpecifications()));
+					ws.addCell(new Label(8, i+2, (String)deviceCardsList.get(i).getPurchaser()));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 	
 	//办公家具导出
 	public String furnitureCardsDc(OutputStream os,List<FurnitureCards> furnitureCardsList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0, 0, 8, 0);
+			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "科室名称"));
+			ws.addCell(new Label(1, 1, "资产类别"));
+			ws.addCell(new Label(2, 1, "资产代码"));
+			ws.addCell(new Label(3, 1, "资产名称"));
+			ws.addCell(new Label(4, 1, "原值（元）"));
+			ws.addCell(new Label(5, 1, "开始使用日期"));
+			ws.addCell(new Label(6, 1, "存放地点"));
+			ws.addCell(new Label(7, 1, "规格型号"));
+			ws.addCell(new Label(8, 1, "负责人"));
+
+			if(furnitureCardsList != null && furnitureCardsList.size() > 0){
+				for(int i=0;i<furnitureCardsList.size();i++){
+					ws.addCell(new Label(0, i+2, (String)furnitureCardsList.get(i).getDepartName()));
+					ws.addCell(new Label(1, i+2, (String)furnitureCardsList.get(i).getCategoryName()));
+					ws.addCell(new Label(2, i+2, (String)furnitureCardsList.get(i).getRegisterNum()));
+					ws.addCell(new Label(3, i+2, (String)furnitureCardsList.get(i).getAssetName()));
+					ws.addCell(new Label(4, i+2, furnitureCardsList.get(i).getOnePrice().toString()));
+					ws.addCell(new Label(5, i+2, (String)furnitureCardsList.get(i).getFormattedShowBuyDate()));
+					ws.addCell(new Label(6, i+2, (String)furnitureCardsList.get(i).getStoragePosition()));
+					ws.addCell(new Label(7, i+2, (String)furnitureCardsList.get(i).getSpecifications()));
+					ws.addCell(new Label(8, i+2, (String)furnitureCardsList.get(i).getPurchaser()));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 	
 	//房屋及建筑物导出
 	public String houseCardsDc(OutputStream os,List<HouseCards> houseCardsList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0, 0, 8, 0);
+			ws.addCell(new Label(0 , 0, "房屋及建筑物资产卡片清单",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "科室名称"));
+			ws.addCell(new Label(1, 1, "资产类别"));
+			ws.addCell(new Label(2, 1, "资产代码"));
+			ws.addCell(new Label(3, 1, "资产名称"));
+			ws.addCell(new Label(4, 1, "原值（元）"));
+			ws.addCell(new Label(5, 1, "开始使用日期"));
+			ws.addCell(new Label(6, 1, "存放地点"));
+			ws.addCell(new Label(7, 1, "规格型号"));
+			ws.addCell(new Label(8, 1, "负责人"));
+
+			if(houseCardsList != null && houseCardsList.size() > 0){
+				for(int i=0;i<houseCardsList.size();i++){
+					ws.addCell(new Label(0, i+2, (String)houseCardsList.get(i).getDepartName()));
+					ws.addCell(new Label(1, i+2, (String)houseCardsList.get(i).getCategoryName()));
+					ws.addCell(new Label(2, i+2, (String)houseCardsList.get(i).getRegisterNum()));
+					ws.addCell(new Label(3, i+2, (String)houseCardsList.get(i).getAssetName()));
+					ws.addCell(new Label(4, i+2, houseCardsList.get(i).getOnePrice().toString()));
+					ws.addCell(new Label(5, i+2, (String)houseCardsList.get(i).getFormattedShowBuyDate()));
+					ws.addCell(new Label(6, i+2, (String)houseCardsList.get(i).getHouseLocated()));
+					ws.addCell(new Label(7, i+2, (String)houseCardsList.get(i).getSpecifications()));
+					ws.addCell(new Label(8, i+2, (String)houseCardsList.get(i).getPurchaser()));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 	

@@ -34,7 +34,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			usedMan = usedMan.get("value");
 			qusedMan = "&usedMan="+usedMan;
 		}
-		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
+		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapExport?companyId="+companyId+qseriesNo+qusedDepart+qusedMan);
 	};
 	
 	assetScrap_delete = function(){
@@ -100,6 +100,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}	
 	};
 	
+	assetScrap_print = function(){
+		var unids = rosten.getGridUnid("single");
+		if (unids == ""){
+			rosten.alert("注意：请选择数据！");
+			return;
+		}
+		rosten.openNewWindow("assetScrapPrint", rosten.webPath + "/assetScrap/assetScrapPrint/" + unids);
+		rosten.kernel.refreshGrid();
+	}
+	
 //	资产调拨
 	assetAllocate_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -109,22 +119,28 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetAllocate_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qseriesNo = "";
+		var qoriginalDepart = "";
+		var qnewDepart = "";
 		
 		var seriesNo = registry.byId("allocate_seriesNo");
 		if(seriesNo.get("value")!=""){
 			seriesNo = seriesNo.get("value");
+			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
 		var originalDepart = registry.byId("allocate_originalDepart");
 		if(originalDepart.get("value")!=""){
 			originalDepart = originalDepart.get("value");
+			qoriginalDepart = "&originalDepart="+originalDepart;
 		}
 		
 		var newDepart = registry.byId("allocate_newDepart");
 		if(newDepart.get("value")!=""){
 			newDepart = newDepart.get("value");
+			qnewDepart = "&newDepart="+newDepart;
 		}
-		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId+"&seriesNo="+seriesNo+"&originalDepart="+originalDepart+"&newDepart="+newDepart);
+		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId+qseriesNo+qoriginalDepart+qnewDepart);
 	};
 	
 	assetAllocate_delete = function(){
@@ -196,6 +212,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}	
 	};
 	
+	assetAllocate_print = function(){
+		var unids = rosten.getGridUnid("single");
+		if (unids == ""){
+			rosten.alert("注意：请选择数据！");
+			return;
+		}
+		rosten.openNewWindow("assetAllocatePrint", rosten.webPath + "/assetAllocate/assetAllocatePrint/" + unids);
+		rosten.kernel.refreshGrid();
+	}
+	
 	//资产报失
 	assetLose_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -205,23 +231,29 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetLose_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qseriesNo = "";
+		var qusedDepart = "";
+		var qusedMan = "";
 		
 		var seriesNo = registry.byId("lose_seriesNo");
 		if(seriesNo.get("value")!=""){
 			seriesNo = seriesNo.get("value");
+			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
 		var usedDepart = registry.byId("lose_usedDepart");
 		if(usedDepart.get("value")!=""){
 			usedDepart = usedDepart.get("value");
+			qusedDepart = "&usedDepart="+usedDepart;
 		}
 		
 		var usedMan = registry.byId("lose_usedMan");
 		if(usedMan.get("value")!=""){
 			usedMan = usedMan.get("value");
+			qusedMan = "&usedMan="+usedMan;
 		}
 		
-		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
+		rosten.openNewWindow("assetLose", rosten.webPath + "/assetLose/assetLoseExport?companyId="+companyId+qseriesNo+qusedDepart+qusedMan);
 	};
 	
 	assetLose_delete = function(){
@@ -296,23 +328,29 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	assetRepair_export = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qseriesNo = "";
+		var qusedDepart = "";
+		var qusedMan = "";
 		
 		var seriesNo = registry.byId("repair_seriesNo");
 		if(seriesNo.get("value")!=""){
 			seriesNo = seriesNo.get("value");
+			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
 		var usedDepart = registry.byId("repair_usedDepart");
 		if(usedDepart.get("value")!=""){
 			usedDepart = usedDepart.get("value");
+			qusedDepart = "&usedDepart="+usedDepart;
 		}
 		
 		var usedMan = registry.byId("repair_usedMan");
 		if(usedMan.get("value")!=""){
 			usedMan = usedMan.get("value");
+			qusedMan = "&usedMan="+usedMan;
 		}
 		
-		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairExport?companyId="+companyId+"&seriesNo="+seriesNo+"&usedDepart="+usedDepart+"&usedMan="+usedMan);
+		rosten.openNewWindow("assetRepair", rosten.webPath + "/assetRepair/assetRepairExport?companyId="+companyId+qseriesNo+qusedDepart+qusedMan);
 	};
 	
 	assetRepair_delete = function(){
@@ -377,6 +415,10 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			break;
 		}	
 	};
+	
+	assetRepair_print = function(){
+		return false;
+	}
 	
 	//增值减值
 	/**暂不作要求

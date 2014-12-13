@@ -31,7 +31,16 @@ class HouseCards {
 		if(userCategory){
 			return userCategory.categoryName
 		}else{
-			return "房屋"
+			return "房屋及建筑物"
+		}
+	}
+	
+	//资产类别代码
+	def getCategoryCode(){
+		if(userCategory){
+			return userCategory.allCode
+		}else{
+			return "qt"
 		}
 	}
 	

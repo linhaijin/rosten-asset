@@ -86,6 +86,7 @@ class AssetScrapController {
 		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
 		}
 		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")

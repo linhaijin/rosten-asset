@@ -271,7 +271,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			quserDepart = "&userDepart="+userDepart;
 		}
 		
-		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsExport?companyId="+companyId+"&registerNum="+registerNum+qregisterNum+qcategory+qassetName+quserDepart);
+		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsExport?companyId="+companyId+qregisterNum+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 
 	//房屋及建筑物

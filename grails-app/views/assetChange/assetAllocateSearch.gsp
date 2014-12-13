@@ -18,7 +18,7 @@
             <th width="8%">申请单号</th>
             <td width="18%">
             	<input id="allocate_seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,style:{width:"120px"}'/>
+                	data-dojo-props='trim:true,value:""'/>
             </td>
             <th width="8%">原部门</th>
             <td width="18%">

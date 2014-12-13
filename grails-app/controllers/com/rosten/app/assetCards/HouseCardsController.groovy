@@ -12,6 +12,7 @@ import com.rosten.app.system.UserGroup
 
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetApply.ApplyNotes
+import com.rosten.app.assetCards.HouseCards
 import com.rosten.app.barcode.Barcode
 
 import com.rosten.app.export.ExcelExport
@@ -248,7 +249,6 @@ class HouseCardsController {
 
 		def houseCardsList = c.list{
 			eq("company",company)
-			eq("status","已结束")
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
 					eq(k,v)

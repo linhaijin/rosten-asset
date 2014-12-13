@@ -120,6 +120,9 @@ class ApplyNotes {
 		}
 	}
 	
+	//国别
+	String country = "中国"
+	
 	//需求时间
 	Date regDate = new Date()
 	def getFormattedRegDate(){
@@ -211,6 +214,7 @@ class ApplyNotes {
 		specifications nullable:true,blank:true
 		isInYearPlan nullable:true,blank:true
 		factory nullable:true,blank:true
+		country nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true

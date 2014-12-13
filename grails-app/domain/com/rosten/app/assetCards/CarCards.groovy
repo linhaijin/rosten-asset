@@ -31,10 +31,11 @@ class CarCards {
 		if(userCategory){
 			return userCategory.categoryName
 		}else{
-			return "车辆"
+			return "运输工具"
 		}
 	}
 	
+	//资产类别代码
 	def getCategoryCode(){
 		if(userCategory){
 			return userCategory.allCode

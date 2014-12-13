@@ -31,7 +31,16 @@ class DeviceCards {
 		if(userCategory){
 			return userCategory.categoryName
 		}else{
-			return "设备"
+			return "电子设备"
+		}
+	}
+	
+	//资产类别代码
+	def getCategoryCode(){
+		if(userCategory){
+			return userCategory.allCode
+		}else{
+			return "qt"
 		}
 	}
 	

@@ -12,6 +12,7 @@ import com.rosten.app.system.UserGroup
 
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetApply.ApplyNotes
+import com.rosten.app.assetCards.BookCards
 import com.rosten.app.barcode.Barcode
 
 import com.rosten.app.export.ExcelExport

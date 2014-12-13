@@ -1,6 +1,10 @@
 package com.rosten.app.assetCards
 
 import com.rosten.app.util.GridUtil
+import com.rosten.app.assetCards.HouseCards
+import com.rosten.app.assetCards.CarCards
+import com.rosten.app.assetCards.DeviceCards
+import com.rosten.app.assetCards.FurnitureCards
 
 class AssetCardsService {
 

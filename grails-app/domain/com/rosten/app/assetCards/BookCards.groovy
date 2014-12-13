@@ -35,6 +35,15 @@ class BookCards {
 		}
 	}
 	
+	//资产类别代码
+	def getCategoryCode(){
+		if(userCategory){
+			return userCategory.allCode
+		}else{
+			return "qt"
+		}
+	}
+	
 	//资产名称
 	@GridColumn(name="资产名称",colIdx=3)
 	String assetName

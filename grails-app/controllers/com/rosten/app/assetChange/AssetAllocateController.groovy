@@ -87,6 +87,7 @@ class AssetAllocateController {
 		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
 		}
 		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
@@ -1165,5 +1166,46 @@ class AssetAllocateController {
 		}
 		def excel = new ExcelExport()
 		excel.assetAllocateDc(os,assetAllocateList)
+	}
+	
+	def assetAllocatePrint = {
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null != ids && ids.length > 0){
+			if(ids.length == 1){
+				def assetAllocate = AssetAllocate.get(params.id)
+				def map =[:]
+				map["assetAllocate"] = assetAllocate
+				
+				//所有意见默认取最后一次意见
+				//获取后勤意见
+				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤部领导审核")
+				if(hqyj && hqyj.size()>0){
+					map["hqComment"]= hqyj[0]
+				}else{
+					map["hqComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取财务意见
+				def cwyj = shareService.getCommentByStatus(assetApply.id,"财务部审核")
+				if(cwyj && cwyj.size()>0){
+					map["cwComment"]= cwyj[0]
+				}else{
+					map["cwComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取秘书长意见
+				def mszyj = shareService.getCommentByStatus(assetApply.id,"秘书长审批")
+				if(mszyj && mszyj.size()>0){
+					map["mszComment"]= mszyj[0]
+				}else{
+					map["mszComment"] = [content:"",date:"",name:""]
+				}
+				
+				word.singlePrint(response,"zcdbd.xml",assetAllocate.seriesNo,map)
+			}else{
+//				word.downloadZzkhbZip(response,params.id)
+			}
+		}
 	}
 }

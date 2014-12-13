@@ -24,12 +24,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			return;
 		rosten.openNewWindow("furnitureCardsPrintTxm", rosten.webPath + "/furnitureCards/furnitureCardsPrintTxm/" + unids);
 	}
-	houseCards_printTxm = function(){
-		var unids = rosten.getGridUnid("multi");
-		if (unids == "")
-			return;
-		rosten.openNewWindow("houseCardsPrintTxm", rosten.webPath + "/houseCards/houseCardsPrintTxm/" + unids);
-	}
 	//------------------------------------------------------------------------------------
 	
 	//运输工具
@@ -281,7 +275,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         rosten.openNewWindow("houseCards", rosten.webPath + "/houseCards/houseCardsAdd?companyId=" + companyId + "&userid=" + userid);
 	};
 	
-	
 	houseCards_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
 		_1.callback = function() {
@@ -393,6 +386,39 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		
 		rosten.openNewWindow("houseCards", rosten.webPath + "/houseCards/houseCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
+	
+	houseCards_printTxm = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
+		
+		var registerNum = registry.byId("house_registerNum");
+		if(registerNum.get("value")!=""){
+			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var category = registry.byId("house_category");
+		if(category.get("value")!=""){
+			category = category.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		var assetName = registry.byId("house_assetName");
+		if(assetName.get("value")!=""){
+			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var userDepart = registry.byId("house_userDepart");
+		if(userDepart.get("value")!=""){
+			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
+		}
+		rosten.openNewWindow("houseCardsPrintTxm", rosten.webPath + "/houseCards/houseCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+	}
 	
 	//电子设备
 	deviceCards_add = function(){

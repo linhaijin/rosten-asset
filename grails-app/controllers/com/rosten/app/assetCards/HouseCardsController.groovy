@@ -42,6 +42,17 @@ class HouseCardsController {
 		render actionList as JSON
 	}
 	
+	def houseCardsPrintForm ={
+		def webPath = request.getContextPath() + "/"
+		def strname = "houseCards"
+		def actionList = []
+		
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("打印",webPath + imgPath + "word_print.png",strname + "_print")
+		
+		render actionList as JSON
+	}
+	
 	def houseCardsView ={
 		def actionList =[]
 		def strname = "houseCards"
@@ -270,11 +281,38 @@ class HouseCardsController {
 	
 	//2014-12-08增加条形码打印功能
 	def houseCardsPrintTxm ={
-		//待完善
-		def json=[:]
+		def model =[:]
 		
-		json["result"] = "true"
+		def currentUser = springSecurityService.getCurrentUser()
 		
-		render json as JSON
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		
+		def c = HouseCards.createCriteria()
+
+		def houseCardsList = c.list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("category") || k.equals("userDepart")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		
+		model["user"] = user
+		model["company"] = company
+		model["houseCardsList"] = houseCardsList
+		model["countSize"] = houseCardsList.size()
+		
+		render(view:'/assetCards/houseCardsPrintTxm',model:model)
 	}
 }

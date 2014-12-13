@@ -7,8 +7,10 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	//2014-12-08 增加审批单打印功能--------------------------------------------------------------
 	assetApply_print = function(){
 		var unids = rosten.getGridUnid("single");
-		if (unids == "")
+		if (unids == ""){
+			rosten.alert("注意：请在列表中选择数据！");
 			return;
+		}
 		rosten.openNewWindow("assetApplyPrint", rosten.webPath + "/applyManage/assetApplyPrint/" + unids);
 		rosten.kernel.refreshGrid();
 	}

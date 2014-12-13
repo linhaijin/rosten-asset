@@ -5,6 +5,7 @@ define(["dojo/_base/connect",
         "dijit/registry",
         "rosten/util/general",
         "rosten/app/Application",
+        "rosten/app/SystemApplication",
         "rosten/kernel/behavior"], function(connect,registry,General) {
 
 	var general = new General();
@@ -313,6 +314,38 @@ define(["dojo/_base/connect",
             rosten.read(rosten.webPath + "/system/permissionDelete", content, delete_callback);
         };
     };
+    //2014-12-13-------增加批量设置角色功能--------------------------------------
+    role_set = function(){
+    	var unids = rosten.getGridUnid("multi");
+        if (unids == "")
+            return;
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.kernel.createRostenShowDialog(rosten.webPath + "/system/setRole/"+ unids+ "?companyId=" + companyId, {
+            onLoadFunction : function() {
+
+            }
+        });
+    };
+    role_set_Submit = function(){
+		var rolename = registry.byId("allowrolesName");
+		if(!rolename.isValid()){
+			rosten.alert("请正确填写角色！");
+			return;
+		}
+		
+        rosten.readSyncNoTime(rosten.webPath + "/system/setRoleSubmit", {}, function(data) {
+            if (data.result == "true") {
+                rosten.kernel.hideRostenShowDialog();
+                rosten.kernel.refreshGrid();
+                rosten.alert("成功!");
+            }else {
+                rosten.alert("失败!");
+            }
+        },null,"rosten_form");
+		
+		
+    };
+    //----------------------------------------------------------------
     role_formatTopic = function(value,rowIndex){
     	return "<a href=\"javascript:role_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
     };

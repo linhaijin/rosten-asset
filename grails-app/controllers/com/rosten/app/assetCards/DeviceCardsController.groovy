@@ -249,7 +249,6 @@ class DeviceCardsController {
 
 		def deviceCardsList = c.list{
 			eq("company",company)
-			eq("status","已结束")
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
 					eq(k,v)

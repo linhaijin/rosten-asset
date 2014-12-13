@@ -24,16 +24,6 @@ class HouseCardsController {
 	
 	def imgPath ="images/rosten/actionbar/"
 	
-	//2014-12-08增加条形码打印功能
-	def houseCardsPrintTxm ={
-		//待完善
-		def json=[:]
-		
-		json["result"] = "true"
-		
-		render json as JSON
-	}
-	
 	def houseCardsForm ={
 		//增加资产管理员群组的控制权限
 		def currentUser = springSecurityService.getCurrentUser()
@@ -276,5 +266,15 @@ class HouseCardsController {
 		}
 		response.outputStream.flush()
 		response.outputStream.close()
+	}
+	
+	//2014-12-08增加条形码打印功能
+	def houseCardsPrintTxm ={
+		//待完善
+		def json=[:]
+		
+		json["result"] = "true"
+		
+		render json as JSON
 	}
 }

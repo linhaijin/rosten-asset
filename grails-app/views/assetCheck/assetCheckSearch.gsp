@@ -5,8 +5,15 @@
 <style type="text/css">
 	
 </style>
-<script type="text/javascript">	
+<script type="text/javascript">
+require(["rosten/app/Application"],function(){
+	search_selectDepart = function(){
+		rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",true,"check_userDepart","check_userDepartIds",false);
+	};
+});
+         
 
+	
 </script>
 </head>
 <body>
@@ -38,12 +45,18 @@
             </td>
             <th width="7%">归属部门</th>
             <td width="15%">
-            	<div id="check_userDepart" data-dojo-type="dijit/form/ComboBox"
-	                data-dojo-props='trim:true,value:"",style:{width:"140px"}'>
-	            	<g:each in="${DepartList}" var="item">
-	                	<option value="${item.departName }">${item.departName }</option>
-	                </g:each>
-	            </div>
+            	<div style="width:145px">
+            		<g:hiddenField id="check_userDepartIds" name="check_userDepartIds" data-dojo-type="dijit/form/ValidationTextBox" />
+	            	<input id="check_userDepart" data-dojo-type="dijit/form/ValidationTextBox" 
+	                	data-dojo-props='trim:true,readOnly:true,style:{width:"123px",float:"left"}
+	               '/>
+	               <div class="dijitTextBox dijitComboBox" style="width:17px;float:left">
+	               		<div role="presentation" class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer">
+		               		<input type="text" onclick="search_selectDepart()" aria-hidden="true" role="button presentation" readonly="readonly" tabindex="-1" value="▼ " 
+		               		class="dijitReset dijitInputField dijitArrowButtonInner">
+	               		</div>
+	               </div>
+               </div>
             </td>
             <td>
             	<div class="btn">

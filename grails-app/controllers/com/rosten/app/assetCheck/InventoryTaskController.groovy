@@ -15,10 +15,12 @@ import com.rosten.app.system.UserGroup
 import com.rosten.app.system.Group1
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetCards.*
+import com.rosten.app.share.ShareService
 
 class InventoryTaskController {
 	def assetCheckService
 	def springSecurityService
+	def shareService
 	
 	def imgPath ="images/rosten/actionbar/"
 	
@@ -246,7 +248,7 @@ class InventoryTaskController {
 		def model =[:]
 		
 		def company = Company.get(params.companyId)
-		model["DepartList"] = Depart.findAllByCompany(company)
+//		model["DepartList"] = Depart.findAllByCompany(company)
 		
 		def _list =[]
 		
@@ -255,7 +257,7 @@ class InventoryTaskController {
 				_list << it.categoryName
 			}
 		}
-		
+		model["company"] = company
 		model["categoryList"] = _list.unique()
 		
 		render(view:'/assetCheck/assetCheckSearch',model:model)
@@ -285,10 +287,19 @@ class InventoryTaskController {
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
 		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = params.category
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
-		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		
+		def userDepartList = []
+		if(params.userDepart && !"".equals(params.userDepart)){
+			params.userDepart.split(",").each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+//				userDepartList << Depart.get(it)
+			}
+			searchArgs["userDepart"] = userDepartList.unique()
+		}
 		
 		def totalNum = 0	//总条目数
-		def totalMoney = 0	//总金额
+		def totalMoney = 0.00	//总金额
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
 			int nowPage =  Util.str2int(params.showPageNum)
@@ -307,7 +318,7 @@ class InventoryTaskController {
 							createAlias('userCategory', 'a')
 							like("a.categoryName","%" + v + "%")
 						}else if(k.equals("userDepart")){
-							eq(k,v)
+							'in'(k,v)
 						}else{
 							like(k,"%" + v + "%")
 						}
@@ -321,7 +332,7 @@ class InventoryTaskController {
 							createAlias('userCategory', 'a')
 							like("a.categoryName","%" + v + "%")
 						}else if(k.equals("userDepart")){
-							eq(k,v)
+							'in'(k,v)
 						}else{
 							like(k,"%" + v + "%")
 						}
@@ -335,7 +346,7 @@ class InventoryTaskController {
 							createAlias('userCategory', 'a')
 							like("a.categoryName","%" + v + "%")
 						}else if(k.equals("userDepart")){
-							eq(k,v)
+							'in'(k,v)
 						}else{
 							like(k,"%" + v + "%")
 						}
@@ -349,7 +360,7 @@ class InventoryTaskController {
 							createAlias('userCategory', 'a')
 							like("a.categoryName","%" + v + "%")
 						}else if(k.equals("userDepart")){
-							eq(k,v)
+							'in'(k,v)
 						}else{
 							like(k,"%" + v + "%")
 						}
@@ -397,7 +408,7 @@ class InventoryTaskController {
 		}
 		
 		if(params.refreshPageControl){
-			json["pageControl"] = ["total":totalNum.toString(),"endHtml":"总金额共<span style=\"color:red;margin-left:2px;margin-right:2px\">" + Util.DoubleToFormat(totalMoney/10000,2) + "</span>万元"]
+			json["pageControl"] = ["total":totalNum.toString(),"endHtml":"总金额共<span style=\"color:red;margin-left:2px;margin-right:2px\">" + Util.DoubleToFormat(totalMoney?totalMoney/10000:0.00,2) + "</span>万元"]
 		}
 		render json as JSON
 	}

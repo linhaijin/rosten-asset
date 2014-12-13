@@ -1,7 +1,7 @@
 /**
  * @author ercjlo
  */
-define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
+define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior"], function(
 		connect, lang,registry,kernel) {
 	
 	assetCheck_search = function(){
@@ -22,7 +22,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("check_userDepart");
+		var userDepart = registry.byId("check_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
@@ -41,6 +41,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("check_category").set("value","");
 			registry.byId("check_assetName").set("value","");
 			registry.byId("check_userDepart").set("value","");
+			registry.byId("check_userDepartIds").set("value","");
 			
 			rosten.kernel.refreshGrid();
 			break;

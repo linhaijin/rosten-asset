@@ -141,20 +141,26 @@ define(["dojo/_base/lang",
         }; 
         return rosten[id];
     };
-	application.selectDepart = function(url,type,inputName,inputId) {
+	application.selectDepart = function(url,type,inputName,inputId,showRoot) {
         var id = "sys_departDialog";
-
+        
         if (rosten[id] && registry.byId(id)) {
             rosten[id].open();
             rosten[id].refresh();
         } else {
             var args = {
                 url : url,
-                rootLabel : "部门层级",
+//                rootLabel : "部门层级",
                 showCheckBox : type,
                 title:"部门选择",
                 folderClass : "departTree"
             };
+            if(showRoot!=undefined && !showRoot){
+            	args.showRoot=false;
+            }else{
+            	args.showRoot=true;
+            	args.rootLabel = "部门层级";
+            }
             rosten[id] = new PickTreeDialog(args);
             rosten[id].open();
         }

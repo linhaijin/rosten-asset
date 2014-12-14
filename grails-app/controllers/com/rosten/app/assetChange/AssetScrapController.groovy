@@ -1205,6 +1205,46 @@ class AssetScrapController {
 				def map =[:]
 				map["assetScrap"] = assetScrap
 				
+				def seriesNo = assetScrap.seriesNo
+				
+				def acCount = 0
+				def acRow = []
+				def assetName = ""
+				def registerNum = ""
+				def specifications = ""
+				def acCarList = CarCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acHouseList = HouseCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acDeviceList = DeviceCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acFurnitureList = FurnitureCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				if(acCarList.size() != 0){
+					acCount = acCarList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acHouseList.size() != 0){
+					acCount = acHouseList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acDeviceList.size() != 0){
+					acCount = acDeviceList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acFurnitureList.size() != 0){
+					acCount = acFurnitureList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}
+				map["acCount"] = acCount
+				acRow.each{
+					assetName =  it.assetName
+					registerNum = it.registerNum
+					specifications = it.specifications
+				}
+				map["acRow"] = [assetName:assetName,registerNum:registerNum,specifications:specifications]
+				
 				//所有意见默认取最后一次意见
 				//获取部门领导意见
 				def bmldyj = shareService.getCommentByStatus(assetScrap.id,"部门领导审核")
@@ -1223,7 +1263,7 @@ class AssetScrapController {
 				}
 				
 				//获取后勤意见
-				def hqyj = shareService.getCommentByStatus(assetScrap.id,"后勤部领导审核")
+				def hqyj = shareService.getCommentByStatus(assetScrap.id,"后勤部审核")
 				if(hqyj && hqyj.size()>0){
 					map["hqComment"]= hqyj[0]
 				}else{

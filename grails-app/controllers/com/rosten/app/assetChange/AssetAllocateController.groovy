@@ -1177,6 +1177,46 @@ class AssetAllocateController {
 				def assetAllocate = AssetAllocate.get(params.id)
 				def map =[:]
 				map["assetAllocate"] = assetAllocate
+				def seriesNo = assetAllocate.seriesNo
+				
+				def acCount = 0
+				def acRow = []
+				def acList
+				def assetName = ""
+				def registerNum = ""
+				def specifications = ""
+				def acCarList = CarCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acHouseList = HouseCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acDeviceList = DeviceCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				def acFurnitureList = FurnitureCards.findAllBySeriesNoLike("%"+seriesNo+"%")
+				if(acCarList.size() != 0){
+					acCount = acCarList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acHouseList.size() != 0){
+					acCount = acHouseList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acDeviceList.size() != 0){
+					acCount = acDeviceList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}else if(acFurnitureList.size() != 0){
+					acCount = acFurnitureList.size()
+					if(acCount == 1){
+						acRow = acCarList[0]
+					}
+				}
+				map["acCount"] = acCount
+				acRow.each{
+					assetName =  it.assetName
+					registerNum = it.registerNum
+					specifications = it.specifications
+				}
+				map["acRow"] = [assetName:assetName,registerNum:registerNum,specifications:specifications]
 				
 				//所有意见默认取最后一次意见
 				//获取后勤意见

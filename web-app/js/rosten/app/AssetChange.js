@@ -103,7 +103,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetScrap_print = function(){
 		var unids = rosten.getGridUnid("single");
 		if (unids == ""){
-			rosten.alert("注意：请选择数据！");
+			rosten.alert("注意：请在列表中选择数据！");
 			return;
 		}
 		rosten.openNewWindow("assetScrapPrint", rosten.webPath + "/assetScrap/assetScrapPrint/" + unids);
@@ -223,7 +223,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	assetAllocate_print = function(){
 		var unids = rosten.getGridUnid("single");
 		if (unids == ""){
-			rosten.alert("注意：请选择数据！");
+			rosten.alert("注意：请在列表中选择数据！");
 			return;
 		}
 		rosten.openNewWindow("assetAllocatePrint", rosten.webPath + "/assetAllocate/assetAllocatePrint/" + unids);

@@ -122,6 +122,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var qseriesNo = "";
 		var qoriginalDepart = "";
 		var qnewDepart = "";
+		var qnewUser = "";
 		
 		var seriesNo = registry.byId("allocate_seriesNo");
 		if(seriesNo.get("value")!=""){
@@ -140,7 +141,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			newDepart = newDepart.get("value");
 			qnewDepart = "&newDepart="+newDepart;
 		}
-		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId+qseriesNo+qoriginalDepart+qnewDepart);
+		
+		var newUser = registry.byId("allocate_newUser");
+		if(newUser.get("value")!=""){
+			newUser = newUser.get("value");
+			qnewUser = "&newUser="+newUser;
+		}
+		
+		rosten.openNewWindow("assetAllocate", rosten.webPath + "/assetAllocate/assetAllocateExport?companyId="+companyId+qseriesNo+qoriginalDepart+qnewDepart+qnewUser);
 	};
 	
 	assetAllocate_delete = function(){
@@ -178,11 +186,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.seriesNo = seriesNo.get("value");
 		}
 		
-//		var applyMan = registry.byId("allocate_applyMan");
-//		if(applyMan.get("value")!=""){
-//			content.applyMan = applyMan.get("value");
-//		}
-		
 		var originalDepart = registry.byId("allocate_originalDepart");
 		if(originalDepart.get("value")!=""){
 			content.originalDepart = originalDepart.get("value");
@@ -191,6 +194,11 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var newDepart = registry.byId("allocate_newDepart");
 		if(newDepart.get("value")!=""){
 			content.newDepart = newDepart.get("value");
+		}
+		
+		var newUser = registry.byId("allocate_newUser");
+		if(newUser.get("value")!=""){
+			content.newUser = newUser.get("value");
 		}
 		
 		switch(rosten.kernel.navigationEntity) {
@@ -204,9 +212,9 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("allocate_seriesNo").set("value","");
-//			registry.byId("allocate_applyMan").set("value","");
 			registry.byId("allocate_originalDepart").set("value","");
 			registry.byId("allocate_newDepart").set("value","");
+			registry.byId("allocate_newUser").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

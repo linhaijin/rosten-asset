@@ -23,7 +23,7 @@ class AssetAllocate {
 		return SeriesDate
 	}
 	//申请单号
-	@GridColumn(name="申请单号",formatter="assetAllocate_formatTopic")
+	@GridColumn(name="申请单号",colIdx=1,formatter="assetAllocate_formatTopic")
 	String seriesNo = getFormattedSeriesDate()
 	
 	//申请日期
@@ -76,6 +76,7 @@ class AssetAllocate {
 	}
 	
 	//新使用人
+	@GridColumn(name="新使用人",width="80px",colIdx=5)
 	String newUser
 	
 	//调入部门
@@ -101,11 +102,11 @@ class AssetAllocate {
 //	}
 	
 	//资产总和
-	@GridColumn(name="资产总和",width="100px",colIdx=5)
+	@GridColumn(name="资产总和",width="100px",colIdx=6)
 	Double assetTotal = 0
 	
 	//调拨原因
-	@GridColumn(name="调拨原因",colIdx=6)
+	@GridColumn(name="调拨原因",colIdx=7)
 	String applyDesc
 	
 	//审批状态
@@ -130,7 +131,7 @@ class AssetAllocate {
 	//当前处理人
 	User currentUser
 
-	@GridColumn(name="当前处理人",colIdx=8,width="70px")
+	@GridColumn(name="当前处理人",colIdx=9,width="70px")
 	def getCurrentUserName(){
 		if(currentUser!=null){
 			return currentUser.getFormattedName()
@@ -179,7 +180,7 @@ class AssetAllocate {
 	String taskId
 	
 	//流程状态
-	@GridColumn(name="流程状态",colIdx=7,width="110px")
+	@GridColumn(name="流程状态",colIdx=8,width="110px")
 	String status = "新建"
 	
 	//--------------------------------------------------------------------------

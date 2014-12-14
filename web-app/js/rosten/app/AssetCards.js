@@ -6,24 +6,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	
 	//2014-12-08 增加条形码打印功能--------------------------------------------------------------
-	carCards_printTxm = function(){
-		var unids = rosten.getGridUnid("multi");
-		if (unids == "")
-			return;
-		rosten.openNewWindow("carCardsPrintTxm", rosten.webPath + "/carCards/carCardsPrintTxm/" + unids);
-	}
-	deviceCards_printTxm = function(){
-		var unids = rosten.getGridUnid("multi");
-		if (unids == "")
-			return;
-		rosten.openNewWindow("deviceCardsPrintTxm", rosten.webPath + "/deviceCards/deviceCardsPrintTxm/" + unids);
-	}
-	furnitureCards_printTxm = function(){
-		var unids = rosten.getGridUnid("multi");
-		if (unids == "")
-			return;
-		rosten.openNewWindow("furnitureCardsPrintTxm", rosten.webPath + "/furnitureCards/furnitureCardsPrintTxm/" + unids);
-	}
+	
 	//------------------------------------------------------------------------------------
 	
 	//运输工具
@@ -147,6 +130,40 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		
 		rosten.openNewWindow("carCards", rosten.webPath + "/carCards/carCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
+	
+	carCards_printTxm = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
+		
+		var registerNum = registry.byId("car_registerNum");
+		if(registerNum.get("value")!=""){
+			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var category = registry.byId("car_category");
+		if(category.get("value")!=""){
+			category = category.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		var assetName = registry.byId("car_assetName");
+		if(assetName.get("value")!=""){
+			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var userDepart = registry.byId("car_userDepart");
+		if(userDepart.get("value")!=""){
+			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
+		}
+		
+		rosten.openNewWindow("carCardsPrintTxm", rosten.webPath + "/carCards/carCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+	}
 	
 	//土地
 	landCards_add = function(){
@@ -547,6 +564,40 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.openNewWindow("deviceCards", rosten.webPath + "/deviceCards/deviceCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
 	
+	deviceCards_printTxm = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
+		
+		var registerNum = registry.byId("device_registerNum");
+		if(registerNum.get("value")!=""){
+			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var category = registry.byId("device_category");
+		if(category.get("value")!=""){
+			category = category.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		var assetName = registry.byId("device_assetName");
+		if(assetName.get("value")!=""){
+			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var userDepart = registry.byId("device_userDepart");
+		if(userDepart.get("value")!=""){
+			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
+		}
+		
+		rosten.openNewWindow("deviceCardsPrintTxm", rosten.webPath + "/deviceCards/deviceCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+	}
+	
 	//图书
 	bookCards_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -784,6 +835,40 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		
 		rosten.openNewWindow("furnitureCards", rosten.webPath + "/furnitureCards/furnitureCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
+	
+	furnitureCards_printTxm = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var qregisterNum = "";
+		var qcategory = "";
+		var qassetName = "";
+		var quserDepart = "";
+		
+		var registerNum = registry.byId("furniture_registerNum");
+		if(registerNum.get("value")!=""){
+			registerNum = registerNum.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var category = registry.byId("furniture_category");
+		if(category.get("value")!=""){
+			category = category.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		var assetName = registry.byId("furniture_assetName");
+		if(assetName.get("value")!=""){
+			assetName = assetName.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var userDepart = registry.byId("furniture_userDepart");
+		if(userDepart.get("value")!=""){
+			userDepart = userDepart.get("value");
+			quserDepart = "&userDepart="+userDepart;
+		}
+		
+		rosten.openNewWindow("furnitureCardsPrintTxm", rosten.webPath + "/furnitureCards/furnitureCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+	}
 	
 	/*
 	 * 此功能默认必须存在

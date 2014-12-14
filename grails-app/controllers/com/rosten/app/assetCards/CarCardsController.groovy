@@ -24,17 +24,6 @@ class CarCardsController {
 	
 	def imgPath ="images/rosten/actionbar/"
 	
-	
-	//2014-12-08增加条形码打印功能
-	def carCardsPrintTxm ={
-		//待完善
-		def json=[:]
-		
-		json["result"] = "true"
-		
-		render json as JSON
-	}
-	
 	def carCardsForm ={
 		//增加资产管理员群组的控制权限
 		def currentUser = springSecurityService.getCurrentUser()
@@ -49,6 +38,17 @@ class CarCardsController {
 		if("zcgly" in userGroups || "xhzcgly" in userGroups){
 			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
 		}
+		
+		render actionList as JSON
+	}
+	
+	def carCardsPrintForm ={
+		def webPath = request.getContextPath() + "/"
+		def strname = "carCards"
+		def actionList = []
+		
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("打印",webPath + imgPath + "word_print.png",strname + "_print")
 		
 		render actionList as JSON
 	}
@@ -277,5 +277,41 @@ class CarCardsController {
 		}
 		response.outputStream.flush()
 		response.outputStream.close()
+	}
+	
+	//2014-12-08增加条形码打印功能
+	def carCardsPrintTxm ={
+		def model =[:]
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		
+		def c = CarCards.createCriteria()
+
+		def carCardsList = c.list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("category") || k.equals("userDepart")){
+					eq(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		
+		model["user"] = user
+		model["company"] = company
+		model["carCardsList"] = carCardsList
+		model["countSize"] = carCardsList.size()
+		
+		render(view:'/assetCards/carCardsPrintTxm',model:model)
 	}
 }

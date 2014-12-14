@@ -12,20 +12,17 @@
 <body>
 	<div class="searchtab">
       <table width="100%" border="0">
-        
         <tbody>
           <tr>
             <th width="8%">申请单号</th>
             <td width="18%">
             	<input id="repair_seriesNo" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true
-               '/>
+                	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
             </td>
             <th width="8%">使用部门</th>
             <td width="18%">
             	<div id="repair_usedDepart" data-dojo-type="dijit/form/ComboBox"
-	                data-dojo-props='trim:true,value:""
-	            '>
+	                data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
@@ -34,10 +31,10 @@
             <th width="8%">使用人</th>
             <td width="18%">
             	<input id="repair_usedMan"  data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true
-               '/>
+                	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
             </td>
-            <td>
+            <td></td>
+            <td width="12%">
             	<div class="btn">
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetRepair_search()}'>查询</button>
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetRepair_resetSearch()}'>重置</button>

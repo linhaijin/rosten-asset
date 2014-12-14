@@ -42,7 +42,7 @@
             	<input id="allocate_newUser" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
             </td>
-            <td>
+            <td width="12%">
             	<div class="btn">
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetAllocate_search()}'>查询</button>
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetAllocate_resetSearch()}'>重置</button>

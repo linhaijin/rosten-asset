@@ -1195,4 +1195,69 @@ class AssetScrapController {
 		def excel = new ExcelExport()
 		excel.assetScrapDc(os,assetScrapList)
 	}
+	
+	def assetScrapPrint = {
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null != ids && ids.length > 0){
+			if(ids.length == 1){
+				def assetScrap = AssetScrap.get(params.id)
+				def map =[:]
+				map["assetScrap"] = assetScrap
+				
+				//所有意见默认取最后一次意见
+				//获取部门领导意见
+				def bmldyj = shareService.getCommentByStatus(assetScrap.id,"部门领导审核")
+				if(bmldyj && bmldyj.size()>0){
+					map["bmldComment"]= bmldyj[0]
+				}else{
+					map["bmldComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取信息部意见
+				def xxbyj = shareService.getCommentByStatus(assetScrap.id,"信息部领导审核")
+				if(xxbyj && xxbyj.size()>0){
+					map["xxbComment"]= xxbyj[0]
+				}else{
+					map["xxbComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取后勤意见
+				def hqyj = shareService.getCommentByStatus(assetScrap.id,"后勤部领导审核")
+				if(hqyj && hqyj.size()>0){
+					map["hqComment"]= hqyj[0]
+				}else{
+					map["hqComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取财务意见
+				def cwyj = shareService.getCommentByStatus(assetScrap.id,"财务部审核")
+				if(cwyj && cwyj.size()>0){
+					map["cwComment"]= cwyj[0]
+				}else{
+					map["cwComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取秘书长意见
+				def mszyj = shareService.getCommentByStatus(assetScrap.id,"秘书长审批")
+				if(mszyj && mszyj.size()>0){
+					map["mszComment"]= mszyj[0]
+				}else{
+					map["mszComment"] = [content:"",date:"",name:""]
+				}
+				
+				//获取理事长意见
+				def lszyj = shareService.getCommentByStatus(assetScrap.id,"理事长审批")
+				if(lszyj && lszyj.size()>0){
+					map["lszComment"]= lszyj[0]
+				}else{
+					map["lszComment"] = [content:"",date:"",name:""]
+				}
+				
+				word.singlePrint(response,"zcbfbsd.xml",assetScrap.seriesNo,map)
+			}else{
+//				word.downloadZzkhbZip(response,params.id)
+			}
+		}
+	}
 }

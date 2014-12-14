@@ -1180,7 +1180,7 @@ class AssetAllocateController {
 				
 				//所有意见默认取最后一次意见
 				//获取后勤意见
-				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤部领导审核")
+				def hqyj = shareService.getCommentByStatus(assetAllocate.id,"后勤部领导审核")
 				if(hqyj && hqyj.size()>0){
 					map["hqComment"]= hqyj[0]
 				}else{
@@ -1188,7 +1188,7 @@ class AssetAllocateController {
 				}
 				
 				//获取财务意见
-				def cwyj = shareService.getCommentByStatus(assetApply.id,"财务部审核")
+				def cwyj = shareService.getCommentByStatus(assetAllocate.id,"财务部审核")
 				if(cwyj && cwyj.size()>0){
 					map["cwComment"]= cwyj[0]
 				}else{
@@ -1196,7 +1196,7 @@ class AssetAllocateController {
 				}
 				
 				//获取秘书长意见
-				def mszyj = shareService.getCommentByStatus(assetApply.id,"秘书长审批")
+				def mszyj = shareService.getCommentByStatus(assetAllocate.id,"秘书长审批")
 				if(mszyj && mszyj.size()>0){
 					map["mszComment"]= mszyj[0]
 				}else{

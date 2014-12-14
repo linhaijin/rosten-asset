@@ -172,8 +172,10 @@ if(carCardsList != null && carCardsList.size()>0){
 		<tr>
 			<td colspan="2" align="right" style="padding-right:20px;">
 			  	共<%=listsize%>条 当前<%=p%>/<%=ye%>页&nbsp;&nbsp;&nbsp;&nbsp;
+				<input id = "btn0" class="btn" type="button" value="首  页" onClick="return turnPage(<%=1%>)" />&nbsp;&nbsp;
 				<input id = "btn1" class="btn" type="button" value="上一页" onClick="return turnPage(<%=prep%>)" />&nbsp;&nbsp;
 				<input id = "btn2" class="btn" type="button" value="下一页" onClick="return turnPage(<%=nextp%>)"/>&nbsp;&nbsp;
+				<input id = "btn3" class="btn" type="button" value="尾  页" onClick="return turnPage(<%=ye%>)"/>&nbsp;&nbsp;
 			</td>
 		</tr>
 	</table>

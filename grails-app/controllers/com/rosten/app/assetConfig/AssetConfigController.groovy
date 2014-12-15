@@ -154,6 +154,7 @@ class AssetConfigController {
 
 					if(rootCategory && _category){
 						//创建资产卡片信息
+						
 						def cardEntity
 						switch (rootCategory.categoryCode){
 							case "house":	//房屋及建筑物

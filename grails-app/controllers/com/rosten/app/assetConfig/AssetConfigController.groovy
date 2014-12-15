@@ -134,112 +134,98 @@ class AssetConfigController {
 				Sheet sourceSheet = Workbook.getWorkbook(filePath).getSheet(0);
 				int sourceRowCount = sourceSheet.getRows();//获得源excel的行数
 				
-				for(int i=1;i<sourceRowCount;i++){
-					String bm =sourceSheet.getCell(1, i).getContents();	//所属部门
-					String bz =sourceSheet.getCell(2, i).getContents();	//卡片编号，备注
-					String lb =sourceSheet.getCell(4, i).getContents();	//资产类别
-					String dm =sourceSheet.getCell(5, i).getContents();	//资产代码
-					String mc =sourceSheet.getCell(6, i).getContents();	//资产名称
-					String jz =sourceSheet.getCell(7, i).getContents();	//资产价值
-					String sj =sourceSheet.getCell(8, i).getContents();	//开始使用时间
-					String dd =sourceSheet.getCell(9, i).getContents();	//存放地点
-					String xh =sourceSheet.getCell(10, i).getContents();	//规格型号
-					String zrr =sourceSheet.getCell(11, i).getContents();	//责任人
+				//从第三行开始计算
+				for(int i=2;i<sourceRowCount;i++){
+					String bm =sourceSheet.getCell(0, i).getContents();	//所属部门
+					String zcdl =sourceSheet.getCell(1, i).getContents();	//资产大类名称
+					String lb =sourceSheet.getCell(2, i).getContents();	//资产类别
+					String dm =sourceSheet.getCell(4, i).getContents();	//资产代码
+					String mc =sourceSheet.getCell(5, i).getContents();	//资产名称
+					String jz =sourceSheet.getCell(6, i).getContents();	//资产价值
+					String sj =sourceSheet.getCell(7, i).getContents();	//开始使用时间
+					String dd =sourceSheet.getCell(8, i).getContents();	//存放地点
+					String xh =sourceSheet.getCell(9, i).getContents();	//规格型号
+					String zrr =sourceSheet.getCell(10, i).getContents();	//责任人
+					String bz =sourceSheet.getCell(11, i).getContents();	//备注
 					
 					//通过类别获取大类信息，如未找到，则默认为其他类别
-					def rootCategory
-					def _category = AssetCategory.findByCategoryName(lb)
-					if(_category){
-						rootCategory = _category.getRootCategory(_category)
-					}else{
-						rootCategory = AssetCategory.findByCategoryName("其他")
-					}
-					
-					//创建资产卡片信息
-					def cardEntity
-					switch (rootCategory.categoryCode){
-						case "house":	//房屋及建筑物
-							cardEntity = HouseCards.findByRegisterNum(dm)
-							if(!cardEntity){
+					def rootCategory = AssetCategory.findByCategoryName(zcdl)
+					def _category = AssetCategory.findByCategoryNameAndParent(lb,rootCategory)
+
+					if(rootCategory && _category){
+						//创建资产卡片信息
+						def cardEntity
+						switch (rootCategory.categoryCode){
+							case "house":	//房屋及建筑物
 								cardEntity = new HouseCards()
-								cardEntity.registerNum = dm
 								cardEntity.company = company
-							}
-							cardEntity.userDepart = Depart.findByDepartName(bm)
-							cardEntity.userCategory = _category
-							cardEntity.assetName = mc
-							cardEntity.onePrice = Util.obj2Double(jz)
-							cardEntity.houseLocated = dd
-							cardEntity.specifications = xh
-							cardEntity.purchaser = zrr
-							cardEntity.createDate = Util.convertToTimestamp(sj)
-							cardEntity.remark = bz
-							
-							cardEntity.save()
-							break
-						case "car":		//运输工具
-							cardEntity = CarCards.findByRegisterNum(dm)
-							if(!cardEntity){
+								cardEntity.registerNum = dm
+								cardEntity.userDepart = Depart.findByDepartName(bm)
+								cardEntity.userCategory = _category
+								cardEntity.assetName = mc
+								cardEntity.onePrice = Util.obj2Double(jz)
+								cardEntity.houseLocated = dd
+								cardEntity.specifications = xh
+								cardEntity.purchaser = zrr
+								cardEntity.createDate = Util.convertToTimestamp(sj)
+								cardEntity.remark = bz
+								
+								cardEntity.save()
+								break
+							case "car":		//运输工具
 								cardEntity = new CarCards()
-								cardEntity.registerNum = dm
 								cardEntity.company = company
-							}
-							cardEntity.userDepart = Depart.findByDepartName(bm)
-							cardEntity.userCategory = _category
-							cardEntity.assetName = mc
-							cardEntity.onePrice = Util.obj2Double(jz)
-							cardEntity.storagePosition = dd
-							cardEntity.specifications = xh
-							cardEntity.purchaser = zrr
-							cardEntity.buyDate = Util.convertToTimestamp(sj)
-							cardEntity.remark = bz
-							
-							cardEntity.save()
-							break
-						case "furniture":	//办公家具
-							cardEntity = FurnitureCards.findByRegisterNum(dm)
-							if(!cardEntity){
+								cardEntity.registerNum = dm
+								cardEntity.userDepart = Depart.findByDepartName(bm)
+								cardEntity.userCategory = _category
+								cardEntity.assetName = mc
+								cardEntity.onePrice = Util.obj2Double(jz)
+								cardEntity.storagePosition = dd
+								cardEntity.specifications = xh
+								cardEntity.purchaser = zrr
+								cardEntity.buyDate = Util.convertToTimestamp(sj)
+								cardEntity.remark = bz
+								
+								cardEntity.save()
+								break
+							case "furniture":	//办公家具
 								cardEntity = new FurnitureCards()
-								cardEntity.registerNum = dm
 								cardEntity.company = company
-							}
-							cardEntity.userDepart = Depart.findByDepartName(bm)
-							cardEntity.userCategory = _category
-							cardEntity.assetName = mc
-							cardEntity.onePrice = Util.obj2Double(jz)
-							cardEntity.storagePosition = dd
-							cardEntity.specifications = xh
-							cardEntity.purchaser = zrr
-							cardEntity.buyDate = Util.convertToTimestamp(sj)
-							cardEntity.remark = bz
-							
-							cardEntity.save()
-							break
-						case "device":		//电子设备
-							cardEntity = DeviceCards.findByRegisterNum(dm)
-							if(!cardEntity){
+								cardEntity.registerNum = dm
+								cardEntity.userDepart = Depart.findByDepartName(bm)
+								cardEntity.userCategory = _category
+								cardEntity.assetName = mc
+								cardEntity.onePrice = Util.obj2Double(jz)
+								cardEntity.storagePosition = dd
+								cardEntity.specifications = xh
+								cardEntity.purchaser = zrr
+								cardEntity.buyDate = Util.convertToTimestamp(sj)
+								cardEntity.remark = bz
+								
+								cardEntity.save()
+								break
+							case "device":		//电子设备
 								cardEntity = new DeviceCards()
-								cardEntity.registerNum = dm
 								cardEntity.company = company
-							}
-							cardEntity.userDepart = Depart.findByDepartName(bm)
-							cardEntity.userCategory = _category
-							cardEntity.assetName = mc
-							cardEntity.onePrice = Util.obj2Double(jz)
-							cardEntity.storagePosition = dd
-							cardEntity.specifications = xh
-							cardEntity.purchaser = zrr
-							cardEntity.buyDate = Util.convertToTimestamp(sj)
-							cardEntity.remark = bz
+								cardEntity.registerNum = dm
+								cardEntity.userDepart = Depart.findByDepartName(bm)
+								cardEntity.userCategory = _category
+								cardEntity.assetName = mc
+								cardEntity.onePrice = Util.obj2Double(jz)
+								cardEntity.storagePosition = dd
+								cardEntity.specifications = xh
+								cardEntity.purchaser = zrr
+								cardEntity.buyDate = Util.convertToTimestamp(sj)
+								cardEntity.remark = bz
+								
+								cardEntity.save()
+								break
+								
+							case "other":		//其他
 							
-							cardEntity.save()
-							break
-							
-						case "other":		//其他
-						
-							break
-					}
-					
+								break
+						}
+					}					
 				}
 				
 				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();}</script>"

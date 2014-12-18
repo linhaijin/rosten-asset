@@ -139,6 +139,7 @@ class FurnitureCardsController {
 		//特殊字段信息处理
 		furnitureCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		furnitureCards.userDepart = Depart.get(params.allowdepartsId)
+		furnitureCards.userCategory = AssetCategory.get(params.allowCategoryId)
 		
 		if(furnitureCards.save(flush:true)){
 			json["result"] = "true"

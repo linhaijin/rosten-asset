@@ -127,6 +127,7 @@ class LandCardsController {
 		//特殊字段信息处理
 		landCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		landCards.userDepart = Depart.get(params.allowdepartsId)
+		landCards.userCategory = AssetCategory.get(params.allowCategoryId)
 		
 		if(landCards.save(flush:true)){
 			json["result"] = "true"

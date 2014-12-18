@@ -140,6 +140,7 @@ class HouseCardsController {
 		//特殊字段信息处理
 		houseCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		houseCards.userDepart = Depart.get(params.allowdepartsId)
+		houseCards.userCategory = AssetCategory.get(params.allowCategoryId)
 
 		if(houseCards.save(flush:true)){
 			json["result"] = "true"

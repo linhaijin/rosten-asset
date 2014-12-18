@@ -140,6 +140,7 @@ class CarCardsController {
 		//特殊字段信息处理
 		carCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		carCards.userDepart = Depart.get(params.allowdepartsId)
+		carCards.userCategory = AssetCategory.get(params.allowCategoryId)
 		
 		if(carCards.save(flush:true)){
 			json["result"] = "true"

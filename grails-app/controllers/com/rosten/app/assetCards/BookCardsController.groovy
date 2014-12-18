@@ -126,6 +126,7 @@ class BookCardsController {
 		//特殊字段信息处理
 		bookCards.buyDate = Util.convertToTimestamp(params.buyDate)
 		bookCards.userDepart = Depart.get(params.allowdepartsId)
+		bookCards.userCategory = AssetCategory.get(params.allowCategoryId)
 		
 		if(bookCards.save(flush:true)){
 			json["result"] = "true"

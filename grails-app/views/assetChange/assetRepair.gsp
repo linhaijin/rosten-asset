@@ -14,33 +14,32 @@
 		}
     </style>
 	<script type="text/javascript">
-		require(["dojo/parser",
-	    	"dojo/dom",
-			"dojo/_base/kernel",
-			"dojo/_base/lang",
-			"dijit/registry",
-			"dijit/layout/TabContainer",
-			"dijit/layout/ContentPane",
-			"dijit/form/ValidationTextBox",
-			"dijit/form/DateTextBox",
-			"dijit/form/SimpleTextarea",
-			"dijit/form/Button",
-			"dijit/form/Select",
-			"dijit/Dialog",
-			"dojox/grid/DataGrid",
-			"dojox/widget/Wizard",
-			"dojox/widget/WizardPane",
-	    	"rosten/widget/ActionBar",
-	    	"rosten/widget/TitlePane",
-	    	"rosten/app/Application",
-	    	"rosten/app/SystemApplication",
-	    	"rosten/app/BookKeeping",
-	    	"rosten/kernel/behavior"],
+	require(["dojo/parser",
+    	"dojo/dom",
+		"dojo/_base/kernel",
+		"dojo/_base/lang",
+		"dijit/registry",
+		"dijit/layout/TabContainer",
+		"dijit/layout/BorderContainer",
+		"dijit/layout/ContentPane",
+		"dijit/form/ValidationTextBox",
+		"dijit/form/DateTextBox",
+		"dijit/form/SimpleTextarea",
+		"dijit/form/Button",
+		"dijit/form/Select",
+		"dijit/Dialog",
+		"dojox/grid/DataGrid",
+    	"rosten/widget/ActionBar",
+    	"rosten/widget/TitlePane",
+    	"rosten/app/Application",
+    	"rosten/app/SystemApplication",
+    	"rosten/kernel/behavior"],
 		function(parser,dom,kernel,lang,registry){
 			kernel.addOnLoad(function(){
 				rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 				rosten.cssinit();
 			});
+			
 			assetRepair_save = function(object){
 				
 				var usedDepartName = dojo.byId("usedDepartName").value;
@@ -93,16 +92,21 @@
 					},queryOptions:{deep:true}
 				});
 				categoryId = categoryId.substring(0,categoryId.length-1) 
+				
+				var qSeriesNo = "";
+				var seriesNo = "${assetRepair?.seriesNo}";
+				qSeriesNo = "?seriesNo="+encodeURI(seriesNo);
 
 				var url = "${createLink(controller:'assetRepair',action:'assetRepairSaveCheck')}";
-				url += "?categoryId="+encodeURI(categoryId);
+				//url += "?categoryId="+encodeURI(categoryId);
+				url += qSeriesNo;
 
 				var ioArgs = {
 					url : url,
 					handleAs : "json",
 					load : function(response,args) {
 						if(response.result=="false"){//rensult为false，资产列表为不同类型资产
-							rosten.alert("注意：资产列表只能为同类型资产！");
+							rosten.alert("注意：只能为同类型资产！");
 							return;
 						}else{//rensult为true，资产列表为同类型资产，继续
 							//增加对多次单击的次数----2014-9-4
@@ -145,11 +149,11 @@
 					}
 				};
 				dojo.xhrPost(ioArgs);
-			};
+			}
 			
 			page_quit = function(){
 				rosten.pagequit();
-			};	
+			}	
 
 			assetRepair_addComment = function(){
 				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
@@ -169,7 +173,7 @@
 						}	
 					});
 				};
-			};
+			}
 
 			assetRepair_submit = function(object,conditionObj){
 				/*
@@ -217,7 +221,7 @@
 					rosten.alert("系统错误，请通知管理员！");
 					rosten.toggleAction(buttonWidget,false);
 				});
-			};
+			}
 
 			assetRepair_select = function(url,buttonWidget,conditionObj){
 				var rostenShowDialog = rosten.selectFlowUser(url,"single");
@@ -247,7 +251,7 @@
 				rostenShowDialog.queryDlgClose = function(){
 					rosten.toggleAction(buttonWidget,false);
 				};	
-			};
+			}
 		
 			assetRepair_deal = function(type,readArray,buttonWidget,conditionObj){
 				var content = {};
@@ -292,7 +296,7 @@
 					rosten.alert("系统错误，请通知管理员！");
 					rosten.toggleAction(buttonWidget,false);
 				});
-			};
+			}
 		
 			assetRepair_back = function(object,conditionObj){
 				//增加对多次单击的控制
@@ -325,191 +329,276 @@
 					rosten.alert("系统错误，请通知管理员！");
 					rosten.toggleAction(buttonWidget,false);
 				});
-			};
-		});
-
-		assetTypeSelect = function(){
-			var url = "${createLink(controller:'assetRepair',action:'assetChooseListDataStore')}";
-			var qs;
-			var qCompany = "";
-			var compamyId;
-			<g:if test="${company?.id}">
-				compamyId = "${company?.id}";
-				qCompany = "?companyId="+encodeURI(compamyId);
-			</g:if>
-	
-			var qAssetType = "";
-			var assetType;
-			var assetSel = dijit.byId("assetTypeRange");
-			if(assetSel){
-				if(assetSel.attr("value")!=""){
-					assetType = assetSel.attr("value");
-					qAssetType = "&assetType="+assetType;
-				}
 			}
-			url += qCompany+qAssetType;
-			var grid = dijit.byId("assetChooseListGrid");
-			grid.url = url;
-			grid.refresh();
-		}
+
+			addAsset = function(){
+				var tabContainer = dijit.byId("rosten_tabContainer");
+				var title = "资产筛选";
+				var assetpaneid = "assetCategoryChoose_pane";
+				var url = "${createLink(controller:'assetCategoryChoose',action:'assetChoose',params:[companyId:company?.id])}";
+	
+				var qcontrolName = "&controlName=assetRepair";
+				
+				var qseriesNo = "";
+				var seriesNo = dijit.byId("seriesNo").attr("value");
+				if(seriesNo != null || seriesNo != ""){
+					qseriesNo = "&seriesNo="+seriesNo;
+				}
+				
+				url += qcontrolName + qseriesNo;
+				
+				if(dijit.byId("assetCategoryChoose_pane")){
+					var node_pane = dijit.byId("assetCategoryChoose_pane");
+					tabContainer.removeChild(node_pane);
+					node_pane.destroyRecursive();
+				}
+
+				var node = document.createElement("div");
+				var w = new dijit.layout.ContentPane({id:assetpaneid,renderStyles:true,title:title,selected:true,closable:true,href:url},node);
+				dojo.connect(dijit.byId(assetpaneid), "onClose", null , function(){});
+				dojo.style(w.domNode,{"padding":"4px"})
+				tabContainer.addChild(w);
+				tabContainer.selectChild(w);
+			}
 		
-		addAsset = function(){
-			dijit.byId("assetChooseDialog").show();
-		}
-	
-		assetChooseDone = function(){
-			var seriesNo = dijit.byId("seriesNo").attr("value");
-			
-			var grid = dijit.byId("assetChooseListGrid");
-			var selected = grid.getSelected();
-			if (selected.length == 0) {
-				rosten.alert("请在资产列表中选择数据！");
-				return;
-			}
-			
-			var assetId = "";
-			var store = grid.store;
-			dojo.forEach(selected,function(item){
-				if (assetId==""){
-					assetId = store.getValue(item, "id");
-				}else{
-					assetId = assetId+","+store.getValue(item, "id");
+			deleteAsset = function(){
+				var grid = dijit.byId("assetRepairListGrid");
+				var selected = grid.getSelected();
+				if (selected.length == 0) {
+					rosten.alert("注意：请在列表中选择资产！");
+					return;
 				}
-			});
+				
+				var assetId = "";
+				var store = grid.store;
+				dojo.forEach(selected,function(item){
+					if (assetId==""){
+						assetId = store.getValue(item, "id");
+					}else{
+						assetId = assetId+","+store.getValue(item, "id");
+					}
+				});
 	
-			var assetType
-			var assetSel = dijit.byId("assetTypeRange");
-			if(assetSel){
-				if(assetSel.attr("value")!=""){
-					assetType = assetSel.attr("value");
-				}
-			}
-
-			var assetTotal;
-			var assettotal;
-			var assetTotalSel = dijit.byId("assetTotal");
-			if(assetTotalSel){
-				if(assetTotalSel.attr("value") == "" || assetTotalSel.attr("value") == null){
-					assetTotal = "0-0";
-				}else{
-					assetTotal = assetTotalSel.attr("value").replace(".","-");
-				}
-			}
-			//异步处理所选资产数据
-			var url = "${createLink(controller:'assetRepair',action:'assetChooseOperate')}";
-			url += "?assetId="+encodeURI(assetId)+"&assetType="+assetType+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
-			var ioArgs = {
-				url : url,
-				handleAs : "json",
-				load : function(response,args) {
-					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						var assetTotal = response.assetTotal;
-						dojo.byId("assetTotal").value = assetTotal;
-	
-						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
-						var qs;
-						var qCompany = "";
-						var compamyId;
-						<g:if test="${company?.id}">
-							compamyId = "${company?.id}";
-							qCompany = "?companyId="+encodeURI(compamyId);
-						</g:if>
-	
-						var qAssetType = "";
-						var assetType;
-						var assetSel = dijit.byId("assetTypeRange");
-						if(assetSel){
-							if(assetSel.attr("value")!=""){
-								assetType = assetSel.attr("value");
-								qAssetType = "&assetType="+assetType;
-							}
+				var repairId = "${assetRepair?.id}";
+				var seriesNo = "${assetRepair?.seriesNo}";
+				var assetTotal = dojo.byId("assetTotal").value;
+				var url = "${createLink(controller:'assetRepair',action:'assetChooseDelete')}";
+				url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
+				var ioArgs = {
+					url : url,
+					handleAs : "json",
+					load : function(response,args) {
+						if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
+							var assetTotal = response.assetTotal;
+							dojo.byId("assetTotal").value = assetTotal.toFixed(2);
+		
+							var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
+							var qs;
+							var qCompany = "";
+							var compamyId;
+							<g:if test="${company?.id}">
+								compamyId = "${company?.id}";
+								qCompany = "?companyId="+encodeURI(compamyId);
+							</g:if>
+		
+							var qFreshType = "&freshType=twice";
+		
+							var qSeriesNo = "&seriesNo="+seriesNo;
+							
+							url_twice += qCompany+qSeriesNo;
+							var grid_twice = dijit.byId("assetRepairListGrid");
+							
+							grid_twice.url = url_twice;
+							grid_twice.refresh();
+						}else{//rensult为false，处理失败
+							rosten.alert("操作失败，请联系管理员!");
+							return;
 						}
-	
-						var qFreshType = "&freshType=twice";
-	
-						var qSeriesNo = "&seriesNo="+seriesNo;
-						
-						url_twice += qCompany+qSeriesNo;
-						var grid_twice = dijit.byId("assetRepairListGrid");
-						
-						grid_twice.url = url_twice;
-						grid_twice.refresh();
-					}else{//rensult为false，处理失败
-						rosten.alert("操作失败，请联系管理员!");
+					},
+					error : function(response,args) {
+						rosten.alert(response.message);
 						return;
 					}
-				},
-				error : function(response,args) {
-					rosten.alert(response.message);
-					return;
-				}
-			};
-			dojo.xhrPost(ioArgs);
-			dijit.byId("assetChooseDialog").hide();
-		}
-	
-		deleteAsset = function(){
-			var grid = dijit.byId("assetRepairListGrid");
-			var selected = grid.getSelected();
-			if (selected.length == 0) {
-				rosten.alert("请在资产列表中选择数据！");
-				return;
+				};
+				dojo.xhrPost(ioArgs);
 			}
 			
-			var assetId = "";
-			var store = grid.store;
-			dojo.forEach(selected,function(item){
-				if (assetId==""){
-					assetId = store.getValue(item, "id");
-				}else{
-					assetId = assetId+","+store.getValue(item, "id");
-				}
-			});
-
-			var repairId = "${assetRepair?.id}";
-			var seriesNo = "${assetRepair?.seriesNo}";
-			var assetTotal = dojo.byId("assetTotal").value;
-			var url = "${createLink(controller:'assetRepair',action:'assetChooseDelete')}";
-			url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId+"&assetTotal="+assetTotal;
-			var ioArgs = {
-				url : url,
-				handleAs : "json",
-				load : function(response,args) {
-					if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
-						var assetTotal = response.assetTotal;
-						dojo.byId("assetTotal").value = assetTotal;
+			assetCategoryChoose_close = function(){
+				var tabContainer = dijit.byId("rosten_tabContainer");
+				var node = dijit.byId("assetCategoryChoose_pane");
+				tabContainer.removeChild(node);
+				node.destroyRecursive();
+			}
 	
-						var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
-						var qs;
-						var qCompany = "";
-						var compamyId;
-						<g:if test="${company?.id}">
-							compamyId = "${company?.id}";
-							qCompany = "?companyId="+encodeURI(compamyId);
-						</g:if>
-	
-						var qFreshType = "&freshType=twice";
-	
-						var qSeriesNo = "&seriesNo="+seriesNo;
-						
-						url_twice += qCompany+qSeriesNo;
-						var grid_twice = dijit.byId("assetRepairListGrid");
-						
-						grid_twice.url = url_twice;
-						grid_twice.refresh();
-					}else{//rensult为false，处理失败
-						rosten.alert("操作失败，请联系管理员!");
+			assetCategoryChoose_search = function(){
+				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
+				
+				var qCompany = "";
+				var compamyId;
+				<g:if test="${company?.id}">
+					compamyId = "${company?.id}";
+					qCompany = "?companyId="+encodeURI(compamyId);
+				</g:if>
+				
+				var qSeriesNo = "";
+				var seriesNo = "${assetRepair?.seriesNo}";
+				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
+				
+				var qControlName = "&controlName=assetRepair";
+		
+				var qAssetCardsType = "";
+				var assetCardsType;
+				var assetCardsTypeSel = dijit.byId("assetCardsType");
+				if(assetCardsTypeSel){
+					if(assetCardsTypeSel.attr("value")!=""){
+						assetCardsType = assetCardsTypeSel.attr("value");
+						qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
+					}else{
+						rosten.alert("注意：请选择资产类别！");
+						document.getElementById("assetCardsType").focus();
 						return;
 					}
-				},
-				error : function(response,args) {
-					rosten.alert(response.message);
-					return;
 				}
-			};
-			dojo.xhrPost(ioArgs);
-		}
-		
+
+				var qAssetDepart = "";
+				var assetDepart;
+				var assetDepartSel = dijit.byId("assetDepart");
+				if(assetDepartSel){
+					if(assetDepartSel.attr("value") != ""){
+						assetDepart = assetDepartSel.attr("value");
+						qAssetDepart = "&assetDepart=" + encodeURI(assetDepart);
+					}
+				}
+
+				var qAssetUser = "";
+				var assetUser;
+				var assetUserSel = dijit.byId("assetUser");
+				if(assetUserSel){
+					if(assetUserSel.attr("value") != ""){
+						assetUser = assetUserSel.attr("value");
+						qAssetUser = "&assetUser=" + encodeURI(assetUser);
+					}
+				}
+				
+				url += qCompany+qSeriesNo+qAssetCardsType+qAssetDepart+qAssetUser+qControlName;
+				
+				var grid = dijit.byId("assetCategoryChooseListGrid");
+				grid.url = url;
+				grid.refresh();
+			}
+			
+			assetCategoryChoose_reset = function(){
+				registry.byId("assetCardsType").set("value","");
+				registry.byId("assetDepart").set("value","");
+				registry.byId("assetUser").set("value","");
+				rosten.kernel.refreshGrid();
+			}
+			
+			assetCategoryChoose_add = function(){
+				var grid = dijit.byId("assetCategoryChooseListGrid");
+				var selected = grid.getSelected();
+				if (selected.length == 0) {
+					rosten.alert("注意：请在列表中选择资产！");
+					return;
+				}else{
+					var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseOperate')}";
+
+					var qCompany = "";
+					var compamyId;
+					<g:if test="${company?.id}">
+						compamyId = "${company?.id}";
+						qCompany = "?companyId="+encodeURI(compamyId);
+					</g:if>
+					
+					var qControlName = "&controlName=assetRepair";
+
+					var qSeriesNo = "";
+					var seriesNo = "${assetRepair?.seriesNo}";
+					qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
+			
+					var qAssetCardsType = "";
+					var assetCardsType;
+					var assetCardsTypeSel = dijit.byId("assetCardsType");
+					if(assetCardsTypeSel){
+						if(assetCardsTypeSel.attr("value")!=""){
+							assetCardsType = assetCardsTypeSel.attr("value");
+							qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
+						}
+					}
+
+					var qAssetId = "";
+					var assetId = "";
+					var store = grid.store;
+					dojo.forEach(selected,function(item){
+						if (assetId==""){
+							assetId = store.getValue(item, "id");
+						}else{
+							assetId = assetId+","+store.getValue(item, "id");
+						}
+					});
+					if(assetId != ""){
+						qAssetId = "&assetId="+encodeURI(assetId);
+					}
+					
+					
+					var assetTotal;
+					var assetTotalSel = dijit.byId("assetTotal");
+					if(assetTotalSel){
+						if(assetTotalSel.attr("value") == "" || assetTotalSel.attr("value") == null){
+							assetTotal = "0-0";
+						}else{
+							assetTotal = assetTotalSel.attr("value").replace(".","-");
+						}
+					}
+					var qAssetTotal = "&assetTotal="+encodeURI(assetTotal);
+					
+					url += qCompany+qControlName+qSeriesNo+qAssetCardsType+qAssetId+qAssetTotal;
+					//异步处理所选资产数据
+					var ioArgs = {
+						url : url,
+						handleAs : "json",
+						load : function(response,args) {
+							if(response.result=="true"){//rensult为true，后台数据操作成功并返回总金额，同时刷新父页面Grid
+								var url_twice = "${createLink(controller:'assetRepair',action:'assetRepairListDataStore')}";
+								var qCompany = "";
+								var compamyId;
+								<g:if test="${company?.id}">
+									compamyId = "${company?.id}";
+									qCompany = "?companyId="+encodeURI(compamyId);
+								</g:if>
+
+								var qSeriesNo = "";
+								var seriesNo = "${assetRepair?.seriesNo}";
+								qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
+			
+								url_twice += qCompany+qSeriesNo;
+								
+								var assetTotal = response.assetTotal;
+								dojo.byId("assetTotal").value = assetTotal.toFixed(2);
+								
+								//刷新资产筛选页面
+								assetCategoryChoose_search();
+								
+								var grid_twice = dijit.byId("assetRepairListGrid");
+								grid_twice.url = url_twice;
+								grid_twice.refresh();
+								
+								//var pane = dijit.byId("assetCategoryChoose_pane");
+								//pane.set("disabled", true);
+							}else{//rensult为false，处理失败
+								rosten.alert("操作失败，请联系管理员!");
+								return;
+							}
+						},
+						error : function(response,args) {
+							rosten.alert(response.message);
+							return;
+						}
+					};
+					dojo.xhrPost(ioArgs);
+				}
+			}
+		});
     </script>
 </head>
 <body>
@@ -519,7 +608,7 @@
 	</div>
 </div>
 
-<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
+<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"570px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
@@ -728,33 +817,5 @@
 		</div>
 	</g:if>
 </div> 
-<div id="assetChooseDialog" data-dojo-type="dijit.Dialog" class="displayLater" data-dojo-props="title:'资产筛选',style:'width:855px;height:515px'">
-	<div id="assetChooseWizard" data-dojo-type="dojox.widget.Wizard" style="width:850px; height:475px; margin:5 auto;">
-		<div data-dojo-type="dojox.widget.WizardPane" id="assetSelectWizardPane" style="height:430px;border:1px;" >
-			<div>
-				<label>请选择资产类别：</label>
-				<select data-dojo-type="dijit.form.Select" data-dojo-props="id:'assetTypeRange',onChange:assetTypeSelect,style:'width:180px'">
-					<option value="house">房屋及建筑物</option>
-					<option value="car">运输工具</option>
-					<option value="device">电子设备</option>
-					<option value="furniture">办公家具</option>
-					<!-- <option value="land">土地</option>
-					<option value="book">图书</option> -->
-				</select>
-			</div>
-		</div>
-		<div data-dojo-type="dojox.widget.WizardPane" data-dojo-props='canGoBack:"true",doneFunction:assetChooseDone' >
-			<div id="chooseAsset">
-				<div id="assetChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:820px;height:430px;padding:2px;overflow:auto;"'>
-					<div data-dojo-type="rosten/widget/RostenGrid" id="assetChooseListGrid" data-dojo-id="assetChooseListGrid"
-						data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetRepair',action:'assetChooseListDataStore',params:[companyId:company?.id])}"'></div>
-				</div>
-			</div>
-		</div>
-		<script type="dojo/method" event="cancelFunction">
-				dijit.byId("assetChooseDialog").hide();
-			</script>
-	</div>
-</div>
 </body>
 </html>

@@ -72,10 +72,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("car_userDepart");
+		var userDepart = registry.byId("car_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
+//		var userDepart = registry.byId("car_userDepart");
+//		if(userDepart.get("value")!=""){
+//			content.userDepart = userDepart.get("value");
+//		}
 		
 		switch(rosten.kernel.navigationEntity) {
 		default:
@@ -90,6 +94,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("car_registerNum").set("value","");
 			registry.byId("car_category").set("value","");
 			registry.byId("car_assetName").set("value","");
+			registry.byId("car_userDepartIds").set("value","");
 			registry.byId("car_userDepart").set("value","");
 			
 			rosten.kernel.refreshGrid();
@@ -122,11 +127,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("car_userDepart");
+		var userDepart = registry.byId("car_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("car_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("carCards", rosten.webPath + "/carCards/carCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
@@ -156,11 +166,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("car_userDepart");
+		var userDepart = registry.byId("car_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("car_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("carCardsPrintTxm", rosten.webPath + "/carCards/carCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	}
@@ -227,10 +242,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("land_userDepart");
+		var userDepart = registry.byId("land_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
+//		var userDepart = registry.byId("land_userDepart");
+//		if(userDepart.get("value")!=""){
+//			content.userDepart = userDepart.get("value");
+//		}
 		
 		switch(rosten.kernel.navigationEntity) {
 		default:
@@ -245,6 +264,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("land_registerNum").set("value","");
 			registry.byId("land_category").set("value","");
 			registry.byId("land_assetName").set("value","");
+			registry.byId("land_userDepartIds").set("value","");
 			registry.byId("land_userDepart").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
@@ -276,11 +296,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("land_userDepart");
+		var userDepart = registry.byId("land_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("land_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("landCards", rosten.webPath + "/landCards/landCardsExport?companyId="+companyId+qregisterNum+qregisterNum+qcategory+qassetName+quserDepart);
 	};
@@ -346,10 +371,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("house_userDepart");
+		var userDepart = registry.byId("house_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
+//		var userDepart = registry.byId("house_userDepart");
+//		if(userDepart.get("value")!=""){
+//			content.userDepart = userDepart.get("value");
+//		}
 		
 		switch(rosten.kernel.navigationEntity) {
 		default:
@@ -364,6 +393,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("house_registerNum").set("value","");
 			registry.byId("house_category").set("value","");
 			registry.byId("house_assetName").set("value","");
+			registry.byId("house_userDepartIds").set("value","");
 			registry.byId("house_userDepart").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
@@ -395,11 +425,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("house_userDepart");
+		var userDepart = registry.byId("house_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("house_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("houseCards", rosten.webPath + "/houseCards/houseCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
@@ -429,11 +464,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("house_userDepart");
+		var userDepart = registry.byId("house_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("house_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		rosten.openNewWindow("houseCardsPrintTxm", rosten.webPath + "/houseCards/houseCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	}
 	
@@ -506,10 +546,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("device_userDepart");
+		var userDepart = registry.byId("device_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
+//		var userDepart = registry.byId("device_userDepart");
+//		if(userDepart.get("value")!=""){
+//			content.userDepart = userDepart.get("value");
+//		}
 		
 		switch(rosten.kernel.navigationEntity) {
 		default:
@@ -524,6 +568,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("device_registerNum").set("value","");
 			registry.byId("device_category").set("value","");
 			registry.byId("device_assetName").set("value","");
+			registry.byId("device_userDepartIds").set("value","");
 			registry.byId("device_userDepart").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
@@ -555,11 +600,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("device_userDepart");
+		var userDepart = registry.byId("device_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("device_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("deviceCards", rosten.webPath + "/deviceCards/deviceCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
@@ -589,11 +639,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("device_userDepart");
+		var userDepart = registry.byId("device_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("device_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("deviceCardsPrintTxm", rosten.webPath + "/deviceCards/deviceCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	}
@@ -778,10 +833,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.assetName = assetName.get("value");
 		}
 		
-		var userDepart = registry.byId("furniture_userDepart");
+		var userDepart = registry.byId("furniture_userDepartIds");
 		if(userDepart.get("value")!=""){
 			content.userDepart = userDepart.get("value");
 		}
+//		var userDepart = registry.byId("furniture_userDepart");
+//		if(userDepart.get("value")!=""){
+//			content.userDepart = userDepart.get("value");
+//		}
 		
 		switch(rosten.kernel.navigationEntity) {
 		default:
@@ -796,6 +855,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("furniture_registerNum").set("value","");
 			registry.byId("furniture_category").set("value","");
 			registry.byId("furniture_assetName").set("value","");
+			registry.byId("furniture_userDepartIds").set("value","");
 			registry.byId("furniture_userDepart").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
@@ -827,11 +887,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("furniture_userDepart");
+		var userDepart = registry.byId("furniture_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("furniture_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("furnitureCards", rosten.webPath + "/furnitureCards/furnitureCardsExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	};
@@ -861,11 +926,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qassetName = "&assetName="+assetName;
 		}
 		
-		var userDepart = registry.byId("furniture_userDepart");
+		var userDepart = registry.byId("furniture_userDepartIds");
 		if(userDepart.get("value")!=""){
 			userDepart = userDepart.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
+//		var userDepart = registry.byId("furniture_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
 		
 		rosten.openNewWindow("furnitureCardsPrintTxm", rosten.webPath + "/furnitureCards/furnitureCardsPrintTxm?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
 	}

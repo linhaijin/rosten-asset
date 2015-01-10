@@ -16,9 +16,10 @@ import com.rosten.app.assetCards.CarCards
 import com.rosten.app.barcode.Barcode
 
 import com.rosten.app.export.ExcelExport
+import com.rosten.app.share.ShareService
 
 class CarCardsController {
-
+	def shareService
     def assetCardsService
 	def springSecurityService
 	
@@ -79,7 +80,8 @@ class CarCardsController {
 		def model =[:]
 		
 		def company = Company.get(params.companyId)
-		model["DepartList"] = Depart.findAllByCompany(company)
+		model["company"] = company
+//		model["DepartList"] = Depart.findAllByCompany(company)
 		
 		def parentCategory = AssetCategory.findByCategoryCode("car")
 		model["categoryList"] = AssetCategory.findAllByCompanyAndParent(company,parentCategory)
@@ -214,7 +216,15 @@ class CarCardsController {
 		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryNameAndParent(company,params.category,parentCategory)
 		
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
-		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		def userDepartList = []
+		if(params.userDepart && !"".equals(params.userDepart)){
+			params.userDepart.split(",").each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["userDepart"] = userDepartList.unique()
+		}
+//		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		if(params.refreshData){
 			def args =[:]
@@ -245,7 +255,15 @@ class CarCardsController {
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
 		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
-		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		def userDepartList = []
+		if(params.userDepart && !"".equals(params.userDepart)){
+			params.userDepart.split(",").each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["userDepart"] = userDepartList.unique()
+		}
+//		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		def c = CarCards.createCriteria()
 
@@ -253,7 +271,7 @@ class CarCardsController {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -293,7 +311,15 @@ class CarCardsController {
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
 		if(params.category && !"".equals(params.category)) searchArgs["category"] = AssetCategory.findByCompanyAndCategoryName(company,params.category)
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
-		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
+		def userDepartList = []
+		if(params.userDepart && !"".equals(params.userDepart)){
+			params.userDepart.split(",").each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["userDepart"] = userDepartList.unique()
+		}
+//		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		def c = CarCards.createCriteria()
 
@@ -301,7 +327,7 @@ class CarCardsController {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}

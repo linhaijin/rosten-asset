@@ -30,7 +30,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -46,7 +46,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -77,7 +77,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -93,7 +93,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -124,7 +124,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -140,7 +140,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -171,7 +171,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -187,7 +187,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -218,7 +218,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -234,7 +234,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("category") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -265,7 +265,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -281,7 +281,7 @@ class AssetCardsService {
 			eq("company",company)
 			searchArgs.each{k,v->
 				if(k.equals("userCategory") || k.equals("userDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}

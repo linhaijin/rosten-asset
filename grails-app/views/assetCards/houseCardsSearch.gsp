@@ -2,6 +2,13 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+require(["rosten/app/Application"],function(){
+	search_selectUsedDepart = function(){
+		rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",true,"house_userDepart","house_userDepartIds",false);
+	};
+});
+</script>
 </head>
 <body>
 	<div class="searchtab">
@@ -30,13 +37,27 @@
                '/>
             </td>
             <th width="6%">归属部门</th>
-            <td width="12%">
-            	<div id="house_userDepart" data-dojo-type="dijit/form/ComboBox"
+            <!-- <td width="12%">
+            	<div id="house_usedDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:"",style:{width:"140px"}'>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
 	            </div>
+            </td> -->
+            <td width="12%">
+            	<div style="width:140px">
+            		<g:hiddenField id="house_userDepartIds" name="house_userDepartIds" data-dojo-type="dijit/form/ValidationTextBox" />
+	            	<input id="house_userDepart" data-dojo-type="dijit/form/ValidationTextBox" 
+	                	data-dojo-props='trim:true,readOnly:true,style:{width:"120px",float:"left"}
+	               '/>
+	               <div class="dijitTextBox dijitComboBox" style="width:15px;float:left">
+	               		<div role="presentation" class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer">
+		               		<input type="text" onclick="search_selectUsedDepart()" aria-hidden="true" role="button presentation" readonly="readonly" tabindex="-1" value="▼ " 
+		               		class="dijitReset dijitInputField dijitArrowButtonInner">
+	               		</div>
+	               </div>
+               </div>
             </td>
             <td></td>
            	<td width="12%">

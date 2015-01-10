@@ -103,7 +103,7 @@
                                	data-dojo-props='name:"taskNum",${fieldAcl.isReadOnly("taskNum")},
                                	trim:true,
                                	required:true,
-                               	disabled:"disabled",
+                               	readOnly:true,
              					value:"${inventoryTask?.taskNum}"
                            	'/>
 			            </td>
@@ -113,6 +113,7 @@
 		                 		data-dojo-props='name:"makeDate",${fieldAcl.isReadOnly("makeDate")},
 		                 		trim:true,
 		                 		required:true,
+		                 		readOnly:true,
 								value:"${inventoryTask?.getFormattedMakeDate()}"
 		                	'/>
 		                </td>
@@ -138,7 +139,8 @@
 					   	<td>
 					    	<input id="sendMan" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"sendMan",${fieldAcl.isReadOnly("sendMan")},
-                            	trim:true,readOnly:true,
+                            	trim:true,
+                            	readOnly:true,
                             	required:true,
           						value:"${user?.getFormattedName()}"
                            	'/>

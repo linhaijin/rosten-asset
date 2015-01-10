@@ -5,8 +5,12 @@
 <style type="text/css">
 	
 </style>
-<script type="text/javascript">	
-
+<script type="text/javascript">
+require(["rosten/app/Application"],function(){
+	search_selectUsedDepart = function(){
+		rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",true,"scrap_usedDepart","scrap_usedDepartIds",false);
+	};
+});
 </script>
 </head>
 <body>
@@ -21,13 +25,27 @@
                 	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
             </td>
             <th width="8%">使用部门</th>
-            <td width="18%">
+            <!-- <td width="18%">
             	<div id="scrap_usedDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:"",style:"width:140px;"'/>
 	            	 <g:each in="${DepartList}" var="item">
 	                	<option value="${item.departName }">${item.departName }</option>
 	                </g:each>
 	            </div>
+            </td> -->
+            <td width="18%">
+            	<div style="width:140px">
+            		<g:hiddenField id="scrap_usedDepartIds" name="scrap_usedDepartIds" data-dojo-type="dijit/form/ValidationTextBox" />
+	            	<input id="scrap_usedDepart" data-dojo-type="dijit/form/ValidationTextBox" 
+	                	data-dojo-props='trim:true,readOnly:true,style:{width:"120px",float:"left"}
+	               '/>
+	               <div class="dijitTextBox dijitComboBox" style="width:15px;float:left">
+	               		<div role="presentation" class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer">
+		               		<input type="text" onclick="search_selectUsedDepart()" aria-hidden="true" role="button presentation" readonly="readonly" tabindex="-1" value="▼ " 
+		               		class="dijitReset dijitInputField dijitArrowButtonInner">
+	               		</div>
+	               </div>
+               </div>
             </td>
             <th width="8%">使用人</th>
             <td width="18%">

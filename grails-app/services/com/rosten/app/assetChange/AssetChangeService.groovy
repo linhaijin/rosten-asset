@@ -40,7 +40,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -69,7 +69,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -113,7 +113,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("originalDepart") || k.equals("newDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -142,7 +142,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("originalDepart") || k.equals("newDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -186,7 +186,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -215,7 +215,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -259,7 +259,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}
@@ -288,7 +288,7 @@ class AssetChangeService {
 			}
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}

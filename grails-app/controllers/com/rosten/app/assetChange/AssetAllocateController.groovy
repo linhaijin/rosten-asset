@@ -107,7 +107,8 @@ class AssetAllocateController {
 		def model =[:]
 		
 		def company = Company.get(params.companyId)
-		model["DepartList"] = Depart.findAllByCompany(company)
+		model["company"] = company
+//		model["DepartList"] = Depart.findAllByCompany(company)
 		
 		render(view:'/assetChange/assetAllocateSearch',model:model)
 	}
@@ -274,8 +275,25 @@ class AssetAllocateController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
-		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
+		
+		def originalDepartList = []
+		if(params.originalDepart && !"".equals(params.originalDepart)){
+			params.originalDepart.split(",").each{
+				def _list = []
+				originalDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["originalDepart"] = originalDepartList.unique()
+		}
+//		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
+		def newDepartList = []
+		if(params.newDepart && !"".equals(params.newDepart)){
+			params.newDepart.split(",").each{
+				def _list = []
+				newDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["newDepart"] = newDepartList.unique()
+		}
+//		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
 		if(params.newUser && !"".equals(params.newUser)) searchArgs["newUser"] = params.newUser
 		
 		if(params.refreshData){

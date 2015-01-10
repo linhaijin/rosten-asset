@@ -106,7 +106,8 @@ class AssetScrapController {
 		def model =[:]
 		
 		def company = Company.get(params.companyId)
-		model["DepartList"] = Depart.findAllByCompany(company)
+		model["company"] = company
+//		model["DepartList"] = Depart.findAllByCompany(company)
 		
 		render(view:'/assetChange/assetScrapSearch',model:model)
 	}
@@ -365,7 +366,15 @@ class AssetScrapController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		def usedDepartList = []
+		if(params.usedDepart && !"".equals(params.usedDepart)){
+			params.usedDepart.split(",").each{
+				def _list = []
+				usedDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["usedDepart"] = usedDepartList.unique()
+		}
+//		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
 		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		if(params.refreshData){

@@ -9,12 +9,7 @@ import com.rosten.app.assetChange.AssetAllocate;
 import com.rosten.app.assetChange.AssetLose;
 import com.rosten.app.assetChange.AssetRepair;
 import com.rosten.app.assetApply.ApplyNotes;
-import com.rosten.app.assetCards.CarCards;
-import com.rosten.app.assetCards.DeviceCards;
-import com.rosten.app.assetCards.FurnitureCards;
-import com.rosten.app.assetCards.HouseCards;
-import com.rosten.app.assetCards.BookCards;
-import com.rosten.app.assetCards.LandCards;
+import com.rosten.app.assetCards.*;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -47,7 +42,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("报损清单", 0);
 			
 			ws.mergeCells(0, 0, 6, 0);
 			ws.addCell(new Label(0 , 0, "资产报损申请清单",titlewcfStyle));
@@ -104,7 +99,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("调拨清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
 			ws.addCell(new Label(0 , 0, "资产调拨申请清单",titlewcfStyle));
@@ -165,7 +160,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("报失清单", 0);
 			
 			ws.mergeCells(0, 0, 6, 0);
 			ws.addCell(new Label(0 , 0, "资产报失申请清单",titlewcfStyle));
@@ -222,7 +217,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("报修清单", 0);
 			
 			ws.mergeCells(0, 0, 6, 0);
 			ws.addCell(new Label(0 , 0, "资产报修申请清单",titlewcfStyle));
@@ -279,7 +274,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("申请清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
 			ws.addCell(new Label(0 , 0, "资产申请清单",titlewcfStyle));
@@ -340,7 +335,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("资产清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
 			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
@@ -401,10 +396,10 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("资产清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
-			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
+			ws.addCell(new Label(0 , 0, "电子设备资产卡片清单",titlewcfStyle));
 			
 			ws.addCell(new Label(0, 1, "科室名称"));
 			ws.addCell(new Label(1, 1, "资产类别"));
@@ -462,10 +457,10 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("资产清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
-			ws.addCell(new Label(0 , 0, "运输工具资产卡片清单",titlewcfStyle));
+			ws.addCell(new Label(0 , 0, "办公家具资产卡片清单",titlewcfStyle));
 			
 			ws.addCell(new Label(0, 1, "科室名称"));
 			ws.addCell(new Label(1, 1, "资产类别"));
@@ -523,7 +518,7 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("数据导出", 0);
+			ws = wwb.createSheet("资产清单", 0);
 			
 			ws.mergeCells(0, 0, 8, 0);
 			ws.addCell(new Label(0 , 0, "房屋及建筑物资产卡片清单",titlewcfStyle));
@@ -546,7 +541,7 @@ public class ExcelExport {
 					ws.addCell(new Label(3, i+2, (String)houseCardsList.get(i).getAssetName()));
 					ws.addCell(new Label(4, i+2, houseCardsList.get(i).getOnePrice().toString()));
 					ws.addCell(new Label(5, i+2, (String)houseCardsList.get(i).getFormattedShowBuyDate()));
-					ws.addCell(new Label(6, i+2, (String)houseCardsList.get(i).getHouseLocated()));
+					ws.addCell(new Label(6, i+2, (String)houseCardsList.get(i).getStoragePosition()));
 					ws.addCell(new Label(7, i+2, (String)houseCardsList.get(i).getSpecifications()));
 					ws.addCell(new Label(8, i+2, (String)houseCardsList.get(i).getPurchaser()));
 				}
@@ -566,6 +561,68 @@ public class ExcelExport {
 		return null;
 	}
 	
+	//资产核查导出
+	public String assetCardsDc(OutputStream os,List<List> assetCardsList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("资产清单", 0);
+			
+			ws.mergeCells(0, 0, 8, 0);
+			ws.addCell(new Label(0 , 0, "资产卡片清单",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "资产编号"));
+			ws.addCell(new Label(1, 1, "资产类别"));
+			ws.addCell(new Label(2, 1, "资产名称"));
+			ws.addCell(new Label(3, 1, "归属部门"));
+			ws.addCell(new Label(4, 1, "原值（元）"));
+			ws.addCell(new Label(5, 1, "购置日期"));
+			ws.addCell(new Label(6, 1, "存放地点"));
+			ws.addCell(new Label(7, 1, "规格型号"));
+			ws.addCell(new Label(8, 1, "负责人"));
+
+			if(assetCardsList != null && assetCardsList.size() > 0){
+				for(int i=0;i<assetCardsList.size();i++){
+					List<String> assetCardsRow = assetCardsList.get(i);
+					for(int j=0;j<assetCardsRow.size();j++){
+						ws.addCell(new Label(0, i+2, (String)assetCardsRow.get(0)));
+						ws.addCell(new Label(1, i+2, (String)assetCardsRow.get(1)));
+						ws.addCell(new Label(2, i+2, (String)assetCardsRow.get(2)));
+						ws.addCell(new Label(3, i+2, (String)assetCardsRow.get(3)));
+						ws.addCell(new Label(4, i+2, (String)assetCardsRow.get(4)));
+						ws.addCell(new Label(5, i+2, (String)assetCardsRow.get(5)));
+						ws.addCell(new Label(6, i+2, (String)assetCardsRow.get(6)));
+						ws.addCell(new Label(7, i+2, (String)assetCardsRow.get(7)));
+						ws.addCell(new Label(8, i+2, (String)assetCardsRow.get(8)));
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 	/**数据导入*/
 	public String hkcjdrsjdr(String filePath) throws Exception{
 		

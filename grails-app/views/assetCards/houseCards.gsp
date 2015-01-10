@@ -234,10 +234,10 @@
 			            </td>
 						<td><div align="right">坐落位置：</div></td>
 					    <td>
-					    	<input id="houseLocated" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"houseLocated",${fieldAcl.isReadOnly("houseLocated")},
+					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
                                		trim:true,
-             						value:"${houseCards?.houseLocated}"
+             						value:"${houseCards?.storagePosition}"
                            	'/>
 			            </td>
 					</tr>

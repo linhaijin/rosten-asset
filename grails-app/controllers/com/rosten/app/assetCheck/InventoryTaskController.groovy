@@ -1,6 +1,7 @@
 package com.rosten.app.assetCheck
 
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 import jxl.Sheet;
 import jxl.Workbook;
 
@@ -15,7 +16,10 @@ import com.rosten.app.system.UserGroup
 import com.rosten.app.system.Group1
 import com.rosten.app.assetConfig.AssetCategory
 import com.rosten.app.assetCards.*
+import com.rosten.app.export.ExcelExport
 import com.rosten.app.share.ShareService
+
+
 
 class InventoryTaskController {
 	def assetCheckService
@@ -240,6 +244,7 @@ class InventoryTaskController {
 		def actionList =[]
 		def strname = "assetCheck"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
@@ -764,4 +769,119 @@ class InventoryTaskController {
 		render json as JSON
 	}
 	
+	def assetCheckExport = {
+		OutputStream os = response.outputStream
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产卡片清单.xls".getBytes("GB2312"), "ISO_8859_1"))
+		def company = Company.get(params.companyId)
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
+		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = params.category
+		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
+		def userDepartList = []
+		if(params.userDepart && !"".equals(params.userDepart)){
+			params.userDepart.split(",").each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["userDepart"] = userDepartList.unique()
+		}
+		
+		def allList =[]
+		
+		allList += HouseCards.createCriteria().list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					createAlias('userCategory', 'a')
+					like("a.categoryName","%" + v + "%")
+				}else if(k.equals("userDepart")){
+					'in'(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("registerNum", "desc")
+		}
+		allList += CarCards.createCriteria().list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					createAlias('userCategory', 'a')
+					like("a.categoryName","%" + v + "%")
+				}else if(k.equals("userDepart")){
+					'in'(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("registerNum", "desc")
+		}
+		allList += DeviceCards.createCriteria().list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					createAlias('userCategory', 'a')
+					like("a.categoryName","%" + v + "%")
+				}else if(k.equals("userDepart")){
+					'in'(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("registerNum", "desc")
+		}
+		allList += FurnitureCards.createCriteria().list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("userCategory")){
+					createAlias('userCategory', 'a')
+					like("a.categoryName","%" + v + "%")
+				}else if(k.equals("userDepart")){
+					'in'(k,v)
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			order("registerNum", "desc")
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd")
+		def assetCardsList = []
+		allList.each {
+			List sMap =[]
+			sMap << it.registerNum
+			sMap << it.userCategory.categoryName
+			sMap << it.assetName
+			sMap << it.userDepart.departName
+			sMap << String.format("%.2f", it.onePrice)
+			sMap << sdf.format(it.buyDate)
+			def storagePosition
+			if(it.storagePosition != "" && it.storagePosition != null){
+				storagePosition = it.storagePosition
+			}else{
+				storagePosition = ""
+			}
+			sMap << storagePosition
+			def specifications
+			if(it.specifications != "" && it.specifications != null){
+				specifications = it.specifications
+			}else{
+				specifications = ""
+			}
+			sMap << specifications
+			def purchaser
+			if(it.purchaser != "" && it.purchaser != null){
+				purchaser = it.purchaser
+			}else{
+				purchaser = ""
+			}
+			sMap << specifications
+			assetCardsList << sMap
+		}
+		
+		def excel = new ExcelExport()
+		excel.assetCardsDc(os,assetCardsList)
+	}
 }

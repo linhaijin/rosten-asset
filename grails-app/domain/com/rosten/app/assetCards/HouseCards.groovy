@@ -106,7 +106,7 @@ class HouseCards {
 	Double otherFund = 0
 	
 	//坐落位置
-	String houseLocated
+	String storagePosition
 	
 	//负责人
 	String purchaser
@@ -162,7 +162,7 @@ class HouseCards {
 		otherFund nullable:true,blank:true
 		houseArea nullable:false,blank:false
 		organizationalType nullable:true,blank:true
-		houseLocated nullable:true,blank:true
+		storagePosition nullable:true,blank:true
 		purchaser nullable:true ,blank: true
 		country nullable:true,blank:true
 		assetStatus nullable:false,blank:false

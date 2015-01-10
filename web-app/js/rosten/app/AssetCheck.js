@@ -48,6 +48,57 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}	
 	};
 	
+	assetCheck_export = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var registerNum;
+		var qregisterNum = "";
+		var category;
+		var qcategory = "";
+		var assetName;
+		var qassetName = "";
+		var userDepart;
+		var quserDepart = "";
+		
+		var registerNum_ = registry.byId("check_registerNum");
+		if(registerNum_.get("value")!=""){
+			registerNum = registerNum_.get("value");
+			qregisterNum = "&registerNum="+registerNum;
+		}
+		
+		var category_ = registry.byId("check_category");
+		if(category_.get("value")!=""){
+			category = category_.get("value");
+			qcategory = "&category="+category;
+		}
+		
+		var assetName_ = registry.byId("check_assetName");
+		if(assetName_.get("value")!=""){
+			assetName = assetName_.get("value");
+			qassetName = "&assetName="+assetName;
+		}
+		
+		var userDepart_ = registry.byId("check_userDepartIds");
+		if(userDepart_.get("value")!=""){
+			userDepart = userDepart_.get("value");
+			quserDepart = "&userDepart="+userDepart;
+		}
+//		var userDepart = registry.byId("car_userDepart");
+//		if(userDepart.get("value")!=""){
+//			userDepart = userDepart.get("value");
+//			quserDepart = "&userDepart="+userDepart;
+//		}
+		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+		
+//		var url = rosten.webPath + "/inventoryTask/assetCheckExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart;
+//		var copyOfWindowOpen = window.open;
+//		var width = 200;
+//	    var height = 200;
+//	    var params = "height=" + height + ",width=" + width + ",scrollbars=yes,toolbar=no,menubar=yes,status=yes,resizable=yes,border=0,top=0,left=0";
+//		if (typeof(url) != "undefined") {
+//			 var docwin = copyOfWindowOpen(url, "assetCheck", params);
+//		}	
+	};
+	
 	myTask_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:myTask_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	}

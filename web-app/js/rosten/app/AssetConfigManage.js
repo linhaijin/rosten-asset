@@ -4,6 +4,19 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	//2015-1-10 增加上传文件的提示功能
+	importSubmit = function(object){
+	    rosten.alert("导入数据需要花费一定的时间，请耐心等待！").queryDlgClose= function(){
+	        var buttonWidget = object.target;
+            rosten.toggleAction(buttonWidget,true);
+            
+	        var importDom = registry.byId("upload_form");
+            importDom.submit();
+            
+            
+	    };
+	};
+	
 	//2014-12-06 修复资产卡片分类信息
 	asset_repair = function(){
 		rosten.readSyncNoTime(rosten.webPath + "/assetConfig/assetCategoryRepair", {},function(data){
@@ -80,6 +93,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             break;
 		}
 		
-	}
+	};
 	connect.connect("show_naviEntity", show_assetConfigNaviEntity);
 });

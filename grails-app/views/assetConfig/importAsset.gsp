@@ -7,7 +7,7 @@
   
 <body>
 	<div style="text-Align:center">
-           <form data-dojo-type="dijit/form/Form" method="post" class="rosten_form" id="file_form" style="width:560px;text-align:left" 
+           <form id="upload_form" data-dojo-type="dijit/form/Form" method="post" class="rosten_form" id="file_form" style="width:560px;text-align:left" 
         	target="upload_iframe" enctype="multipart/form-data" action="${createLink(controller:'assetConfig',action:'importAssetSubmit',params:[])}">
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">批量导入</legend>
@@ -27,7 +27,7 @@
 								<div style="margin-top:10px">
 								
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.openNewWindow("assetTemplate", rosten.webPath + "/templates/assetTemplate.xls");}'>模板下载</button>
-								<button data-dojo-type="dijit/form/Button" type="submit" data-dojo-props=''>确定</button>
+								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(object){importSubmit(object)}'>确定</button>
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.kernel.hideRostenShowDialog()}'>取消</button>
 								</div>
 							</td>

@@ -1,35 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="layout" content="rosten" />
-    <title>资产筛选</title>
-    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
-    <style type="text/css">
-    	.rosten .dsj_form table tr{
-    		height:30px;
-    	}
-    	body{
-			overflow:auto;
-		}
-    </style>
-	<script type="text/javascript">
-	require(["dojo/parser",
-    	"dojo/dom",
-		"dojo/_base/kernel",
-		"dojo/_base/lang",
-		"dijit/registry",
-		"dijit/layout/ContentPane",
-		"dijit/form/ValidationTextBox",
-		"dijit/form/Button",
-		"dijit/form/Select",
-		"dijit/Dialog",
-		"dojox/grid/DataGrid",
-    	"rosten/widget/ActionBar",
-    	"rosten/app/Application",
-    	"rosten/app/SystemApplication",
-    	"rosten/kernel/behavior"]);
-	</script>
 </head>
 <body>
 <div class="rosten_action">
@@ -38,7 +9,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='height:"630px",marginBottom:"2px",region:"top"'>
+<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"top",style:{padding:"0px"}'>
 	<form id="assetCategoryChoose_form" name="assetCategoryChoose_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 		<div class="searchtab">
 			<table width="100%" height="50" border="0">
@@ -77,11 +48,11 @@
 	        	</tbody>
 	      	</table>
       	</div>
-      	<div id="assetCategoryChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"height:500px;padding:2px;overflow:auto;"'>
-			<div data-dojo-type="rosten/widget/RostenGrid" id="assetCategoryChooseListGrid" data-dojo-id="assetCategoryChooseListGrid"
-			data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore',params:[companyId:company?.id,controlName:controlName,seriesNo:seriesNo])}"'></div>
-		</div>
 	</form>
+	<div id="assetCategoryChooseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"padding:0px;"'>
+		<div data-dojo-type="rosten/widget/RostenGrid" id="assetCategoryChooseListGrid" data-dojo-id="assetCategoryChooseListGrid"
+		data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore',params:[companyId:company?.id,controlName:controlName,seriesNo:seriesNo])}"'></div>
+	</div>
 </div>
 </body>
 </html>

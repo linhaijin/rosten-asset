@@ -4,7 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <title>资产变动--资产调拨</title>
-    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;
@@ -633,8 +632,8 @@
 	</div>
 </div>
 
-<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"680px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"550px",marginBottom:"2px",region:"top"'>
+<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"680px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='doLayout:false,height:"550px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField id="seriesNo_form" name="seriesNo_form" value="${assetAllocate?.seriesNo}" />
 			<g:hiddenField id="applyMan" name="applyMan" value="${assetAllocate?.applyMan == null?user.chinaName:assetAllocate?.applyMan}" />
@@ -759,18 +758,19 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
-				<div data-dojo-type="rosten/widget/RostenGrid" id="assetAllocateListGrid" data-dojo-id="assetAllocateListGrid"
-					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
-			</div>
+			
 		</form>
+		<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;padding:2px"'>
+			<div data-dojo-type="rosten/widget/RostenGrid" id="assetAllocateListGrid" data-dojo-id="assetAllocateListGrid"
+				data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
+		</div>
 	</div>
 	<g:if test="${assetAllocate?.id}">
-		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='doLayout:false,refreshOnShow:true,
 			href:"${createLink(controller:'share',action:'getCommentLog',id:assetAllocate?.id)}"
 		'>	
 		</div>
-		<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='doLayout:false,refreshOnShow:true,
 			href:"${createLink(controller:'share',action:'getFlowLog',id:assetAllocate?.id,params:[processDefinitionId:assetAllocate?.processDefinitionId,taskId:assetAllocate?.taskId])}"
 		'>	
 		</div>

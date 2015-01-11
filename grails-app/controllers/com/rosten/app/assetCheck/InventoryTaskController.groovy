@@ -783,8 +783,13 @@ class InventoryTaskController {
 		def userDepartList = []
 		if(params.userDepart && !"".equals(params.userDepart)){
 			params.userDepart.split(",").each{
-				def _list = []
-				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+				def _depart = Depart.get(it)
+				
+				if(_depart){
+					def _list = []
+					userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+				}
+				
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
@@ -854,7 +859,7 @@ class InventoryTaskController {
 			sMap << it.registerNum
 			sMap << it.userCategory.categoryName
 			sMap << it.assetName
-			sMap << it.userDepart.departName
+			sMap << it.userDepart?.departName
 			sMap << String.format("%.2f", it.onePrice)
 			sMap << sdf.format(it.buyDate)
 			def storagePosition

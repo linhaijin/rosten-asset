@@ -32,6 +32,7 @@
     	"rosten/widget/TitlePane",
     	"rosten/app/Application",
     	"rosten/app/SystemApplication",
+    	"rosten/app/AssetShareManage",
     	"rosten/kernel/behavior"],
 		function(parser,dom,kernel,lang,registry){
 			kernel.addOnLoad(function(){
@@ -445,76 +446,12 @@
 				};
 				dojo.xhrPost(ioArgs);
 			}
-			
-			assetCategoryChoose_close = function(){
-				var tabContainer = dijit.byId("rosten_tabContainer");
-				var node = dijit.byId("assetCategoryChoose_pane");
-				tabContainer.removeChild(node);
-				node.destroyRecursive();
-			}
-			
+			refreshAsset = function(){
+				assetAllocateListGrid.refresh(assetAllocateListGrid.defaultUrl);
+			};
 			assetCategoryChoose_search = function(){
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				
-				var qCompany = "";
-				var compamyId;
-				<g:if test="${company?.id}">
-					compamyId = "${company?.id}";
-					qCompany = "?companyId="+encodeURI(compamyId);
-				</g:if>
-				
-				var qSeriesNo = "";
-				var seriesNo = "${assetAllocate?.seriesNo}";
-				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
-				
-				var qControlName = "&controlName=assetAllocate";
-		
-				var qAssetCardsType = "";
-				var assetCardsType;
-				var assetCardsTypeSel = dijit.byId("assetCardsType");
-				if(assetCardsTypeSel){
-					if(assetCardsTypeSel.attr("value")!=""){
-						assetCardsType = assetCardsTypeSel.attr("value");
-						qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
-					}else{
-						rosten.alert("注意：请选择资产类别！");
-						document.getElementById("assetCardsType").focus();
-						return;
-					}
-				}
-
-				var qAssetDepart = "";
-				var assetDepart;
-				var assetDepartSel = dijit.byId("assetDepart");
-				if(assetDepartSel){
-					if(assetDepartSel.attr("value") != ""){
-						assetDepart = assetDepartSel.attr("value");
-						qAssetDepart = "&assetDepart=" + encodeURI(assetDepart);
-					}
-				}
-
-				var qAssetUser = "";
-				var assetUser;
-				var assetUserSel = dijit.byId("assetUser");
-				if(assetUserSel){
-					if(assetUserSel.attr("value") != ""){
-						assetUser = assetUserSel.attr("value");
-						qAssetUser = "&assetUser=" + encodeURI(assetUser);
-					}
-				}
-				
-				url += qCompany+qSeriesNo+qAssetCardsType+qAssetDepart+qAssetUser+qControlName;
-				
-				var grid = dijit.byId("assetCategoryChooseListGrid");
-				grid.url = url;
-				grid.refresh();
-			}
-			
-			assetCategoryChoose_reset = function(){
-				registry.byId("assetCardsType").set("value","");
-				registry.byId("assetDepart").set("value","");
-				registry.byId("assetUser").set("value","");
-				rosten.kernel.refreshGrid();
+				assetCategoryChoose_search_common(url,"${company?.id}","${assetAllocate?.seriesNo}");
 			}
 			
 			assetCategoryChoose_add = function(){
@@ -563,7 +500,6 @@
 						qAssetId = "&assetId="+encodeURI(assetId);
 					}
 					
-					
 					var assetTotal;
 					var assetTotalSel = dijit.byId("assetTotal");
 					if(assetTotalSel){
@@ -596,18 +532,28 @@
 			
 								url_twice += qCompany+qSeriesNo;
 								
+								//处理相关表单的显示数据-----------22015-1-11---------------------------------------
 								var assetTotal = response.assetTotal;
 								dojo.byId("assetTotal").value = assetTotal.toFixed(2);
+								
+								var originalDepartName = registry.byId("originalDepartName");
+								if(originalDepartName.get("value")==""){
+									originalDepartName.set("value",store.getValue(selected[0], "userDepart"));
+									registry.byId("originalDepartId").set("value",store.getValue(selected[0], "userDepartId"));
+								}
+								
+								var originalUser = registry.byId("originalUser");
+								if(originalUser.get("value")==""){
+									originalUser.set("value",store.getValue(selected[0], "assetUser"));
+								}
+								
+								//----------------------------------------------------------------
 								
 								//刷新资产筛选页面
 								assetCategoryChoose_search();
 								
-								var grid_twice = dijit.byId("assetAllocateListGrid");
-								//grid_twice.url = url_twice;
-								grid_twice.refresh();
+								rosten.alert("添加成功,请使用返回退出或继续添加！");
 								
-								//var pane = dijit.byId("assetCategoryChoose_pane");
-								//pane.set("disabled", true);
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");
 								return;
@@ -620,7 +566,7 @@
 					};
 					dojo.xhrPost(ioArgs);
 				}
-			}
+			};
 		});
 		
 	</script>
@@ -633,7 +579,7 @@
 </div>
 
 <div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"680px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='doLayout:false,height:"550px",marginBottom:"2px",region:"top"'>
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='doLayout:false,height:"550px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField id="seriesNo_form" name="seriesNo_form" value="${assetAllocate?.seriesNo}" />
 			<g:hiddenField id="applyMan" name="applyMan" value="${assetAllocate?.applyMan == null?user.chinaName:assetAllocate?.applyMan}" />
@@ -650,7 +596,7 @@
                                	data-dojo-props='name:"seriesNo",${fieldAcl.isReadOnly("seriesNo")},
                                		trim:true,
                                		required:true,
-                               		readOnly:true,
+                               		readOnly:true,disabled:true,
              						value:"${assetAllocate?.seriesNo}"
                            	'/>
 			            </td>
@@ -674,7 +620,7 @@
 				               		readOnly:true,
 									value:"${assetAllocate?.getOriginalDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="originalDepartId" value="${assetAllocate?.originalDepart?.id }" />
+				         	<g:hiddenField id="originalDepartId" data-dojo-type="dijit/form/ValidationTextBox"  name="originalDepartId" value="${assetAllocate?.originalDepart?.id }" />
 				         	<g:if test="${assetAllocate?.dataStatus=='未审批'}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"originalDepartName","originalDepartId")}'>选择</button>
 							</g:if>
@@ -754,6 +700,12 @@
 				data-dojo-props="label:'删除',iconClass:'docCloseIcon'">
 				<script type="dojo/method" data-dojo-event="onClick">
 					deleteAsset();
+				</script>
+			</button>
+			<button data-dojo-type='dijit.form.Button' 
+				data-dojo-props="label:'刷新',iconClass:'docRefreshIcon'">
+				<script type="dojo/method" data-dojo-event="onClick">
+					refreshAsset();
 				</script>
 			</button>
 			<div style="height:5px;"></div>

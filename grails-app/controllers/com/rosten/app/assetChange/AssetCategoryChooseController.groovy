@@ -93,14 +93,15 @@ class AssetCategoryChooseController {
 		def furniture = FurnitureCards.createCriteria()
 		
 		def _gridHeader =[]
-		_gridHeader << ["name":"序号","width":"40px","colIdx":0,"field":"rowIndex"]
-		_gridHeader << ["name":"资产编号","width":"120px","colIdx":1,"field":"registerNum"]
+		_gridHeader << ["name":"序号","width":"30px","colIdx":0,"field":"rowIndex"]
+		_gridHeader << ["name":"资产编号","width":"100px","colIdx":1,"field":"registerNum"]
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
-		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"60px","colIdx":4,"field":"onePrice"]
+		_gridHeader << ["name":"使用人","width":"60px","colIdx":5,"field":"assetUser"]
 		_gridHeader << ["name":"归属部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
+		_gridHeader << ["name":"使用状况","width":"60px","colIdx":8,"field":"userStatus"]
 		
 		json["gridHeader"] = _gridHeader
 		
@@ -135,6 +136,24 @@ class AssetCategoryChooseController {
 				assetUser = params.assetUser
 			}
 			
+			//2015-1-10--增加查询条件---------------------------------------------------------------
+			def registerNum
+			if(params.assetRegisterNum && params.assetRegisterNum != "" && params.assetRegisterNum != null){
+				registerNum = params.assetRegisterNum
+			}
+			
+			def assetName
+			if(params.assetName && params.assetName != "" && params.assetName != null){
+				assetName = params.assetName
+			}
+			
+			def buyDate
+			if(params.buyDate && params.buyDate != "" && params.buyDate != null){
+				buyDate = Util.convertToTimestamp(params.buyDate)
+			}
+			
+			//----------------------------------------------------------------------------------
+			
 			def query = {
 				and{
 					if(companyId != null && companyId != ""){
@@ -155,6 +174,18 @@ class AssetCategoryChooseController {
 						if(assetUser != null && assetUser != ""){
 							eq("purchaser",assetUser)
 						}
+						//2015-1-10-----增加查询条件------------------------------------
+						if(registerNum != null && registerNum != ""){
+							like("registerNum","%" + registerNum + "%")
+						}
+						if(assetName != null && assetName != ""){
+							like("assetName","%" + assetName + "%")
+						}
+						if(buyDate != null && buyDate != ""){
+							eq("buyDate",buyDate)
+						}
+						//--------------------------------------------------------
+						
 					}
 				}
 			}
@@ -189,6 +220,8 @@ class AssetCategoryChooseController {
 					sMap["onePrice"] = it.onePrice
 					sMap["userDepart"] = it.getDepartName()
 					sMap["buyDate"] = it.getFormattedShowBuyDate()
+					sMap["assetUser"] = it.purchaser
+					sMap["userDeaprtId"] = it.userDepart?.id
 					
 					_json.items += sMap
 					idx += 1

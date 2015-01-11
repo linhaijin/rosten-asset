@@ -33,6 +33,7 @@
     	"rosten/widget/TitlePane",
     	"rosten/app/Application",
     	"rosten/app/SystemApplication",
+    	"rosten/app/AssetShareManage",
     	"rosten/kernel/behavior"],
 		function(parser,dom,kernel,lang,registry){
 			kernel.addOnLoad(function(){
@@ -432,78 +433,13 @@
 				};
 				dojo.xhrPost(ioArgs);
 			}
-
-			assetCategoryChoose_close = function(){
-				var tabContainer = dijit.byId("rosten_tabContainer");
-				var node = dijit.byId("assetCategoryChoose_pane");
-				tabContainer.removeChild(node);
-				node.destroyRecursive();
-			}
-			
+			refreshAsset = function(){
+				assetScrapListGrid.refresh(assetScrapListGrid.defaultUrl);
+			};
 			assetCategoryChoose_search = function(){
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				
-				var qCompany = "";
-				var compamyId;
-				<g:if test="${company?.id}">
-					compamyId = "${company?.id}";
-					qCompany = "?companyId="+encodeURI(compamyId);
-				</g:if>
-				
-				var qSeriesNo = "";
-				var seriesNo = "${assetScrap?.seriesNo}";
-				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
-				
-				var qControlName = "&controlName=assetScrap";
-		
-				var qAssetCardsType = "";
-				var assetCardsType;
-				var assetCardsTypeSel = dijit.byId("assetCardsType");
-				if(assetCardsTypeSel){
-					if(assetCardsTypeSel.attr("value")!=""){
-						assetCardsType = assetCardsTypeSel.attr("value");
-						qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
-					}else{
-						rosten.alert("注意：请选择资产类别！");
-						document.getElementById("assetCardsType").focus();
-						return;
-					}
-				}
-
-				var qAssetDepart = "";
-				var assetDepart;
-				var assetDepartSel = dijit.byId("assetDepart");
-				if(assetDepartSel){
-					if(assetDepartSel.attr("value") != ""){
-						assetDepart = assetDepartSel.attr("value");
-						qAssetDepart = "&assetDepart=" + encodeURI(assetDepart);
-					}
-				}
-
-				var qAssetUser = "";
-				var assetUser;
-				var assetUserSel = dijit.byId("assetUser");
-				if(assetUserSel){
-					if(assetUserSel.attr("value") != ""){
-						assetUser = assetUserSel.attr("value");
-						qAssetUser = "&assetUser=" + encodeURI(assetUser);
-					}
-				}
-				
-				url += qCompany+qSeriesNo+qAssetCardsType+qAssetDepart+qAssetUser+qControlName;
-				
-				var grid = dijit.byId("assetCategoryChooseListGrid");
-				grid.url = url;
-				grid.refresh();
+				assetCategoryChoose_search_common(url,"${company?.id}","${assetScrap?.seriesNo}");
 			}
-			
-			assetCategoryChoose_reset = function(){
-				registry.byId("assetCardsType").set("value","");
-				registry.byId("assetDepart").set("value","");
-				registry.byId("assetUser").set("value","");
-				rosten.kernel.refreshGrid();
-			}
-			
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");
 				var selected = grid.getSelected();
@@ -582,15 +518,28 @@
 			
 								url_twice += qCompany+qSeriesNo;
 								
+								//处理相关表单的显示数据-----------22015-1-11---------------------------------------
 								var assetTotal = response.assetTotal;
 								dojo.byId("assetTotal").value = assetTotal.toFixed(2);
+								
+								var usedDepartName = registry.byId("usedDepartName");
+								if(usedDepartName.get("value")==""){
+									usedDepartName.set("value",store.getValue(selected[0], "userDepart"));
+									registry.byId("usedDepartId").set("value",store.getValue(selected[0], "userDepartId"));
+								}
+								
+								var usedMan = registry.byId("usedMan");
+								if(usedMan.get("value")==""){
+									usedMan.set("value",store.getValue(selected[0], "assetUser"));
+								}
+								
+								//----------------------------------------------------------------
 								
 								//刷新资产筛选页面
 								assetCategoryChoose_search();
 								
-								var grid_twice = dijit.byId("assetScrapListGrid");
-								grid_twice.url = url_twice;
-								grid_twice.refresh();
+								rosten.alert("添加成功,请使用返回退出或继续添加！");
+								
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");
 								return;
@@ -615,7 +564,7 @@
 </div>
 
 <div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top"'>
+	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetScrap?.seriesNo}" />
 			<g:hiddenField name="applyMan" id="applyMan" value="${assetScrap?.applyMan == null?user.chinaName:assetScrap?.applyMan}" />
@@ -656,7 +605,7 @@
 				               	readOnly:true,
 								value:"${assetScrap?.getUsedDepartName()}"
 				          	'/>
-				         	<g:hiddenField name="usedDepartId" value="${assetScrap?.usedDepart?.id }" />
+				         	<g:hiddenField data-dojo-type="dijit/form/ValidationTextBox"  id="usedDepartId" name="usedDepartId" value="${assetScrap?.usedDepart?.id }" />
 				         	<g:if test="${assetScrap?.dataStatus=='未审批'}">
 				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 				         	</g:if>
@@ -712,11 +661,17 @@
 					deleteAsset();
 				</script>
 			</button>
+			<button data-dojo-type='dijit.form.Button' 
+				data-dojo-props="label:'刷新',iconClass:'docRefreshIcon'">
+				<script type="dojo/method" data-dojo-event="onClick">
+					refreshAsset();
+				</script>
+			</button>
 			<div style="height:5px;"></div>
 			</g:if>
 			<div id="assetScrapList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetScrapListGrid" data-dojo-id="assetScrapListGrid"
-					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetScrap',action:'assetScrapListDataStore',params:[companyId:company?.id,seriesNo:assetScrap?.seriesNo])}"'></div>
+					data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetScrap',action:'assetScrapListDataStore',params:[companyId:company?.id,seriesNo:assetScrap?.seriesNo])}"'></div>
 			</div>
 		</form>
 	</div>

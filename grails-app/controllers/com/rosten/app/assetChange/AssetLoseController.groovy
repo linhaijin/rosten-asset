@@ -89,7 +89,7 @@ class AssetLoseController {
 		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
 		  elem.group.groupName
 		}
-		if("zcgly" in userGroups || "xhzcgly" in userGroups){
+		if("zcgly" in userGroups || "xhzcgly" in userGroups || "admin".equals(currentUser.getUserType())){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		}
@@ -324,14 +324,16 @@ class AssetLoseController {
 		def companyEntity = Company.get(companyId)
 
 		def _gridHeader =[]
-		_gridHeader << ["name":"序号","width":"40px","colIdx":0,"field":"rowIndex"]
-		_gridHeader << ["name":"资产编号","width":"120px","colIdx":1,"field":"registerNum"]
+		_gridHeader << ["name":"序号","width":"30px","colIdx":0,"field":"rowIndex"]
+		_gridHeader << ["name":"资产编号","width":"100px","colIdx":1,"field":"registerNum"]
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
-		_gridHeader << ["name":"使用状况","width":"80px","colIdx":4,"field":"userStatus"]
-		_gridHeader << ["name":"金额（元）","width":"80px","colIdx":5,"field":"onePrice"]
+		_gridHeader << ["name":"金额（元）","width":"60px","colIdx":4,"field":"onePrice"]
+		_gridHeader << ["name":"使用人","width":"60px","colIdx":5,"field":"assetUser"]
 		_gridHeader << ["name":"归属部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
+		_gridHeader << ["name":"使用状况","width":"60px","colIdx":8,"field":"userStatus"]
+		
 		json["gridHeader"] = _gridHeader
 		
 		int totalNum = 0
@@ -396,6 +398,7 @@ class AssetLoseController {
 				sMap["onePrice"] = it.onePrice
 				sMap["userDepart"] = it.getDepartName()
 				sMap["buyDate"] = it.getFormattedShowBuyDate()
+				sMap["assetUser"] = it.purchaser
 				
 				_json.items+=sMap
 				idx += 1

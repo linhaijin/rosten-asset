@@ -9,7 +9,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"top",style:{padding:"0px"}'>
+<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"top",style:{padding:"0px",marginTop:"2px"}'>
 	<form id="assetCategoryChoose_form" name="assetCategoryChoose_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 		<div class="searchtab">
 			<table width="100%" height="50" border="0">
@@ -39,6 +39,26 @@
 			                	data-dojo-props='trim:true,value:"",style:"width:120px;"'/>
 			            </td>
 			            <td width="12%">
+			            	&nbsp;
+			            </td>
+	          		</tr>
+	          		<tr>
+	          			<th>资产编号</th>
+			            <td>
+			            	<input id="assetRegisterNum" data-dojo-type="dijit/form/ValidationTextBox" 
+			                	data-dojo-props='trim:true,value:"",style:"width:120px;"'/>
+			            </td>
+			            <th>资产名称</th>
+			            <td>
+			            	<input id="assetName" data-dojo-type="dijit/form/ValidationTextBox" 
+			                	data-dojo-props='trim:true,value:"",style:"width:120px;"'/>
+			            </td>
+			            <th>购买日期</th>
+			            <td>
+			            	<input id="buyDate" data-dojo-type="dijit/form/DateTextBox" 
+			                	data-dojo-props='trim:true,value:"",style:"width:120px;",value:" "'/>
+			            </td>
+			            <td>
 			            	<div class="btn">
 			                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetCategoryChoose_search()}'>查询</button>
 			                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){assetCategoryChoose_reset()}'>重置</button>

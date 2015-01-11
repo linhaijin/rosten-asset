@@ -6,12 +6,12 @@ define(["dojo/dom",
         "rosten/kernel/behavior"], function(dom,registry) {
 	
 	//卡片搜索
-	assetCategoryChoose_search_common = function(url,companyId,seriesNo){
+	assetCategoryChoose_search_common = function(url,controlName,companyId,seriesNo){
                 
         var qCompany = "?companyId="+encodeURI(companyId);
         
         var qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
-        var qControlName = "&controlName=assetAllocate";
+        var qControlName = "&controlName="+encodeURI(controlName);
 
         var qAssetCardsType = "";
         var assetCardsType;

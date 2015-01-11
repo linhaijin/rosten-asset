@@ -897,17 +897,25 @@ class AssetLoseController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
+		def usedDepartList = []
+		if(params.usedDepart && !"".equals(params.usedDepart)){
+			params.usedDepart.split(",").each{
+				def _list = []
+				usedDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["usedDepart"] = usedDepartList.unique()
+		}
+//		if(params.usedDepart && !"".equals(params.usedDepart)) searchArgs["usedDepart"] = Depart.findByCompanyAndDepartName(company,params.usedDepart)
 		if(params.usedMan && !"".equals(params.usedMan)) searchArgs["usedMan"] = params.usedMan
 		
 		def c = AssetLose.createCriteria()
 
 		def assetLoseList = c.list{
 			eq("company",company)
-			eq("status","已结束")
+//			eq("status","已结束")
 			searchArgs.each{k,v->
 				if(k.equals("usedDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}

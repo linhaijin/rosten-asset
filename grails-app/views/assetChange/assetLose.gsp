@@ -416,8 +416,9 @@
 				assetLoseListGrid.refresh(assetLoseListGrid.defaultUrl);
 			};
 			assetCategoryChoose_search = function(){
+				var controlName = "assetLose";
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				assetCategoryChoose_search_common(url,"${company?.id}","${assetLose?.seriesNo}");
+				assetCategoryChoose_search_common(url,controlName,"${company?.id}","${assetLose?.seriesNo}");
 			}
 			
 			assetCategoryChoose_add = function(){

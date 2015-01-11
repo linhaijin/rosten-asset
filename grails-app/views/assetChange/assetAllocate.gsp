@@ -450,8 +450,9 @@
 				assetAllocateListGrid.refresh(assetAllocateListGrid.defaultUrl);
 			};
 			assetCategoryChoose_search = function(){
+				var controlName = "assetAllocate";
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				assetCategoryChoose_search_common(url,"${company?.id}","${assetAllocate?.seriesNo}");
+				assetCategoryChoose_search_common(url,controlName,"${company?.id}","${assetAllocate?.seriesNo}");
 			}
 			
 			assetCategoryChoose_add = function(){

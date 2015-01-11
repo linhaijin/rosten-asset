@@ -86,7 +86,6 @@ class AssetCategoryChooseController {
 		if(params.controlName && params.controlName!="" && params.controlName!=null){
 			controlName = params.controlName
 		}
-		
 		def car = CarCards.createCriteria()
 		def house = HouseCards.createCriteria()
 		def device = DeviceCards.createCriteria()
@@ -155,39 +154,42 @@ class AssetCategoryChooseController {
 			//----------------------------------------------------------------------------------
 			
 			def query = {
-				and{
-					if(companyId != null && companyId != ""){
-						eq("company",company)
-						if(controlName == "assetLose"){
-							or{
-								eq("assetStatus","已入库")
-								like("assetStatus","%资产已调拨%")
-								like("assetStatus","%资产已报损%")
-								like("assetStatus","%资产已报修%")
-							}
-						}else{
+				if(companyId != null && companyId != ""){
+					eq("company",company)
+					if(controlName == "assetLose"){
+						or{
 							eq("assetStatus","已入库")
+							like("assetStatus","%资产已调拨%")
+							like("assetStatus","%资产已报损%")
+							like("assetStatus","%资产已报修%")
 						}
-						if(assetDepart != null && assetDepart != ""){
-							eq("userDepart",depart)
+						not{
+							like("assetStatus","%资产已报失%")
 						}
-						if(assetUser != null && assetUser != ""){
-							eq("purchaser",assetUser)
-						}
-						//2015-1-10-----增加查询条件------------------------------------
-						if(registerNum != null && registerNum != ""){
-							like("registerNum","%" + registerNum + "%")
-						}
-						if(assetName != null && assetName != ""){
-							like("assetName","%" + assetName + "%")
-						}
-						if(buyDate != null && buyDate != ""){
-							eq("buyDate",buyDate)
-						}
-						//--------------------------------------------------------
-						
 					}
+					else{
+						eq("assetStatus","已入库")
+					}
+					if(assetDepart != null && assetDepart != ""){
+						eq("userDepart",depart)
+					}
+					if(assetUser != null && assetUser != ""){
+						eq("purchaser",assetUser)
+					}
+					//2015-1-10-----增加查询条件------------------------------------
+					if(registerNum != null && registerNum != ""){
+						like("registerNum","%" + registerNum + "%")
+					}
+					if(assetName != null && assetName != ""){
+						like("assetName","%" + assetName + "%")
+					}
+					if(buyDate != null && buyDate != ""){
+						eq("buyDate",buyDate)
+					}
+					//--------------------------------------------------------
+					
 				}
+				
 			}
 			
 			if(params.refreshData){
@@ -289,16 +291,14 @@ class AssetCategoryChooseController {
 							seriesNo_exists = seriesNo_exist.split(",")
 							if(seriesNo in seriesNo_exists){
 								//undo
-							}
-						}else{
-//							carCards.assetStatus = "资产已调拨"
-							if(controlName == "assetLose"){
+							}else{
 								carCards.assetStatus += ","+cardsStatus
 								carCards.seriesNo += ","+seriesNo
-							}else{
-								carCards.assetStatus = cardsStatus
-								carCards.seriesNo = seriesNo
+								totalPrice = carCards.onePrice
 							}
+						}else{
+							carCards.assetStatus = cardsStatus
+							carCards.seriesNo = seriesNo
 							totalPrice = carCards.onePrice
 						}
 					}
@@ -310,15 +310,14 @@ class AssetCategoryChooseController {
 							seriesNo_exists = seriesNo_exist.split(",")
 							if(seriesNo in seriesNo_exists){
 								//undo
-							}
-						}else{
-							if(controlName == "assetLose"){
+							}else{
 								houseCards.assetStatus += ","+cardsStatus
 								houseCards.seriesNo += ","+seriesNo
-							}else{
-								houseCards.assetStatus = cardsStatus
-								houseCards.seriesNo = seriesNo
+								totalPrice = houseCards.onePrice
 							}
+						}else{
+							houseCards.assetStatus = cardsStatus
+							houseCards.seriesNo = seriesNo
 							totalPrice = houseCards.onePrice
 						}
 					}
@@ -330,15 +329,14 @@ class AssetCategoryChooseController {
 							seriesNo_exists = seriesNo_exist.split(",")
 							if(seriesNo in seriesNo_exists){
 								//undo
-							}
-						}else{
-							if(controlName == "assetLose"){
+							}else{
 								deviceCards.assetStatus += ","+cardsStatus
 								deviceCards.seriesNo += ","+seriesNo
-							}else{
-								deviceCards.assetStatus = cardsStatus
-								deviceCards.seriesNo = seriesNo
+								totalPrice = deviceCards.onePrice
 							}
+						}else{
+							deviceCards.assetStatus = cardsStatus
+							deviceCards.seriesNo = seriesNo
 							totalPrice = deviceCards.onePrice
 						}
 					}
@@ -350,15 +348,14 @@ class AssetCategoryChooseController {
 							seriesNo_exists = seriesNo_exist.split(",")
 							if(seriesNo in seriesNo_exists){
 								//undo
-							}
-						}else{
-							if(controlName == "assetLose"){
+							}else{
 								furnitureCards.assetStatus += ","+cardsStatus
 								furnitureCards.seriesNo += ","+seriesNo
-							}else{
-								furnitureCards.assetStatus = cardsStatus
-								furnitureCards.seriesNo = seriesNo
+								totalPrice = furnitureCards.onePrice
 							}
+						}else{
+							furnitureCards.assetStatus = cardsStatus
+							furnitureCards.seriesNo = seriesNo
 							totalPrice = furnitureCards.onePrice
 						}
 					}

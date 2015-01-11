@@ -607,7 +607,6 @@ public class ExcelExport {
 						ws.addCell(new Label(7, i+2, (String)assetCardsRow.get(7)));
 						ws.addCell(new Label(8, i+2, (String)assetCardsRow.get(8)));
 					}
-					
 				}
 			}
 		} catch (Exception e) {

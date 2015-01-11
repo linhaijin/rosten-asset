@@ -4,7 +4,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 String currentPage = request.getParameter("page");
 
-int pagesize = 6;                                   //每页显示的条数
+int pagesize = 12;                                   //每页显示的条数
 int p = 1;                           				//当前页
 if(currentPage != null && !currentPage.equals("")){
 	p = Integer.parseInt(currentPage);              //将页数字符串转成int型
@@ -126,7 +126,7 @@ if(p == ye){
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"840px",height:"800px",margin:"0 auto"}' >
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"840px",height:"710px",margin:"0 auto"}' >
 	<table border="0" width="800" align="center">
 <%
 if(furnitureCardsList != null && furnitureCardsList.size()>0){
@@ -137,36 +137,36 @@ if(furnitureCardsList != null && furnitureCardsList.size()>0){
    	for(int i=k;i<x;i++){
 		def obj = furnitureCardsList.get(i);
 %>
-    	<td width="400" style="padding:6px;">
+    	<td width="260" style="padding:3px;">
 	    	<div class="pt_border">
-	    	<table width="400" height="210" border="0">
+	    	<table width="260" height="150" border="0">
 	    		<tr>
-	    			<td width="80" height="110" align="right">编号：</td>
-	    			<td width="320" align="left">
-	    				<img src="${createLink(controller:'furnitureCards',action:'getBarcode',params:[registerNum:obj.registerNum?.encodeAsHTML()])}" width="300" height="100" style="padding-left:10px;">
+	    			<td width="50" height="70" align="right" style="padding-right:5px;">编号</td>
+	    			<td width="210" align="left">
+	    				<img src="${createLink(controller:'deviceCards',action:'getBarcode',params:[registerNum:obj.registerNum?.encodeAsHTML()])}" width="200" height="60" style="padding-left:10px;">
 	    			</td>
 	    		</tr>
 	    		<tr>
-	    			<td height="25" align="right">名称：</td>
+	    			<td height="20" align="right" style="padding-right:5px;">名称</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.assetName?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>
-	    			<td height="25" align="right">品牌：</td>
+	    			<td height="20" align="right" style="padding-right:5px;">品牌</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.specifications?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>
-	    			<td height="25" align="right">时间：</td>
+	    			<td height="20" align="right" style="padding-right:5px;">时间</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.getFormattedShowBuyDate()?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>
-	    			<td height="25" align="right">使用人：</td>
+	    			<td height="20" align="right" style="padding-right:5px;">使用人</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.purchaser?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    	</table>
 	    	</div>
 		</td>
 <%  
-	if(i != 0  && (i+1)%2 == 0){out.print("</tr>");}
+	if(i != 0  && (i+1)%3 == 0){out.print("</tr>");}
     }   
 }
 %>

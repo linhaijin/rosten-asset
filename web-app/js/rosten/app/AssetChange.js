@@ -23,7 +23,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
-		var usedDepart = registry.byId("scrap_usedDepart");
+		var usedDepart = registry.byId("scrap_usedDepartIds");
 		if(usedDepart.get("value")!=""){
 			usedDepart = usedDepart.get("value");
 			qusedDepart = "&usedDepart="+usedDepart;
@@ -135,13 +135,13 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
-		var originalDepart = registry.byId("allocate_originalDepart");
+		var originalDepart = registry.byId("allocate_originalDepartIds");
 		if(originalDepart.get("value")!=""){
 			originalDepart = originalDepart.get("value");
 			qoriginalDepart = "&originalDepart="+originalDepart;
 		}
 		
-		var newDepart = registry.byId("allocate_newDepart");
+		var newDepart = registry.byId("allocate_newDepartIds");
 		if(newDepart.get("value")!=""){
 			newDepart = newDepart.get("value");
 			qnewDepart = "&newDepart="+newDepart;
@@ -263,7 +263,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
-		var usedDepart = registry.byId("lose_usedDepart");
+		var usedDepart = registry.byId("lose_usedDepartIds");
 		if(usedDepart.get("value")!=""){
 			usedDepart = usedDepart.get("value");
 			qusedDepart = "&usedDepart="+usedDepart;
@@ -365,7 +365,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			qseriesNo = "&seriesNo="+seriesNo;
 		}
 		
-		var usedDepart = registry.byId("repair_usedDepart");
+		var usedDepart = registry.byId("repair_usedDepartIds");
 		if(usedDepart.get("value")!=""){
 			usedDepart = usedDepart.get("value");
 			qusedDepart = "&usedDepart="+usedDepart;

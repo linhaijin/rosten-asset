@@ -784,8 +784,26 @@ class AssetAllocateController {
 		def searchArgs =[:]
 		
 		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
-		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
-		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
+		
+		def originalDepartList = []
+		if(params.originalDepart && !"".equals(params.originalDepart)){
+			params.originalDepart.split(",").each{
+				def _list = []
+				originalDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["originalDepart"] = originalDepartList.unique()
+		}
+		
+		def newDepartList = []
+		if(params.newDepart && !"".equals(params.newDepart)){
+			params.newDepart.split(",").each{
+				def _list = []
+				newDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+			}
+			searchArgs["newDepart"] = newDepartList.unique()
+		}
+//		if(params.originalDepart && !"".equals(params.originalDepart)) searchArgs["originalDepart"] = Depart.findByCompanyAndDepartName(company,params.originalDepart)
+//		if(params.newDepart && !"".equals(params.newDepart)) searchArgs["newDepart"] = Depart.findByCompanyAndDepartName(company,params.newDepart)
 		if(params.newUser && !"".equals(params.newUser)) searchArgs["newUser"] = params.newUser
 		
 		def c = AssetAllocate.createCriteria()
@@ -793,10 +811,10 @@ class AssetAllocateController {
 		def assetAllocateList = c.list{
 			
 			eq("company",company)
-			eq("status","已结束")
+//			eq("status","已结束")
 			searchArgs.each{k,v->
 				if(k.equals("originalDepart") || k.equals("newDepart")){
-					eq(k,v)
+					'in'(k,v)
 				}else{
 					like(k,"%" + v + "%")
 				}

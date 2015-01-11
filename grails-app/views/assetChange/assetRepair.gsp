@@ -427,8 +427,9 @@
 				assetRepairListGrid.refresh(assetRepairListGrid.defaultUrl);
 			};
 			assetCategoryChoose_search = function(){
+				var controlName = "assetRepair";
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				assetCategoryChoose_search_common(url,"${company?.id}","${assetRepair?.seriesNo}");
+				assetCategoryChoose_search_common(url,controlName,"${company?.id}","${assetRepair?.seriesNo}");
 			}
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");

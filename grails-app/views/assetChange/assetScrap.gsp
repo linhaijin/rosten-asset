@@ -437,8 +437,9 @@
 				assetScrapListGrid.refresh(assetScrapListGrid.defaultUrl);
 			};
 			assetCategoryChoose_search = function(){
+				var controlName = "assetScrap";
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
-				assetCategoryChoose_search_common(url,"${company?.id}","${assetScrap?.seriesNo}");
+				assetCategoryChoose_search_common(url,controlName,"${company?.id}","${assetScrap?.seriesNo}");
 			}
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");

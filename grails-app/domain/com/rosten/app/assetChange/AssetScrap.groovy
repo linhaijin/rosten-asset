@@ -11,7 +11,7 @@ import com.rosten.app.system.User
 import com.rosten.app.util.SystemUtil
 
 /**
- * 资产报损
+ * 资产报废
  * @author ercjlo
  *
  */
@@ -83,8 +83,8 @@ class AssetScrap {
 	@GridColumn(name="资产总和（元）",width="120px",colIdx=5)
 	Double assetTotal = 0
 	
-	//报损
-	@GridColumn(name="报损原因",colIdx=6)
+	//报废原因
+	@GridColumn(name="报废原因",colIdx=6)
 	String applyDesc
 	
 	//审批状态

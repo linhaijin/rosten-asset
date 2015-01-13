@@ -178,7 +178,7 @@ class AssetScrapController {
 		def company = Company.get(params.companyId)
 		def currentUser = springSecurityService.getCurrentUser()
 		
-		//资产报损申请信息保存-------------------------------
+		//资产报废申请信息保存-------------------------------
 		def assetScrap = new AssetScrap()
 		if(params.id && !"".equals(params.id)){
 			assetScrap = AssetScrap.get(params.id)
@@ -456,10 +456,10 @@ class AssetScrapController {
 					eq("company",companyEntity)
 					like("seriesNo","%"+seriesNo+"%")
 //					if(assetType=="" || assetType==null){
-//						eq("assetStatus","报损待审批")
+//						eq("assetStatus","报废待审批")
 //					}
 //					if(freshType=="twice"){
-//						eq("assetStatus","报损待审批")
+//						eq("assetStatus","报废待审批")
 //					}
 				}
 			}
@@ -757,8 +757,8 @@ class AssetScrapController {
 					taskService.claim(assetScrap.taskId, nextUser.username)
 					
 					def args = [:]
-					args["type"] = "【资产报损】"
-					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的资产报损申请信息"
+					args["type"] = "【资产报废】"
+					args["content"] = "请您审核编号为  【" + assetScrap.seriesNo +  "】 的资产报废申请信息"
 					args["contentStatus"] = nextStatus
 					args["contentId"] = assetScrap.id
 					args["user"] = nextUser
@@ -780,7 +780,7 @@ class AssetScrapController {
 		}
 		assetScrap.status = nextStatus
 		assetScrap.currentDealDate = new Date()
-		//处理资产报损状态
+		//处理资产报废状态
 		assetScrap.dataStatus = nextStatus
 		
 		//判断下一处理人是否与当前处理人员为同一人
@@ -871,8 +871,8 @@ class AssetScrapController {
 				
 				//增加待办事项
 				def args = [:]
-				args["type"] = "【资产报损】"
-				args["content"] = "编号为  【" + assetScrap.seriesNo +  "】 的资产报损申请信息被退回，请查看！"
+				args["type"] = "【资产报废】"
+				args["content"] = "编号为  【" + assetScrap.seriesNo +  "】 的资产报废申请信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = assetScrap.id
 				args["user"] = user
@@ -885,7 +885,7 @@ class AssetScrapController {
 				assetScrap.currentDepart = user.getDepartName()
 				assetScrap.currentDealDate = new Date()
 				assetScrap.status = nextStatus
-				//处理资产报损状态
+				//处理资产报废状态
 				assetScrap.dataStatus = nextStatus
 				
 				//判断下一处理人是否与当前处理人员为同一人
@@ -939,7 +939,7 @@ class AssetScrapController {
 		OutputStream os = response.outputStream
 		def company = Company.get(params.companyId)
 		response.setContentType('application/vnd.ms-excel')
-		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报损申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("资产报废申请信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
 		//增加查询条件
 		def searchArgs =[:]

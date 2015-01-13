@@ -292,7 +292,6 @@ class InventoryTaskController {
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
 		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = params.category
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
-		
 		def userDepartList = []
 		if(params.userDepart && !"".equals(params.userDepart)){
 			params.userDepart.split(",").each{
@@ -302,6 +301,7 @@ class InventoryTaskController {
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 		
 		def totalNum = 0	//总条目数
 		def totalMoney = 0.00	//总金额
@@ -793,6 +793,7 @@ class InventoryTaskController {
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 		
 		def allList =[]
 		

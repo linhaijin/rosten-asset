@@ -25,7 +25,7 @@ class AssetCategoryChooseController {
 		def strname = "assetCategoryChoose"
 		def actionList = []
 		
-		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
+//		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
 		actionList << createAction("添加",webPath +imgPath + "add.png",strname + "_add")
 		render actionList as JSON
 	}
@@ -159,12 +159,12 @@ class AssetCategoryChooseController {
 					if(controlName == "assetLose"){
 						or{
 							eq("assetStatus","已入库")
-							like("assetStatus","%资产已调拨%")
-							like("assetStatus","%资产已报损%")
-							like("assetStatus","%资产已报修%")
+							like("assetStatus","%已调拨%")
+							like("assetStatus","%已报废%")
+							like("assetStatus","%已报修%")
 						}
 						not{
-							like("assetStatus","%资产已报失%")
+							like("assetStatus","%已报失%")
 						}
 					}
 					else{
@@ -245,7 +245,7 @@ class AssetCategoryChooseController {
 		def cardsStatus
 		if(params.controlName && params.controlName!="" && params.controlName!=null){
 			controlName = params.controlName
-			cardsStatus = ["assetAllocate":"资产已调拨","assetScrap":"资产已报损","assetLose":"资产已报失","assetRepair":"资产已报修"][controlName]
+			cardsStatus = ["assetAllocate":"已调拨","assetScrap":"已报废","assetLose":"已报失","assetRepair":"已报修"][controlName]
 		}
 		
 		def seriesNo
@@ -292,7 +292,7 @@ class AssetCategoryChooseController {
 							if(seriesNo in seriesNo_exists){
 								//undo
 							}else{
-								carCards.assetStatus += ","+cardsStatus
+								carCards.assetStatus = cardsStatus
 								carCards.seriesNo += ","+seriesNo
 								totalPrice = carCards.onePrice
 							}
@@ -311,7 +311,7 @@ class AssetCategoryChooseController {
 							if(seriesNo in seriesNo_exists){
 								//undo
 							}else{
-								houseCards.assetStatus += ","+cardsStatus
+								houseCards.assetStatus = cardsStatus
 								houseCards.seriesNo += ","+seriesNo
 								totalPrice = houseCards.onePrice
 							}
@@ -330,7 +330,7 @@ class AssetCategoryChooseController {
 							if(seriesNo in seriesNo_exists){
 								//undo
 							}else{
-								deviceCards.assetStatus += ","+cardsStatus
+								deviceCards.assetStatus = cardsStatus
 								deviceCards.seriesNo += ","+seriesNo
 								totalPrice = deviceCards.onePrice
 							}
@@ -349,7 +349,7 @@ class AssetCategoryChooseController {
 							if(seriesNo in seriesNo_exists){
 								//undo
 							}else{
-								furnitureCards.assetStatus += ","+cardsStatus
+								furnitureCards.assetStatus = cardsStatus
 								furnitureCards.seriesNo += ","+seriesNo
 								totalPrice = furnitureCards.onePrice
 							}

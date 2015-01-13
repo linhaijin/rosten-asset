@@ -210,10 +210,8 @@ class FurnitureCardsController {
 		//增加查询条件
 		def searchArgs =[:]
 		if(params.registerNum && !"".equals(params.registerNum)) searchArgs["registerNum"] = params.registerNum
-		
 		def parentCategory = AssetCategory.findByCategoryCode("furniture")
 		if(params.category && !"".equals(params.category)) searchArgs["userCategory"] = AssetCategory.findByCompanyAndCategoryNameAndParent(company,params.category,parentCategory)
-		
 		if(params.assetName && !"".equals(params.assetName)) searchArgs["assetName"] = params.assetName
 		def userDepartList = []
 		if(params.userDepart && !"".equals(params.userDepart)){
@@ -223,6 +221,7 @@ class FurnitureCardsController {
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 //		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		if(params.refreshData){
@@ -262,6 +261,7 @@ class FurnitureCardsController {
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 //		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		def c = FurnitureCards.createCriteria()
@@ -318,6 +318,7 @@ class FurnitureCardsController {
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}
+		if(params.assetStatus && !"".equals(params.assetStatus)) searchArgs["assetStatus"] = params.assetStatus
 //		if(params.userDepart && !"".equals(params.userDepart)) searchArgs["userDepart"] = Depart.findByCompanyAndDepartName(company,params.userDepart)
 		
 		def c = FurnitureCards.createCriteria()

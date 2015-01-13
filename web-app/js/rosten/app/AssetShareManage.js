@@ -20,11 +20,12 @@ define(["dojo/dom",
             if(assetCardsTypeSel.attr("value")!=""){
                 assetCardsType = assetCardsTypeSel.attr("value");
                 qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
-            }else{
-                rosten.alert("注意：请选择资产类别！");
-                dom.byId("assetCardsType").focus();
-                return;
             }
+//            else{
+//                rosten.alert("注意：请选择资产类别！");
+//                dom.byId("assetCardsType").focus();
+//                return;
+//            }
         }
 
         var qAssetDepart = "";

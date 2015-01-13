@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>资产变动--报废报损</title>
+    <title>资产变动--报废报废</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .dsj_form table tr{
@@ -533,14 +533,13 @@
 								if(usedMan.get("value")==""){
 									usedMan.set("value",store.getValue(selected[0], "assetUser"));
 								}
-								
 								//----------------------------------------------------------------
 								
 								//刷新资产筛选页面
 								assetCategoryChoose_search();
-								
-								rosten.alert("添加成功,请使用返回退出或继续添加！");
-								
+								rosten.alert("资产已成功添加！");
+								//刷新主页面
+								refreshAsset();
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");
 								return;

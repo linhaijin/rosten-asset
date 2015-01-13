@@ -5,7 +5,7 @@ import com.rosten.app.system.UserGroup
 
 class AssetChangeService {
 	def springSecurityService
-	//资产报损
+	//资产报废
     def getAssetScrapListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new AssetScrap())

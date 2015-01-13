@@ -552,9 +552,9 @@
 								
 								//刷新资产筛选页面
 								assetCategoryChoose_search();
-								
-								rosten.alert("添加成功,请使用返回退出或继续添加！");
-								
+								rosten.alert("资产已成功添加！");
+								//刷新主页面
+								refreshAsset();
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");
 								return;

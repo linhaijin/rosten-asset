@@ -27,6 +27,11 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			content.userDepart = userDepart.get("value");
 		}
 		
+		var assetStatus = registry.byId("check_assetStatus");
+		if(assetStatus.get("value")!=""){
+			content.assetStatus = assetStatus.get("value");
+		}
+		
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
@@ -42,6 +47,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			registry.byId("check_assetName").set("value","");
 			registry.byId("check_userDepart").set("value","");
 			registry.byId("check_userDepartIds").set("value","");
+			registry.byId("check_assetStatus").set("value","");
 			
 			rosten.kernel.refreshGrid();
 			break;
@@ -58,6 +64,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var qassetName = "";
 		var userDepart;
 		var quserDepart = "";
+		var assetStatus;
+		var qassetStatus = "";
 		
 		var registerNum_ = registry.byId("check_registerNum");
 		if(registerNum_.get("value")!=""){
@@ -82,12 +90,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			userDepart = userDepart_.get("value");
 			quserDepart = "&userDepart="+userDepart;
 		}
-//		var userDepart = registry.byId("car_userDepart");
-//		if(userDepart.get("value")!=""){
-//			userDepart = userDepart.get("value");
-//			quserDepart = "&userDepart="+userDepart;
-//		}
-		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart);
+		
+		var assetStatus = registry.byId("check_assetStatus");
+		if(assetStatus.get("value")!=""){
+			assetStatus = assetStatus.get("value");
+			qassetStatus = "&assetStatus="+assetStatus;
+		}
+		
+		rosten.openNewWindow("assetCheck", rosten.webPath + "/inventoryTask/assetCheckExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart+qassetStatus);
 		
 //		var url = rosten.webPath + "/inventoryTask/assetCheckExport?companyId="+companyId+qregisterNum+qcategory+qassetName+quserDepart;
 //		var copyOfWindowOpen = window.open;

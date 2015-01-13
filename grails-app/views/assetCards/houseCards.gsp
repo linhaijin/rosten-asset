@@ -114,7 +114,7 @@
 			            </td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>归属部门：</div></td>
 					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
@@ -171,7 +171,23 @@
 								value:"${houseCards?.getFormattedShowBuyDate()}"
 		                '/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产状态：</div></td>
+					    <td>
+					    	<select id="assetStatus" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"assetStatus",trim:true,required:true,
+                           			autoComplete:true,${fieldAcl.isReadOnly("assetStatus")},
+            						value:"${houseCards?.assetStatus}"
+                            '>
+	                            <option value="已入库">已入库</option>
+								<option value="已调拨">已调拨</option>
+								<option value="已报修">已报修</option>
+								<option value="已报废">已报废</option>
+								<option value="已报失">已报失</option>
+                           	</select>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"onePrice",${fieldAcl.isReadOnly("onePrice")},
@@ -180,8 +196,6 @@
              						value:"${String.format("%.2f", houseCards?.onePrice)}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -190,7 +204,9 @@
              						value:"${houseCards?.undertakingRevenue}"
                            	'/>
 			            </td>
-					    <td><div align="right">财政拨款（元）：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"fiscalAppropriation",${fieldAcl.isReadOnly("fiscalAppropriation")},
@@ -198,8 +214,6 @@
              						value:"${houseCards?.fiscalAppropriation}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -208,7 +222,9 @@
              						value:"${houseCards?.otherFund}"
                            	'/>
 			            </td>
-					    <td><div align="right">采购组织形式：</div></td>
+					</tr>
+					<tr>
+						<td><div align="right">采购组织形式：</div></td>
 					    <td>
 					    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"organizationalType",trim:true,required:true,
@@ -221,8 +237,6 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -232,6 +246,8 @@
              						value:"${houseCards?.purchaser}"
                            	'/>
 			            </td>
+					</tr>
+					<tr>
 						<td><div align="right">坐落位置：</div></td>
 					    <td>
 					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -240,10 +256,8 @@
              						value:"${houseCards?.storagePosition}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">建筑面积（m<SUP>2</SUP>）：</div></td>
-					    <td colspan="3">
+					    <td>
 					    	<input id="houseArea" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"houseArea",${fieldAcl.isReadOnly("houseArea")},
                                		trim:true,

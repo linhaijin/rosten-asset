@@ -60,15 +60,15 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"600px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='height:"510px",marginBottom:"2px",region:"top"'>
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"630px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='height:"540px",marginBottom:"2px",region:"top"'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="CardsNum_form" value="${deviceCards?.registerNum}" />
 			<div style="display:none">
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${deviceCards?.id }"' />
 	        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"500px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"资产信息",toggleable:false,moreText:"",height:"530px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>资产编号：</div></td>
@@ -114,7 +114,7 @@
 			            </td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>管理部门：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>归属部门：</div></td>
 					   	<td width="250">
 					    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
 				               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
@@ -171,7 +171,23 @@
 								value:"${deviceCards?.getFormattedShowBuyDate()}"
 		                '/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>资产状态：</div></td>
+					    <td>
+					    	<select id="assetStatus" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"assetStatus",trim:true,required:true,
+                           			autoComplete:true,${fieldAcl.isReadOnly("assetStatus")},
+            						value:"${deviceCards?.assetStatus}"
+                            '>
+	                            <option value="已入库">已入库</option>
+								<option value="已调拨">已调拨</option>
+								<option value="已报修">已报修</option>
+								<option value="已报废">已报废</option>
+								<option value="已报失">已报失</option>
+                           	</select>
+			            </td>
+					</tr>
+					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>价格（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"onePrice",${fieldAcl.isReadOnly("onePrice")},
@@ -180,8 +196,6 @@
              						value:"${String.format("%.2f", deviceCards?.onePrice)}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">事业收入（元）：</div></td>
 					    <td>
 					    	<input id="undertakingRevenue" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -190,7 +204,10 @@
              						value:"${deviceCards?.undertakingRevenue}"
                            	'/>
 			            </td>
-					    <td><div align="right">财政拨款（元）：</div></td>
+					    
+					</tr>
+					<tr>
+						<td><div align="right">财政拨款（元）：</div></td>
 					    <td>
 					    	<input id="fiscalAppropriation" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"fiscalAppropriation",${fieldAcl.isReadOnly("fiscalAppropriation")},
@@ -198,8 +215,6 @@
              						value:"${deviceCards?.fiscalAppropriation}"
                            	'/>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right">其他资金（元）：</div></td>
 					    <td>
 					    	<input id="otherFund" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -208,7 +223,10 @@
              						value:"${deviceCards?.otherFund}"
                            	'/>
 			            </td>
-					    <td><div align="right">采购组织形式：</div></td>
+					    
+					</tr>
+					<tr>
+						<td><div align="right">采购组织形式：</div></td>
 					    <td>
 					    	<select id="organizationalType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"organizationalType",trim:true,required:true,
@@ -221,8 +239,6 @@
 								<option value="其他">其他</option>
                            	</select>
 			            </td>
-					</tr>
-					<tr>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="purchaser" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -232,8 +248,10 @@
              						value:"${deviceCards?.purchaser}"
                            	'/>
 			            </td>
+			        </tr>
+			        <tr>
 						<td><div align="right">存放地点：</div></td>
-					    <td>
+					    <td colspan="3">
 					    	<input id="storagePosition" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"storagePosition",${fieldAcl.isReadOnly("storagePosition")},
                                		trim:true,

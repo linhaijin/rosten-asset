@@ -24,7 +24,7 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 public class ExcelExport {
-	//资产报损导出
+	//资产报废导出
 	public String assetScrapDc(OutputStream os,List<AssetScrap> assetScrapList){
 		WritableWorkbook wwb = null;
 		WritableSheet ws = null;
@@ -42,10 +42,10 @@ public class ExcelExport {
 			titlewcfStyle.setVerticalAlignment(vcenter);
 			
 			wwb = Workbook.createWorkbook(os);
-			ws = wwb.createSheet("报损清单", 0);
+			ws = wwb.createSheet("报废清单", 0);
 			
 			ws.mergeCells(0, 0, 6, 0);
-			ws.addCell(new Label(0 , 0, "资产报损申请清单",titlewcfStyle));
+			ws.addCell(new Label(0 , 0, "资产报废申请清单",titlewcfStyle));
 			
 			ws.addCell(new Label(0, 1, "申请编号"));
 			ws.addCell(new Label(1, 1, "申请日期"));

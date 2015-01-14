@@ -90,7 +90,7 @@ class AssetLoseController {
 		  elem.group.groupName
 		}
 		if("zcgly" in userGroups || "xhzcgly" in userGroups || "admin".equals(currentUser.getUserType())){
-			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+			actionList << createAction("资产报失",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		}
 		actionList << createAction("导出",imgPath + "export.png",strname + "_export")

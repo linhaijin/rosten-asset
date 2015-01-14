@@ -7,7 +7,8 @@ define(["dojo/dom",
 	
 	//卡片搜索
 	assetCategoryChoose_search_common = function(url,controlName,companyId,seriesNo){
-                
+        var hasArgs = false;
+        
         var qCompany = "?companyId="+encodeURI(companyId);
         
         var qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
@@ -20,6 +21,8 @@ define(["dojo/dom",
             if(assetCardsTypeSel.attr("value")!=""){
                 assetCardsType = assetCardsTypeSel.attr("value");
                 qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
+                
+                if(!hasArgs) hasArgs = true;
             }
 //            else{
 //                rosten.alert("注意：请选择资产类别！");
@@ -35,6 +38,8 @@ define(["dojo/dom",
             if(assetDepartSel.attr("value") != ""){
                 assetDepart = assetDepartSel.attr("value");
                 qAssetDepart = "&assetDepart=" + encodeURI(assetDepart);
+                
+                if(!hasArgs) hasArgs = true;
             }
         }
 
@@ -45,6 +50,8 @@ define(["dojo/dom",
             if(assetUserSel.attr("value") != ""){
                 assetUser = assetUserSel.attr("value");
                 qAssetUser = "&assetUser=" + encodeURI(assetUser);
+                
+                if(!hasArgs) hasArgs = true;
             }
         }
         
@@ -54,6 +61,8 @@ define(["dojo/dom",
         if(assetRegisterNumSel){
             if(assetRegisterNumSel.attr("value") != ""){
                 qassetRegisterNum = "&assetRegisterNum=" + encodeURI(assetRegisterNumSel.attr("value"));
+                
+                if(!hasArgs) hasArgs = true;
             }
         }
         
@@ -62,17 +71,26 @@ define(["dojo/dom",
         if(assetNameSel){
             if(assetNameSel.attr("value") != ""){
                 qassetName = "&assetName=" + encodeURI(assetNameSel.attr("value"));
+                
+                if(!hasArgs) hasArgs = true;
             }
         }
         
         var qbuyDate = "";
         var buyDateSel = registry.byId("buyDate");
         if(buyDateSel){
-            if(buyDateSel.attr("value") != ""){
+            if(buyDateSel.attr("value") != "" && buyDateSel.attr("value") !=null ){
                 qbuyDate = "&buyDate=" + encodeURI(buyDateSel.attr("value"));
+                
+                if(!hasArgs) hasArgs = true;
             }
         }
         //---------------------------------------------------------------------
+        
+        if(!hasArgs){
+            rosten.alert("请正确输入搜索条件！");
+            return;
+        }
         
         url += qCompany+qSeriesNo+qAssetCardsType+qAssetDepart+qAssetUser+qControlName+qassetRegisterNum+qassetName+qbuyDate;
         

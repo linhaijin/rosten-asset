@@ -17,7 +17,8 @@
 	          		<tr>
 	            		<th width="8%">资产类别</th>
 			            <td width="14%">
-			            	<select id="assetCardsType" data-dojo-type="dijit/form/FilteringSelect" data-dojo-props='trim:true,autoComplete:false,value:"",style:"width:120px;"'>
+			            	<select id="assetCardsType" data-dojo-type="dijit/form/FilteringSelect" 
+			            		data-dojo-props='trim:true,autoComplete:false,value:"",style:"width:120px;"'>
 								<option value="house">房屋及建筑物</option>
 								<option value="car">运输工具</option>
 								<option value="device">电子设备</option>

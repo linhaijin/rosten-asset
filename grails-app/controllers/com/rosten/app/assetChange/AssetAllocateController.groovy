@@ -85,7 +85,7 @@ class AssetAllocateController {
 		  elem.group.groupName
 		}
 		if("zcgly" in userGroups || "xhzcgly" in userGroups || "admin".equals(currentUser.getUserType())){
-			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+			actionList << createAction("资产调拨",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
 		}
@@ -145,7 +145,7 @@ class AssetAllocateController {
 		if(params.id){
 			assetAllocate = AssetAllocate.get(params.id)
 			currentDepart = currentUser.getDepartEntity()
-			isSubDepart = currentDepart.isSubDepart
+			isSubDepart = currentDepart?.isSubDepart
 		}
 		
 		model["user"] = currentUser

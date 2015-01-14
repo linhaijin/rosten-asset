@@ -25,7 +25,7 @@ class AssetCategoryChooseController {
 		def strname = "assetCategoryChoose"
 		def actionList = []
 		
-//		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
 		actionList << createAction("添加",webPath +imgPath + "add.png",strname + "_add")
 		render actionList as JSON
 	}
@@ -115,121 +115,149 @@ class AssetCategoryChooseController {
 		
 		def pa=[max:max,offset:offset]
 		
-		def assetList
+		//获取搜索条件
+		def hasArgs = false
 		
-		def assetCardsType
-		if(params.assetCardsType == null || params.assetCardsType == ""){
+		def assetList
+		def assetCardsType = params.assetCardsType
 			
-		}else{
-			assetCardsType = params.assetCardsType
+		def assetDepart
+		def depart
+		if(params.assetDepart && params.assetDepart != "" && params.assetDepart != null){
+			assetDepart = params.assetDepart
+			depart = Depart.findByCompanyAndDepartName(company,assetDepart)
 			
-			def assetDepart
-			def depart
-			if(params.assetDepart && params.assetDepart != "" && params.assetDepart != null){
-				assetDepart = params.assetDepart
-				depart = Depart.findByCompanyAndDepartName(company,assetDepart)
+			if(!hasArgs) hasArgs= true
+		}
+		
+		def assetUser
+		if(params.assetUser && params.assetUser != "" && params.assetUser != null){
+			assetUser = params.assetUser
+			
+			if(!hasArgs) hasArgs= true
+		}
+		
+		//2015-1-10--增加查询条件---------------------------------------------------------------
+		def registerNum
+		if(params.assetRegisterNum && params.assetRegisterNum != "" && params.assetRegisterNum != null){
+			registerNum = params.assetRegisterNum
+			
+			if(!hasArgs) hasArgs= true
+		}
+		
+		def assetName
+		if(params.assetName && params.assetName != "" && params.assetName != null){
+			assetName = params.assetName
+			
+			if(!hasArgs) hasArgs= true
+		}
+		
+		def buyDate
+		if(params.buyDate && params.buyDate != "" && params.buyDate != null){
+			buyDate = Util.convertToTimestamp(params.buyDate)
+			
+			if(!hasArgs) hasArgs= true
+		}
+		
+		//----------------------------------------------------------------------------------
+		
+		def query = {
+			eq("company",company)
+			if(controlName == "assetLose"){
+				or{
+					eq("assetStatus","已入库")
+					like("assetStatus","%已调拨%")
+					like("assetStatus","%已报废%")
+					like("assetStatus","%已报修%")
+				}
+				not{
+					like("assetStatus","%已报失%")
+				}
+			}else{
+				eq("assetStatus","已入库")
 			}
 			
-			def assetUser
-			if(params.assetUser && params.assetUser != "" && params.assetUser != null){
-				assetUser = params.assetUser
+			if(assetDepart != null && assetDepart != ""){
+				eq("userDepart",depart)
 			}
-			
-			//2015-1-10--增加查询条件---------------------------------------------------------------
-			def registerNum
-			if(params.assetRegisterNum && params.assetRegisterNum != "" && params.assetRegisterNum != null){
-				registerNum = params.assetRegisterNum
+			if(assetUser != null && assetUser != ""){
+				eq("purchaser",assetUser)
 			}
-			
-			def assetName
-			if(params.assetName && params.assetName != "" && params.assetName != null){
-				assetName = params.assetName
+			//2015-1-10-----增加查询条件------------------------------------
+			if(registerNum != null && registerNum != ""){
+				like("registerNum","%" + registerNum + "%")
 			}
-			
-			def buyDate
-			if(params.buyDate && params.buyDate != "" && params.buyDate != null){
-				buyDate = Util.convertToTimestamp(params.buyDate)
+			if(assetName != null && assetName != ""){
+				like("assetName","%" + assetName + "%")
 			}
+			if(buyDate != null && buyDate != ""){
+				eq("buyDate",buyDate)
+			}
+			//--------------------------------------------------------
 			
-			//----------------------------------------------------------------------------------
+		}	
+	
+		if(params.refreshData){
+			if(assetCardsType.equals("car")){
+				assetList = car.list(pa,query)
+				totalNum = CarCards.createCriteria().count(query)
+			}else if(assetCardsType.equals("house")){
+				assetList = house.list(pa,query)
+				totalNum = HouseCards.createCriteria().count(query)
+			}else if(assetCardsType.equals("device")){
+				assetList = device.list(pa,query)
+				totalNum = DeviceCards.createCriteria().count(query)
+			}else if(assetCardsType.equals("furniture")){
+				assetList = furniture.list(pa,query)
+				totalNum = FurnitureCards.createCriteria().count(query)
+			}else{
 			
-			def query = {
-				if(companyId != null && companyId != ""){
-					eq("company",company)
-					if(controlName == "assetLose"){
-						or{
-							eq("assetStatus","已入库")
-							like("assetStatus","%已调拨%")
-							like("assetStatus","%已报废%")
-							like("assetStatus","%已报修%")
-						}
-						not{
-							like("assetStatus","%已报失%")
-						}
-					}
-					else{
-						eq("assetStatus","已入库")
-					}
-					if(assetDepart != null && assetDepart != ""){
-						eq("userDepart",depart)
-					}
-					if(assetUser != null && assetUser != ""){
-						eq("purchaser",assetUser)
-					}
-					//2015-1-10-----增加查询条件------------------------------------
-					if(registerNum != null && registerNum != ""){
-						like("registerNum","%" + registerNum + "%")
-					}
-					if(assetName != null && assetName != ""){
-						like("assetName","%" + assetName + "%")
-					}
-					if(buyDate != null && buyDate != ""){
-						eq("buyDate",buyDate)
-					}
-					//--------------------------------------------------------
+				if(hasArgs){
+					//默认取所有类型的信息--------2015-1-14---------------
+					//--------此处，可能条目数方面有bug，待修复
+					def _list =[],_totalNum =0
+					_list += car.list(pa,query)
+					_totalNum += CarCards.createCriteria().count(query)
 					
+					_list += house.list(pa,query)
+					_totalNum += HouseCards.createCriteria().count(query)
+					
+					_list += device.list(pa,query)
+					_totalNum += DeviceCards.createCriteria().count(query)
+					
+					_list += furniture.list(pa,query)
+					_totalNum += FurnitureCards.createCriteria().count(query)
+					
+					assetList = _list.unique()
+					totalNum = _totalNum
+					
+					//----------------------------------------------
 				}
-				
 			}
 			
-			if(params.refreshData){
-				if(assetCardsType.equals("car")){
-					assetList = car.list(pa,query)
-					totalNum = CarCards.createCriteria().count(query)
-				}else if(assetCardsType.equals("house")){
-					assetList = house.list(pa,query)
-					totalNum = HouseCards.createCriteria().count(query)
-				}else if(assetCardsType.equals("device")){
-					assetList = device.list(pa,query)
-					totalNum = DeviceCards.createCriteria().count(query)
-				}else if(assetCardsType.equals("furniture")){
-					assetList = furniture.list(pa,query)
-					totalNum = FurnitureCards.createCriteria().count(query)
-				}
+			def idx = 0
+			if(offset!=null){
+				idx = offset
+			}
+			assetList.each{
+				def sMap =[:]
+				sMap["rowIndex"] = idx+1
+				sMap["id"] = it.id
+				sMap["registerNum"] = it.registerNum
+				sMap["userCategory"] = it.getCategoryName()
+				sMap["assetName"] = it.assetName
+				sMap["userStatus"] = it.userStatus
+				sMap["onePrice"] = it.onePrice
+				sMap["userDepart"] = it.getDepartName()
+				sMap["buyDate"] = it.getFormattedShowBuyDate()
+				sMap["assetUser"] = it.purchaser
+				sMap["userDepartId"] = it.userDepart?.id
 				
-				def idx = 0
-				if(offset!=null){
-					idx = offset
-				}
-				assetList.each{
-					def sMap =[:]
-					sMap["rowIndex"] = idx+1
-					sMap["id"] = it.id
-					sMap["registerNum"] = it.registerNum
-					sMap["userCategory"] = it.getCategoryName()
-					sMap["assetName"] = it.assetName
-					sMap["userStatus"] = it.userStatus
-					sMap["onePrice"] = it.onePrice
-					sMap["userDepart"] = it.getDepartName()
-					sMap["buyDate"] = it.getFormattedShowBuyDate()
-					sMap["assetUser"] = it.purchaser
-					sMap["userDeaprtId"] = it.userDepart?.id
-					
-					_json.items += sMap
-					idx += 1
-				}
+				_json.items += sMap
+				idx += 1
 				
 			}
+				
 		}
 		json["gridData"] = _json
 		if(params.refreshPageControl){
@@ -238,6 +266,19 @@ class AssetCategoryChooseController {
 		render json as JSON
 	}
 	
+	private def getEntity ={entityId->
+		def entity = CarCards.get(entityId)
+		if(!entity){
+			entity = HouseCards.get(entityId)
+			if(!entity){
+				entity = DeviceCards.get(entityId)
+				if(!entity){
+					entity = FurnitureCards.get(entityId)
+				}
+			}
+		}
+		return entity
+	}
 	def assetCategoryChooseOperate = {
 		def json,message
 		
@@ -273,93 +314,33 @@ class AssetCategoryChooseController {
 		}
 		double totalPrice = 0
 		
-		def carCards
-		def houseCards
-		def deviceCards
-		def furnitureCards
-		
 		def seriesNo_exist
 		def seriesNo_exists
 		if(assetIds.size()>0){
 			assetIds.each{
-				//将申请单号和资产变更类型写入资产建账信息中，同时计算总金额
-				if(assetCardsType.equals("car")){
-					carCards = CarCards.get(it)
-					if(carCards){
-						seriesNo_exist = carCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产变动操作号已存在
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								carCards.assetStatus = cardsStatus
-								carCards.seriesNo += ","+seriesNo
-								totalPrice = carCards.onePrice
-							}
+				
+				//205-1-14------默认采用统一处理方法，前提各相关domain字段需字段一致，相同-------
+				
+				def entity = this.getEntity(it)
+				if(entity){
+					seriesNo_exist = entity.seriesNo
+					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在
+						seriesNo_exists = seriesNo_exist.split(",")
+						if(seriesNo in seriesNo_exists){
+							//undo
 						}else{
-							carCards.assetStatus = cardsStatus
-							carCards.seriesNo = seriesNo
-							totalPrice = carCards.onePrice
+							entity.assetStatus = cardsStatus
+							entity.seriesNo += ","+seriesNo
+							totalPrice = entity.onePrice
 						}
-					}
-				}else if(assetCardsType.equals("house")){
-					houseCards = HouseCards.get(it)
-					if(houseCards){
-						seriesNo_exist = houseCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产变动操作号已存在
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								houseCards.assetStatus = cardsStatus
-								houseCards.seriesNo += ","+seriesNo
-								totalPrice = houseCards.onePrice
-							}
-						}else{
-							houseCards.assetStatus = cardsStatus
-							houseCards.seriesNo = seriesNo
-							totalPrice = houseCards.onePrice
-						}
-					}
-				}else if(assetCardsType.equals("device")){
-					deviceCards = DeviceCards.get(it)
-					if(deviceCards){
-						seriesNo_exist = deviceCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产变动操作号已存在
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								deviceCards.assetStatus = cardsStatus
-								deviceCards.seriesNo += ","+seriesNo
-								totalPrice = deviceCards.onePrice
-							}
-						}else{
-							deviceCards.assetStatus = cardsStatus
-							deviceCards.seriesNo = seriesNo
-							totalPrice = deviceCards.onePrice
-						}
-					}
-				}else if(assetCardsType.equals("furniture")){
-					furnitureCards = FurnitureCards.get(it)
-					if(furnitureCards){
-						seriesNo_exist = furnitureCards.seriesNo
-						if(seriesNo_exist != null && seriesNo_exist !=""){//资产变动操作号已存在
-							seriesNo_exists = seriesNo_exist.split(",")
-							if(seriesNo in seriesNo_exists){
-								//undo
-							}else{
-								furnitureCards.assetStatus = cardsStatus
-								furnitureCards.seriesNo += ","+seriesNo
-								totalPrice = furnitureCards.onePrice
-							}
-						}else{
-							furnitureCards.assetStatus = cardsStatus
-							furnitureCards.seriesNo = seriesNo
-							totalPrice = furnitureCards.onePrice
-						}
+					}else{
+						entity.assetStatus = cardsStatus
+						entity.seriesNo = seriesNo
+						totalPrice = entity.onePrice
 					}
 				}
+				//--------------------------------------------------------------------
+				
 				assetTotal += totalPrice
 			}
 			message = "操作成功！"

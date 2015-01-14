@@ -517,12 +517,11 @@
 								
 								//----------------------------------------------------------------
 								
-								//刷新资产筛选页面
-								assetCategoryChoose_search();
-								
-								rosten.alert("资产已成功添加！");
-								//刷新主页面
-								refreshAsset();
+								//刷新资产筛选页面-------2015-1-14---去除此功能，直接刷新主页面的列表数据
+								//assetCategoryChoose_search();
+								rosten.alert("资产已成功添加！").queryDlgClose= function(){
+									assetCategoryChoose_close();
+								};
 								
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");

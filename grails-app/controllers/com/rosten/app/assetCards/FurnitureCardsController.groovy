@@ -62,6 +62,7 @@ class FurnitureCardsController {
 //		actionList << createAction("入库",imgPath + "submit.png",strname + "_submit")
 		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
 		actionList << createAction("打印条形码",imgPath + "word_print.png",strname + "_printTxm")
+		actionList << createAction("修改卡片状态",imgPath + "init.gif","asset_changeStatus")
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON

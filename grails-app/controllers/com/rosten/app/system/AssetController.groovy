@@ -176,7 +176,7 @@ class AssetController {
 			
 			resource = new Resource()
 //			resource.resourceName = "报废报损"
-			resource.resourceName = "报废报废"
+			resource.resourceName = "资产报废"
 			resource.url = "assetScrap"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)

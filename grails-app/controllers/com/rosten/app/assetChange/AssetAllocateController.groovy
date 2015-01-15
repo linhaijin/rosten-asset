@@ -58,6 +58,11 @@ class AssetAllocateController {
 			if(user.equals(entity.currentUser)){
 				//当前处理人
 				switch (true){
+					case entity.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
@@ -75,7 +80,7 @@ class AssetAllocateController {
 		render actionList as JSON
 	}
 	
-	  def assetAllocateView = {
+	def assetAllocateView = {
 		def actionList =[]
 		def strname = "assetAllocate"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
@@ -142,17 +147,28 @@ class AssetAllocateController {
 		def currentDepart
 		def isSubDepart
 		def assetAllocate = new AssetAllocate()
+		def drafter
+		def isAllowedEdit
 		if(params.id){
 			assetAllocate = AssetAllocate.get(params.id)
 			currentDepart = currentUser.getDepartEntity()
 			isSubDepart = currentDepart?.isSubDepart
+			//判断用户是否一致，若一致且未提交状态，则可编辑
+			drafter = assetAllocate.drafter
+			if(user.equals(drafter) && assetAllocate.dataStatus.equals("新建")){
+				isAllowedEdit = "yes"
+			}else{
+				isAllowedEdit = "no"
+			}
+		}else{
+			isAllowedEdit = "new"
 		}
-		
 		model["user"] = currentUser
 		model["company"] = company
 		model["currentDepart"] = currentDepart
 		model["isSubDepart"] = isSubDepart
 		model["assetAllocate"] = assetAllocate
+		model["isAllowedEdit"] = isAllowedEdit
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa

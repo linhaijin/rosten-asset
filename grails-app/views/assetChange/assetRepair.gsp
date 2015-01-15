@@ -600,7 +600,7 @@
 								value:"${assetRepair?.getUsedDepartName()}"
 				          	'/>
 				         	<g:hiddenField id="usedDepartId" data-dojo-type="dijit/form/ValidationTextBox"  name="usedDepartId" value="${assetRepair?.usedDepart?.id }" />
-				         	<g:if test="${assetRepair?.dataStatus=='未审批'}">
+				         	<g:if test="${isAllowedEdit in ['new','yes']}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 			           		</g:if>
 			           </td>
@@ -610,7 +610,7 @@
                                	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
              					value:"${assetRepair?.usedMan}"
                            	'/>
 			            </td>
@@ -622,7 +622,7 @@
                                	data-dojo-props='id:"repairReason",name:"repairReason",${fieldAcl.isReadOnly("repairReason")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
              					value:"${assetRepair?.repairReason}"
                            	'/>
 			            </td>
@@ -643,7 +643,7 @@
                                	data-dojo-props='name:"contacts",${fieldAcl.isReadOnly("contacts")},
                                	trim:true,
                                	required:true,
-                               	${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
              					value:"${assetRepair.contacts==null?user.chinaName:assetRepair.contacts}"
                            	'/>
 			            </td>
@@ -653,7 +653,7 @@
 	    						data-dojo-props='name:"contactPhone",${fieldAcl.isReadOnly("contactPhone")},
 	                            trim:true,
 	                            required:true,
-	                            ${assetRepair?.dataStatus!='未审批'?'readOnly:true,':'' }
+	                            ${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
 	                            value:"${assetRepair?.contactPhone}"
 	                         '/>
 						</td>
@@ -733,7 +733,7 @@
 					</tr>
 				</table>
 			</div>
-			<g:if test="${assetRepair?.dataStatus=='未审批'}">
+			<g:if test="${isAllowedEdit in ['new','yes']}">
 			<button data-dojo-type='dijit.form.Button' 
 				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
 				<script type="dojo/method" data-dojo-event="onClick">

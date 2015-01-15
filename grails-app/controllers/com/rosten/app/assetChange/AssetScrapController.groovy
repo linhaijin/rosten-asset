@@ -57,6 +57,11 @@ class AssetScrapController {
 			if(user.equals(entity.currentUser)){
 				//当前处理人
 				switch (true){
+					case entity.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
@@ -139,6 +144,8 @@ class AssetScrapController {
 		def money
 		def assetScrap = new AssetScrap()
 		def assetType
+		def drafter
+		def isAllowedEdit
 		if(params.id){
 			assetScrap = AssetScrap.get(params.id)
 			money = assetScrap.assetTotal
@@ -151,16 +158,22 @@ class AssetScrapController {
 			if(deviceCards.size() > 0){assetType = "device"}
 			def furnitureCards = FurnitureCards.findAllBySeriesNo(seriesNo)
 			if(furnitureCards.size() > 0){assetType = "furniture"}
-//			def landCards = LandCards.findAllBySeriesNo(seriesNo)
-//			if(landCards.size() > 0){assetType = "land"}
-//			def bookCards = BookCards.findAllBySeriesNo(seriesNo)
-//			if(bookCards.size() > 0){assetType = "book"}
+			//判断用户是否一致，若一致且未提交状态，则可编辑
+			drafter = assetScrap.drafter
+			if(user.equals(drafter) && assetScrap.dataStatus.equals("新建")){
+				isAllowedEdit = "yes"
+			}else{
+				isAllowedEdit = "no"
+			}
+		}else{
+			isAllowedEdit = "new"
 		}
 		model["assetType"] = assetType
 		model["user"] = currentUser
 		model["company"] = company
 		model["money"] = money
 		model["assetScrap"] = assetScrap
+		model["isAllowedEdit"] = isAllowedEdit
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa

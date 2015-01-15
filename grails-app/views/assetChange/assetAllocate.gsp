@@ -622,7 +622,7 @@
 									value:"${assetAllocate?.getOriginalDepartName()}"
 				          	'/>
 				         	<g:hiddenField id="originalDepartId" data-dojo-type="dijit/form/ValidationTextBox"  name="originalDepartId" value="${assetAllocate?.originalDepart?.id }" />
-				         	<g:if test="${assetAllocate?.dataStatus=='未审批'}">
+				         	<g:if test="${isAllowedEdit in ['new','yes']}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"originalDepartName","originalDepartId")}'>选择</button>
 							</g:if>
 						</td>
@@ -632,7 +632,7 @@
                                	data-dojo-props='name:"originalUser",${fieldAcl.isReadOnly("originalUser")},
                                		trim:true,
                                		required:true,
-                               		${assetAllocate?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
              						value:"${assetAllocate?.originalUser}"
                            	'/>
 			            </td>
@@ -648,7 +648,7 @@
              						value:"${assetAllocate?.getNewDepartName()}"
                            	'/>
                            	<g:hiddenField name="newDepartId" value="${assetAllocate?.newDepart?.id }" />
-                           	<g:if test="${assetAllocate?.dataStatus=='未审批'}">
+                           	<g:if test="${isAllowedEdit in ['new','yes']}">
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"newDepartName","newDepartId")}'>选择</button>
 			            	</g:if>
 			            </td>
@@ -658,7 +658,7 @@
                                	data-dojo-props='name:"newUser",${fieldAcl.isReadOnly("newUser")},
                                		trim:true,
                                		required:true,
-                               		${assetAllocate?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
              						value:"${assetAllocate?.newUser}"
                            	'/>
 			            </td>
@@ -682,7 +682,7 @@
     							data-dojo-props='id:"applyDesc",name:"applyDesc",${fieldAcl.isReadOnly("applyDesc")},
                                		trim:true,
                                		required:true,
-                               		${assetAllocate?.dataStatus!='未审批'?'readOnly:true,':'' }
+                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
                                		style:{width:"550px",height:"80px"},
                                		value:"${assetAllocate?.applyDesc}"
                            '/>
@@ -690,7 +690,7 @@
 					</tr>
 				</table>
 			</div>
-			<g:if test="${assetAllocate?.dataStatus=='未审批'}">
+			<g:if test="${isAllowedEdit in ['new','yes']}">
 			<button data-dojo-type='dijit.form.Button' 
 				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
 				<script type="dojo/method" data-dojo-event="onClick">

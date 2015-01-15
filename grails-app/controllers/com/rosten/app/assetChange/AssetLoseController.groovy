@@ -57,6 +57,11 @@ class AssetLoseController {
 			if(user.equals(entity.currentUser)){
 				//当前处理人
 				switch (true){
+					case entity.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
@@ -70,7 +75,6 @@ class AssetLoseController {
 					default :
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
-						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
 				}
 			}
@@ -142,13 +146,25 @@ class AssetLoseController {
 		def company = Company.get(params.companyId)
 		
 		def assetLose = new AssetLose()
+		def drafter
+		def isAllowedEdit
 		if(params.id){
 			assetLose = AssetLose.get(params.id)
+			//判断用户是否一致，若一致且未提交状态，则可编辑
+			drafter = assetLose.drafter
+			if(user.equals(drafter) && assetLose.dataStatus.equals("新建")){
+				isAllowedEdit = "yes"
+			}else{
+				isAllowedEdit = "no"
+			}
+		}else{
+			isAllowedEdit = "new"
 		}
 		
 		model["user"] = user
 		model["company"] = company
 		model["assetLose"] = assetLose
+		model["isAllowedEdit"] = isAllowedEdit
 		
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){

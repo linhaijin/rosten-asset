@@ -153,7 +153,7 @@ class AssetAllocateController {
 			assetAllocate = AssetAllocate.get(params.id)
 			currentDepart = currentUser.getDepartEntity()
 			isSubDepart = currentDepart?.isSubDepart
-			//判断用户是否一致，若一致且未提交状态，则可编辑
+			//判断用户是否一致，若一致且未提交状态，则可编辑 
 			drafter = assetAllocate.drafter
 			if(user.equals(drafter) && assetAllocate.dataStatus.equals("新建")){
 				isAllowedEdit = "yes"

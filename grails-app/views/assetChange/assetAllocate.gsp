@@ -658,7 +658,7 @@
                                	data-dojo-props='name:"newUser",${fieldAcl.isReadOnly("newUser")},
                                		trim:true,
                                		required:true,
-                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
+                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              						value:"${assetAllocate?.newUser}"
                            	'/>
 			            </td>

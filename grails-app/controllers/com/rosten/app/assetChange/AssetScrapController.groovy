@@ -158,7 +158,7 @@ class AssetScrapController {
 			if(deviceCards.size() > 0){assetType = "device"}
 			def furnitureCards = FurnitureCards.findAllBySeriesNo(seriesNo)
 			if(furnitureCards.size() > 0){assetType = "furniture"}
-			//判断用户是否一致，若一致且未提交状态，则可编辑
+			//判断用户是否一致，若一致且未提交状态，则可编辑 
 			drafter = assetScrap.drafter
 			if(user.equals(drafter) && assetScrap.dataStatus.equals("新建")){
 				isAllowedEdit = "yes"

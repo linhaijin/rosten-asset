@@ -150,7 +150,7 @@ class AssetLoseController {
 		def isAllowedEdit
 		if(params.id){
 			assetLose = AssetLose.get(params.id)
-			//判断用户是否一致，若一致且未提交状态，则可编辑
+			//判断用户是否一致，若一致且未提交状态，则可编辑 
 			drafter = assetLose.drafter
 			if(user.equals(drafter) && assetLose.dataStatus.equals("新建")){
 				isAllowedEdit = "yes"

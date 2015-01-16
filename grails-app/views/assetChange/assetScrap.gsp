@@ -616,7 +616,7 @@
                                	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},
                                		trim:true,
                                		required:true,
-                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'}
+                               		${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              						value:"${assetScrap?.usedMan}"
                            	'/>
 			            </td>

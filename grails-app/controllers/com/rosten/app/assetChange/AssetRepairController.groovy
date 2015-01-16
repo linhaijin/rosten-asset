@@ -146,7 +146,7 @@ class AssetRepairController {
 		def isAllowedEdit
 		if(params.id){
 			assetRepair = AssetRepair.get(params.id)
-			//判断用户是否一致，若一致且未提交状态，则可编辑
+			//判断用户是否一致，若一致且未提交状态，则可编辑 
 			drafter = assetRepair.drafter
 			if(user.equals(drafter) && assetRepair.dataStatus.equals("新建")){
 				isAllowedEdit = "yes"

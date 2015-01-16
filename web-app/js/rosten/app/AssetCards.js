@@ -4,6 +4,26 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	//2015-1-15-------------增加修改卡片状态功能
+	asset_changeStatus = function(){
+		var unids = rosten.getGridUnid("multi");
+        if (unids == "")
+            return;
+        
+        var id = "sys_statusSelectDialog";
+        var initValue = [];
+        
+		rosten.selectDialog("状态选择", id, rosten.webPath + "/cardsShare/statusSelect", false, initValue);
+        rosten[id].callback = function(data) {
+        	if(data.length>0){
+        		var content = {status:data[0].name};
+                rosten.readNoTime(rosten.webPath + "/cardsShare/changeCardsStatus/" + unids, content, rosten.submitCallback);
+        	}else{
+        		rosten.alert("请正确选择状态");
+        	}
+       	 	
+        };
+	}
 	
 	//2014-12-08 增加条形码打印功能--------------------------------------------------------------
 	

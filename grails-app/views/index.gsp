@@ -275,8 +275,8 @@
 										${user.getFormattedName() + "&nbsp;" + usertype}
 								</span>&nbsp;&nbsp;欢迎您的到来！
 								</span> <span class="nav5Icon">&nbsp;</span> <span class="nav5Div"><a
-									href="javascript:changeSkin();">更换皮肤</a></span> <span class="nav4Icon">&nbsp;</span>
-								<span class="nav4Div"><a href="javascript:addBookmark();">添加为书签</a></span>
+									href="javascript:changeSkin();">更换皮肤</a></span><!-- <span class="nav4Icon">&nbsp;</span>
+								<span class="nav4Div"><a href="javascript:addBookmark();">添加为书签</a></span>  -->
 								<g:if test="${normal}">
 									<span class="nav3Icon">&nbsp;</span>
 									<span class="nav3Div"><a

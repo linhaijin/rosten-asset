@@ -211,6 +211,7 @@ class AssetRepairController {
 			categoryIds.each {
 				def entity = this.getEntity(it)
 				if(entity){
+					entity.purchaser = params.usedMan
 					entity.assetStatus = "已报修"
 					def seriesNo_exist = entity.seriesNo
 					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在

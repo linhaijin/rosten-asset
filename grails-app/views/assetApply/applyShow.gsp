@@ -127,7 +127,7 @@
 				var content = {};
 
 				//增加对应节点上的金额控制
-				if("${applyNotes?.status}" == "分管领导审核" || "${applyNotes?.status}" == "秘书长审批"){
+				if("${applyNotes?.status}" == "分管领导审核"){
 					if(!conditionObj){
 						conditionObj = {};
 					}
@@ -373,18 +373,26 @@
              					value:"${applyNotes?.assetName}"
                            	'/>
 			           	</td>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>
-					    <td>
-					    	<input id="amount" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"amount",${fieldAcl.isReadOnly("amount")},
+			           	<td><div align="right">供应商：</div></td>
+			            <td>
+			            	<input id="factory" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"factory",${fieldAcl.isReadOnly("factory")},
                                	trim:true,
-                               	required:true,
-                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
-                               	value:"${applyNotes?.amount}"
+             					value:"${applyNotes?.factory}"
                            	'/>
 			            </td>
 					</tr>
 					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>规格型号：</div></td>
+			            <td>
+			            	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"specifications",${fieldAcl.isReadOnly("specifications")},
+                               	trim:true,
+                               	required:true,
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
+             					value:"${applyNotes?.specifications}"
+                           	'/>
+			            </td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>单价（元）：</div></td>
 					    <td>
 					    	<input id="onePrice" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -395,16 +403,18 @@
              					value:"${String.format("%.0f", applyNotes?.onePrice)}"
                            	'/>
 			            </td>
-			            <td><div align="right">规格型号：</div></td>
-			            <td>
-			            	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"specifications",${fieldAcl.isReadOnly("specifications")},
-                               	trim:true,
-             					value:"${ applyNotes?.specifications}"
-                           	'/>
-			            </td>
 					</tr>
 					<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>数量：</div></td>
+					    <td>
+					    	<input id="amount" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"amount",${fieldAcl.isReadOnly("amount")},
+                               	trim:true,
+                               	required:true,
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
+                               	value:"${applyNotes?.amount}"
+                           	'/>
+			            </td>
 						<td><div align="right"><span style="color:red">*&nbsp;</span>需求时间：</div></td>
 			            <td>
 			            	<input id="regDate" data-dojo-type="dijit/form/DateTextBox" 
@@ -413,8 +423,10 @@
 				                	value:"${applyNotes?.getFormattedRegDate()}"
 				               '/>
 			            </td>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>是否列入年度预算：</div></td>
-					    <td>
+			       	</tr>
+			       	<tr>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>是否列入<br>年度预算：</div></td>
+					    <td colspan="3">
 					    	<input id="isInYearPlan1" data-dojo-type="dijit/form/RadioButton"
 				           		data-dojo-props='name:"isInYearPlan",type:"radio",${fieldAcl.isReadOnly("isInYearPlan")},
 				           			<g:if test="${applyNotes?.isInYearPlan==true }">checked:true,</g:if>

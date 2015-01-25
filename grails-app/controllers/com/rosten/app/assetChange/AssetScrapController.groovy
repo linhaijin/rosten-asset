@@ -1058,23 +1058,31 @@ class AssetScrapController {
 				def acFurnitureList = FurnitureCards.findAllBySeriesNoLike("%"+seriesNo+"%")
 				if(acCarList.size() != 0){
 					acCount = acCarList.size()
-					if(acCount == 1){
+					if(acCount > 1){
 						acRow = acCarList[0]
+					}else{
+						acRow = acCarList
 					}
 				}else if(acHouseList.size() != 0){
 					acCount = acHouseList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
+					if(acCount > 1){
+						acRow = acHouseList[0]
+					}else{
+						acRow = acHouseList
 					}
 				}else if(acDeviceList.size() != 0){
 					acCount = acDeviceList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
+					if(acCount > 1){
+						acRow = acDeviceList[0]
+					}else{
+						acRow = acDeviceList
 					}
 				}else if(acFurnitureList.size() != 0){
 					acCount = acFurnitureList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
+					if(acCount > 1){
+						acRow = acFurnitureList[0]
+					}else{
+						acRow = acFurnitureList
 					}
 				}
 				map["acCount"] = acCount

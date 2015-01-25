@@ -370,7 +370,7 @@ define(["dojo/_base/kernel"
     	case "【资产申请】":
     		rosten.openNewWindow("assetApply", rosten.webPath + "/applyManage/assetApplyShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetApply");
     		break;
-    	case "【资产报损】":
+    	case "【资产报废】":
     		rosten.openNewWindow("assetScrap", rosten.webPath + "/assetScrap/assetScrapShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&flowCode=assetScrap");
     		break;
     	case "【资产调拨】":

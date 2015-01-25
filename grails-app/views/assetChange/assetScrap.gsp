@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>资产变动--报废报废</title>
+    <title>资产变动--资产报废</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
     	.rosten .dsj_form table tr{
@@ -192,7 +192,7 @@
 				}
 				
 				//增加对应节点上的金额控制
-				if("${assetScrap?.status}" == "办公室领导审核"){
+				if("${assetScrap?.status}" == "后勤部领导审核"){
 					if(!conditionObj){
 						conditionObj = {};
 					}

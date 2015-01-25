@@ -217,6 +217,7 @@ class AssetLoseController {
 			categoryIds.each {
 				def entity = this.getEntity(it)
 				if(entity){
+					entity.purchaser = params.usedMan
 					entity.assetStatus = "已报失"
 					def seriesNo_exist = entity.seriesNo
 					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在
@@ -994,5 +995,19 @@ class AssetLoseController {
 		}
 		def excel = new ExcelExport()
 		excel.assetLoseDc(os,assetLoseList)
+	}
+	
+	private def getEntity ={entityId->
+		def entity = CarCards.get(entityId)
+		if(!entity){
+			entity = HouseCards.get(entityId)
+			if(!entity){
+				entity = DeviceCards.get(entityId)
+				if(!entity){
+					entity = FurnitureCards.get(entityId)
+				}
+			}
+		}
+		return entity
 	}
 }

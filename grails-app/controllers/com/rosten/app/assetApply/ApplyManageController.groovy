@@ -117,7 +117,7 @@ class ApplyManageController {
 				}
 				
 				//获取后勤意见
-				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤审核")
+				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤部领导审核")
 				if(hqyj && hqyj.size()>0){
 					map["hqComment"]= hqyj[0]
 				}else{
@@ -125,7 +125,7 @@ class ApplyManageController {
 				}
 				
 				//获取财务意见
-				def cwyj = shareService.getCommentByStatus(assetApply.id,"财务审核")
+				def cwyj = shareService.getCommentByStatus(assetApply.id,"财务部审核")
 				if(cwyj && cwyj.size()>0){
 					map["cwComment"]= cwyj[0]
 				}else{

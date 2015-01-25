@@ -191,7 +191,7 @@
 				}
 				
 				//增加对应节点上的金额控制
-				if("${assetScrap?.status}" == "后勤部领导审核"){
+				if("${assetScrap?.status}" == "办公室领导审核"){
 					if(!conditionObj){
 						conditionObj = {};
 					}

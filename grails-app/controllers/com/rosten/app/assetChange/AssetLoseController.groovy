@@ -206,6 +206,33 @@ class AssetLoseController {
 		}
 		assetLose.dataStatus = assetLose.status
 		
+		//处理筛选的资产卡片资源
+		def categoryId
+		def categoryIds = []
+		if(params.categoryId && params.categoryId !=null){
+			categoryId = params.categoryId
+			categoryIds = categoryId.split(",")
+		}
+		if(categoryIds.size()>0){
+			categoryIds.each {
+				def entity = this.getEntity(it)
+				if(entity){
+					entity.assetStatus = "已报失"
+					def seriesNo_exist = entity.seriesNo
+					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在
+						def seriesNo_exists = seriesNo_exist.split(",")
+						if(params.seriesNo_form in seriesNo_exists){
+							//undo
+						}else{
+							entity.seriesNo += ","+params.seriesNo_form
+						}
+					}else{
+						entity.seriesNo = params.seriesNo_form
+					}
+				}
+			}
+		}
+		
 		//判断是否需要走流程
 		def _status
 		if(params.relationFlow){
@@ -433,7 +460,7 @@ class AssetLoseController {
 		def assetLose = new AssetLose()
 		
 		def seriesNo
-		if(params.seriesNo && params.seriesNo!=""){
+		if(params.seriesNo && params.seriesNo != "" && params.seriesNo != null){
 			seriesNo = params.seriesNo
 		}
 		
@@ -461,157 +488,185 @@ class AssetLoseController {
 		}
 		def seriesNo_exist
 		def seriesNo_exists = []
-		def seriesNo_new
-		def assetStatus_exitst
-		def assetStatus_exitsts = []
-		def assetStatus_new
+//		def seriesNo_new
+//		def assetStatus_exitst
+//		def assetStatus_exitsts = []
+//		def assetStatus_new
 		if(assetIds.size()>0){
 			assetIds.each{
 				//变更资产建账信息中的申请单号和资产变更类型，同时计算总金额
-				carCards = CarCards.get(it)
-				if(carCards){
-					seriesNo_exist = carCards.seriesNo
-					assetStatus_exitst = carCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+				
+				def entity = this.getEntity(it)
+				if(entity){
+					entity.assetStatus = "已入库"
+					seriesNo_exist = entity.seriesNo
+					if(seriesNo_exist != null && seriesNo_exist != ""){//操作号已存在
 						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
 						if(seriesNo in seriesNo_exists){
+							cardsPrice = entity.onePrice
 							if(seriesNo_exists.size() == 1){
-								carCards.assetStatus = "已入库"
-								carCards.seriesNo = null
-								cardsPrice = carCards.onePrice
+								entity.seriesNo = null
 							}else{
 								for(int i=0;i<seriesNo_exists.size();i++){
 									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
+										seriesNo_exists.remove(i)
+										--i
 									}
 								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								carCards.seriesNo = seriesNo_new
-								carCards.assetStatus = assetStatus_new
-								cardsPrice = carCards.onePrice
+								def seriesNo_new = seriesNo_exists.join(",")
+								entity.seriesNo = seriesNo_new
 							}
 						}else{
 							//undo
 						}
 					}
 				}
-				houseCards = HouseCards.get(it)
-				if(houseCards){
-					seriesNo_exist = houseCards.seriesNo
-					assetStatus_exitst = houseCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
-						if(seriesNo in seriesNo_exists){
-							if(seriesNo_exists.size() == 1){
-								houseCards.assetStatus = "已入库"
-								houseCards.seriesNo = null
-								cardsPrice = houseCards.onePrice
-							}else{
-								for(int i=0;i<seriesNo_exists.size();i++){
-									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
-									}
-								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								houseCards.seriesNo = seriesNo_new
-								houseCards.assetStatus = assetStatus_new
-								cardsPrice = houseCards.onePrice
-							}
-						}else{
-							//undo
-						}
-					}
-				}
-				deviceCards = DeviceCards.get(it)
-				if(deviceCards){
-					seriesNo_exist = deviceCards.seriesNo
-					assetStatus_exitst = deviceCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
-						if(seriesNo in seriesNo_exists){
-							if(seriesNo_exists.size() == 1){
-								deviceCards.assetStatus = "已入库"
-								deviceCards.seriesNo = null
-								cardsPrice = deviceCards.onePrice
-							}else{
-								for(int i=0;i<seriesNo_exists.size();i++){
-									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
-									}
-								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								deviceCards.seriesNo = seriesNo_new
-								deviceCards.assetStatus = assetStatus_new
-								cardsPrice = deviceCards.onePrice
-							}
-						}else{
-							//undo
-						}
-					}
-				}
-				furnitureCards = FurnitureCards.get(it)
-				if(furnitureCards){
-					seriesNo_exist = furnitureCards.seriesNo
-					assetStatus_exitst = furnitureCards.assetStatus
-					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
-						seriesNo_exists = seriesNo_exist.split(",").toList()
-						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
-						if(seriesNo in seriesNo_exists){
-							if(seriesNo_exists.size() == 1){
-								furnitureCards.assetStatus = "已入库"
-								furnitureCards.seriesNo = null
-								cardsPrice = furnitureCards.onePrice
-							}else{
-								for(int i=0;i<seriesNo_exists.size();i++){
-									if(seriesNo_exists.get(i) == seriesNo){
-										seriesNo_exists.remove(i);
-										--i;
-									}
-								}
-								seriesNo_new = seriesNo_exists.join(",")
-								for(int j=0;j<assetStatus_exitsts.size();j++){
-									if(assetStatus_exitsts.get(j) == "资产已报失"){
-										assetStatus_exitsts.remove(j);
-										--j;
-									}
-								}
-								assetStatus_new = assetStatus_exitsts.join(",")
-								furnitureCards.seriesNo = seriesNo_new
-								furnitureCards.assetStatus = assetStatus_new
-								cardsPrice = furnitureCards.onePrice
-							}
-						}else{
-							//undo
-						}
-					}
-				}
+				
+				
+//				carCards = CarCards.get(it)
+//				if(carCards){
+//					seriesNo_exist = carCards.seriesNo
+//					assetStatus_exitst = carCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							if(seriesNo_exists.size() == 1){
+//								carCards.assetStatus = "已入库"
+//								carCards.seriesNo = null
+//								cardsPrice = carCards.onePrice
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								carCards.seriesNo = seriesNo_new
+//								carCards.assetStatus = assetStatus_new
+//								cardsPrice = carCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
+//				houseCards = HouseCards.get(it)
+//				if(houseCards){
+//					seriesNo_exist = houseCards.seriesNo
+//					assetStatus_exitst = houseCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							if(seriesNo_exists.size() == 1){
+//								houseCards.assetStatus = "已入库"
+//								houseCards.seriesNo = null
+//								cardsPrice = houseCards.onePrice
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								houseCards.seriesNo = seriesNo_new
+//								houseCards.assetStatus = assetStatus_new
+//								cardsPrice = houseCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
+//				deviceCards = DeviceCards.get(it)
+//				if(deviceCards){
+//					seriesNo_exist = deviceCards.seriesNo
+//					assetStatus_exitst = deviceCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							if(seriesNo_exists.size() == 1){
+//								deviceCards.assetStatus = "已入库"
+//								deviceCards.seriesNo = null
+//								cardsPrice = deviceCards.onePrice
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								deviceCards.seriesNo = seriesNo_new
+//								deviceCards.assetStatus = assetStatus_new
+//								cardsPrice = deviceCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
+//				furnitureCards = FurnitureCards.get(it)
+//				if(furnitureCards){
+//					seriesNo_exist = furnitureCards.seriesNo
+//					assetStatus_exitst = furnitureCards.assetStatus
+//					if(seriesNo_exist != null && seriesNo_exist !=""){//资产操作号不为空
+//						seriesNo_exists = seriesNo_exist.split(",").toList()
+//						assetStatus_exitsts = assetStatus_exitst.split(",").toList()
+//						if(seriesNo in seriesNo_exists){
+//							furnitureCards.assetStatus = "已入库"
+//							cardsPrice = furnitureCards.onePrice
+//							if(seriesNo_exists.size() == 1){
+//								furnitureCards.seriesNo = null
+//							}else{
+//								for(int i=0;i<seriesNo_exists.size();i++){
+//									if(seriesNo_exists.get(i) == seriesNo){
+//										seriesNo_exists.remove(i);
+//										--i;
+//									}
+//								}
+//								seriesNo_new = seriesNo_exists.join(",")
+//								for(int j=0;j<assetStatus_exitsts.size();j++){
+//									if(assetStatus_exitsts.get(j) == "已报失"){
+//										assetStatus_exitsts.remove(j);
+//										--j;
+//									}
+//								}
+//								assetStatus_new = assetStatus_exitsts.join(",")
+//								furnitureCards.seriesNo = seriesNo_new
+//								furnitureCards.assetStatus = assetStatus_new
+//								cardsPrice = furnitureCards.onePrice
+//							}
+//						}else{
+//							//undo
+//						}
+//					}
+//				}
 				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"

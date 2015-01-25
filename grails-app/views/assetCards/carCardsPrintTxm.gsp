@@ -140,9 +140,9 @@ if(carCardsList != null && carCardsList.size()>0){
 	    	<div class="pt_border">
 	    	<table width="260" height="150" border="0">
 	    		<tr>
-	    			<td width="50" height="70" align="right" style="padding-right:5px;">编号</td>
-	    			<td width="210" align="left">
-	    				<img src="${createLink(controller:'deviceCards',action:'getBarcode',params:[registerNum:obj.registerNum?.encodeAsHTML()])}" width="200" height="60" style="padding-left:10px;">
+	    			<td width="65" height="70" align="right" style="padding-right:5px;">编号</td>
+	    			<td width="195" align="left">
+	    				<img src="${createLink(controller:'deviceCards',action:'getBarcode',params:[registerNum:obj.registerNum?.encodeAsHTML()])}" width="185" height="60" style="padding-left:10px;">
 	    			</td>
 	    		</tr>
 	    		<tr>
@@ -158,7 +158,7 @@ if(carCardsList != null && carCardsList.size()>0){
 	    			<td align="left"><div style="padding-left:10px;">${obj.getFormattedShowBuyDate()?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>
-	    			<td height="20" align="right" style="padding-right:5px;">使用人</td>
+	    			<td height="20" align="right" style="padding-right:5px;">负责人</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.purchaser?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    	</table>

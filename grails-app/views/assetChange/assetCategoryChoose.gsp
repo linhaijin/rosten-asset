@@ -21,8 +21,8 @@
 			            		data-dojo-props='trim:true,autoComplete:false,value:"",style:"width:120px;"'>
 								<option value="house">房屋及建筑物</option>
 								<option value="car">运输工具</option>
-								<option value="device">电子设备</option>
 								<option value="furniture">办公家具</option>
+								<option value="device">电子设备</option>
 	                        </select>
 			            </td>
 			            <th width="8%">部  门</th>

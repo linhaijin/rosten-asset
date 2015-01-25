@@ -35,7 +35,7 @@ class AssetCardsService {
 					like(k,"%" + v + "%")
 				}
 			}
-			order("registerNum", "desc")
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -129,7 +129,7 @@ class AssetCardsService {
 					like(k,"%" + v + "%")
 				}
 			}
-			order("registerNum", "desc")
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -176,7 +176,7 @@ class AssetCardsService {
 					like(k,"%" + v + "%")
 				}
 			}
-			order("registerNum", "desc")
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -270,7 +270,7 @@ class AssetCardsService {
 					like(k,"%" + v + "%")
 				}
 			}
-			order("registerNum", "desc")
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}

@@ -200,6 +200,33 @@ class AssetRepairController {
 		}
 		assetRepair.dataStatus = assetRepair.status
 		
+		//处理筛选的资产卡片资源
+		def categoryId
+		def categoryIds = []
+		if(params.categoryId && params.categoryId !=null){
+			categoryId = params.categoryId
+			categoryIds = categoryId.split(",")
+		}
+		if(categoryIds.size()>0){
+			categoryIds.each {
+				def entity = this.getEntity(it)
+				if(entity){
+					entity.assetStatus = "已报修"
+					def seriesNo_exist = entity.seriesNo
+					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在
+						def seriesNo_exists = seriesNo_exist.split(",")
+						if(params.seriesNo_form in seriesNo_exists){
+							//undo
+						}else{
+							entity.seriesNo += ","+params.seriesNo_form
+						}
+					}else{
+						entity.seriesNo = params.seriesNo_form
+					}
+				}
+			}
+		}
+		
 		//判断是否需要走流程
 		def _status
 		if(params.relationFlow){
@@ -433,6 +460,7 @@ class AssetRepairController {
 		
 		double assetTotal = 0
 		double cardsPrice = 0
+		def seriesNo
 		
 		if(params.repairId && !"".equals(params.repairId)){
 			assetRepair = AssetRepair.get(params.repairId)
@@ -442,39 +470,76 @@ class AssetRepairController {
 			assetTotal = params.assetTotal.toDouble()
 		}
 		
+		if(params.seriesNo && params.seriesNo != "" && params.seriesNo != null){
+			seriesNo = params.seriesNo
+		}
+		
 		def assetId
 		def assetIds
 		if(params.assetId && params.assetId!="" && params.assetId!=null){
 			assetId = params.assetId
 			assetIds = assetId.split(",")
 		}
+		
+		def seriesNo_exist
+		def seriesNo_exists = []
 		if(assetIds.size()>0){
 			assetIds.each{
 				//变更资产卡片信息中的申请单号和资产变更类型，同时计算总金额
-				carCards = CarCards.get(it)
-				if(carCards){
-					carCards.assetStatus = "已入库"
-					carCards.seriesNo = null
-					cardsPrice = carCards.onePrice
+				
+				def entity = this.getEntity(it)
+				if(entity){
+					entity.assetStatus = "已入库"
+					seriesNo_exist = entity.seriesNo
+					if(seriesNo_exist != null && seriesNo_exist != ""){//操作号已存在
+						seriesNo_exists = seriesNo_exist.split(",").toList()
+						if(seriesNo in seriesNo_exists){
+							cardsPrice = entity.onePrice
+							if(seriesNo_exists.size() == 1){
+								entity.seriesNo = null
+							}else{
+								for(int i=0;i<seriesNo_exists.size();i++){
+									if(seriesNo_exists.get(i) == seriesNo){
+										seriesNo_exists.remove(i)
+										--i
+									}
+								}
+								def seriesNo_new = seriesNo_exists.join(",")
+								entity.seriesNo = seriesNo_new
+							}
+						}else{
+							//undo
+						}
+					}
 				}
-				houseCards = HouseCards.get(it)
-				if(houseCards){
-					houseCards.assetStatus = "已入库"
-					houseCards.seriesNo = null
-					cardsPrice = houseCards.onePrice
-				}
-				deviceCards = DeviceCards.get(it)
-				if(deviceCards){
-					deviceCards.assetStatus = "已入库"
-					deviceCards.seriesNo = null
-					cardsPrice = deviceCards.onePrice
-				}
-				furnitureCards = FurnitureCards.get(it)
-				if(furnitureCards){
-					furnitureCards.assetStatus = "已入库"
-					furnitureCards.seriesNo = null
-					cardsPrice = furnitureCards.onePrice
-				}
+				
+				
+				
+				
+//				carCards = CarCards.get(it)
+//				if(carCards){
+//					carCards.assetStatus = "已入库"
+//					carCards.seriesNo = null
+//					cardsPrice = carCards.onePrice
+//				}
+//				houseCards = HouseCards.get(it)
+//				if(houseCards){
+//					houseCards.assetStatus = "已入库"
+//					houseCards.seriesNo = null
+//					cardsPrice = houseCards.onePrice
+//				}
+//				deviceCards = DeviceCards.get(it)
+//				if(deviceCards){
+//					deviceCards.assetStatus = "已入库"
+//					deviceCards.seriesNo = null
+//					cardsPrice = deviceCards.onePrice
+//				}
+//				furnitureCards = FurnitureCards.get(it)
+//				if(furnitureCards){
+//					furnitureCards.assetStatus = "已入库"
+//					furnitureCards.seriesNo = null
+//					cardsPrice = furnitureCards.onePrice
+//				}
 				assetTotal -= cardsPrice
 			}
 			message = "操作成功！"
@@ -803,5 +868,19 @@ class AssetRepairController {
 		}
 		def excel = new ExcelExport()
 		excel.assetRepairDc(os,assetRepairList)
+	}
+	
+	private def getEntity ={entityId->
+		def entity = CarCards.get(entityId)
+		if(!entity){
+			entity = HouseCards.get(entityId)
+			if(!entity){
+				entity = DeviceCards.get(entityId)
+				if(!entity){
+					entity = FurnitureCards.get(entityId)
+				}
+			}
+		}
+		return entity
 	}
 }

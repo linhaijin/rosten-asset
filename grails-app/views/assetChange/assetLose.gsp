@@ -104,6 +104,7 @@
 			
 							//流程相关信息
 							var content = {};
+							content.categoryId = encodeURI(categoryId);
 							content.assetTotal = assetTotal;
 							<g:if test='${flowCode}'>
 								content.flowCode = "${flowCode}";
@@ -374,10 +375,12 @@
 				});
 	
 				var loseId = "${assetLose?.id}";
-				var seriesNo = "${assetLose?.seriesNo}";
 				var assetTotal = dojo.byId("assetTotal").value;
+				var qSeriesNo = "";
+				var seriesNo = "${assetAllocate?.seriesNo}";
+				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
 				var url = "${createLink(controller:'assetLose',action:'assetChooseDelete')}";
-				url += "?assetId="+encodeURI(assetId)+"&loseId="+loseId+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal;
+				url += "?assetId="+encodeURI(assetId)+"&loseId="+loseId+"&assetTotal="+assetTotal+qSeriesNo;
 				var ioArgs = {
 					url : url,
 					handleAs : "json",

@@ -193,6 +193,7 @@ class AssetCategoryChooseController {
 			if(buyDate != null && buyDate != ""){
 				eq("buyDate",buyDate)
 			}
+			order("createDate","desc")
 			//--------------------------------------------------------
 			
 		}	
@@ -282,12 +283,12 @@ class AssetCategoryChooseController {
 	def assetCategoryChooseOperate = {
 		def json,message
 		
-		def controlName
-		def cardsStatus
-		if(params.controlName && params.controlName!="" && params.controlName!=null){
-			controlName = params.controlName
-			cardsStatus = ["assetAllocate":"已调拨","assetScrap":"已报废","assetLose":"已报失","assetRepair":"已报修"][controlName]
-		}
+//		def controlName
+//		def cardsStatus
+//		if(params.controlName && params.controlName!="" && params.controlName!=null){
+//			controlName = params.controlName
+//			cardsStatus = ["assetAllocate":"已调拨","assetScrap":"已报废","assetLose":"已报失","assetRepair":"已报修"][controlName]
+//		}
 		
 		def seriesNo
 		if(params.seriesNo && params.seriesNo!="" && params.seriesNo!=null){
@@ -329,12 +330,12 @@ class AssetCategoryChooseController {
 						if(seriesNo in seriesNo_exists){
 							//undo
 						}else{
-							entity.assetStatus = cardsStatus
+//							entity.assetStatus = cardsStatus
 							entity.seriesNo += ","+seriesNo
 							totalPrice = entity.onePrice
 						}
 					}else{
-						entity.assetStatus = cardsStatus
+//						entity.assetStatus = cardsStatus
 						entity.seriesNo = seriesNo
 						totalPrice = entity.onePrice
 					}

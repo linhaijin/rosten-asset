@@ -165,7 +165,7 @@ class AssetConfigController {
 								cardEntity.userCategory = _category
 								cardEntity.assetName = mc
 								cardEntity.onePrice = Util.obj2Double(jz)
-								cardEntity.houseLocated = dd
+								cardEntity.storagePosition = dd
 								cardEntity.specifications = xh
 								cardEntity.purchaser = zrr
 								cardEntity.createDate = Util.convertToTimestamp(sj)

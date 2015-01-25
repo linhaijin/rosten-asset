@@ -60,7 +60,7 @@ class CarCards {
 	}
 	
 	//使用状况
-	@GridColumn(name="使用状况",colIdx=5)
+	@GridColumn(name="使用状况",colIdx=6)
 	String userStatus = "在用"
 	
 	//资产来源
@@ -71,7 +71,7 @@ class CarCards {
 	
 	//购置日期
 	Date buyDate = new Date()
-	@GridColumn(name="购置日期",width="106px",colIdx=6)
+	@GridColumn(name="购置日期",width="106px",colIdx=7)
 	def getFormattedBuyDate(){
 		if(buyDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -96,7 +96,7 @@ class CarCards {
 	String organizationalType
 	
 	//价格
-	@GridColumn(name="价格（元）",colIdx=7)
+	@GridColumn(name="价格（元）",colIdx=8)
 	Double onePrice = 0
 	
 	//事业收入
@@ -112,6 +112,7 @@ class CarCards {
 	String storagePosition
 	
 	//负责人
+	@GridColumn(name="负责人",colIdx=5)
 	String purchaser
 	
 	//国别
@@ -129,7 +130,7 @@ class CarCards {
 	}
 	
 	//资产卡片状态
-	@GridColumn(name="资产状态",colIdx=8)
+	@GridColumn(name="资产状态",colIdx=9)
 	String assetStatus = "已入库"
 	
 	//资产操作号

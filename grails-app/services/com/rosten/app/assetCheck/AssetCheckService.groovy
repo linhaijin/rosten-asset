@@ -59,6 +59,7 @@ class AssetCheckService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -96,7 +97,7 @@ class AssetCheckService {
 			if(!"admin".equals(user.getUserType())){
 				eq("user",user)
 			}
-			
+			order("createDate", "desc")
 		}
 		return c.list(pa,query)
 	}

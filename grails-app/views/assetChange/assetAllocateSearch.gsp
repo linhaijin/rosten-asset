@@ -72,7 +72,7 @@ require(["rosten/app/Application"],function(){
 	               </div>
                </div>
             </td>
-            <th width="8%">新使用人</th>
+            <th width="8%">新负责人</th>
             <td width="14%">
             	<input id="allocate_newUser" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>

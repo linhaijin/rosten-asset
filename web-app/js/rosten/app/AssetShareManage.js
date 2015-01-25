@@ -117,8 +117,6 @@ define(["dojo/dom",
 		var node = registry.byId("assetCategoryChoose_pane");
 		tabContainer.removeChild(node);
 		node.destroyRecursive();
-		
-		refreshAsset();
 	};
 
 });

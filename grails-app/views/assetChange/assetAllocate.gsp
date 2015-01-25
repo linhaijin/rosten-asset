@@ -49,7 +49,7 @@
 				}
 				var originalUser = dojo.byId("originalUser").value;
 				if(originalUser == "" || originalUser == null){
-					rosten.alert("注意：原使用人不能为空！");
+					rosten.alert("注意：原负责人不能为空！");
 					document.getElementById("originalUser").focus();
 					return;
 				}
@@ -61,7 +61,7 @@
 				}
 				var newUser = dojo.byId("newUser").value;
 				if(newUser == "" || newUser == null){
-					rosten.alert("注意：新使用人不能为空！");
+					rosten.alert("注意：新负责人不能为空！");
 					document.getElementById("newUser").focus();
 					return;
 				}
@@ -79,11 +79,11 @@
 					return;
 				}
 
-				if(dijit.byId("assetCategoryChoose_pane")){
-					var node_pane = dijit.byId("assetCategoryChoose_pane");
-					tabContainer.removeChild(node_pane);
-					node_pane.destroyRecursive();
-				}
+				//if(dijit.byId("assetCategoryChoose_pane")){
+				//	var node_pane = dijit.byId("assetCategoryChoose_pane");
+				//	tabContainer.removeChild(node_pane);
+				//	node_pane.destroyRecursive();
+				//}
 				
 				//新增是否同类型资产变更start--2014-11-15
 				var searchQuery = {id:"*"};
@@ -168,19 +168,23 @@
 				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 				var commentDialog = rosten.addCommentDialog({type:"assetAllocate"});
 				commentDialog.callback = function(_data){
-					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetAllocate?.status}",flowCode:"${flowCode}"};
-					rosten.readSync(rosten.webPath + "/share/addComment/${assetAllocate?.id}",content,function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("意见填写成功！").queryDlgClose= function(){
-								var selectWidget = rosten_tabContainer.selectedChildWidget;
-								if(selectWidget.get("id")=="flowComment"){
-									rosten_tabContainer.selectedChildWidget.refresh();
-								}
-							};
-						}else{
-							rosten.alert("意见填写失败!");
-						}	
-					});
+					if(_data.content == "" || _data.content == null){
+						rosten.alert("意见不能为空！");
+					}else{
+						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetAllocate?.status}",flowCode:"${flowCode}"};
+						rosten.readSync(rosten.webPath + "/share/addComment/${assetAllocate?.id}",content,function(data){
+							if(data.result=="true" || data.result == true){
+								rosten.alert("意见填写成功！").queryDlgClose= function(){
+									var selectWidget = rosten_tabContainer.selectedChildWidget;
+									if(selectWidget.get("id")=="flowComment"){
+										rosten_tabContainer.selectedChildWidget.refresh();
+									}
+								};
+							}else{
+								rosten.alert("意见填写失败!");
+							}	
+						});
+					}
 				};
 			};
 
@@ -554,6 +558,10 @@
 								//assetCategoryChoose_search();
 								rosten.alert("资产已成功添加！").queryDlgClose= function(){
 									assetCategoryChoose_close();
+									var tabContainer_w = dijit.byId("rosten_tabContainer");
+									var node_w = registry.byId("assetAllocatePane");
+									tabContainer_w.selectChild(node_w);
+									refreshAsset();
 								};
 							}else{//rensult为false，处理失败
 								rosten.alert("操作失败，请联系管理员!");
@@ -580,7 +588,7 @@
 </div>
 
 <div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"680px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='doLayout:false,height:"550px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
+	<div data-dojo-type="dijit/layout/ContentPane" id="assetAllocatePane" title="申请信息" data-dojo-props='doLayout:false,height:"550px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField id="seriesNo_form" name="seriesNo_form" value="${assetAllocate?.seriesNo}" />
 			<g:hiddenField id="applyMan" name="applyMan" value="${assetAllocate?.applyMan == null?user.chinaName:assetAllocate?.applyMan}" />
@@ -626,7 +634,7 @@
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"originalDepartName","originalDepartId")}'>选择</button>
 							</g:if>
 						</td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>原使用人：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>原负责人：</div></td>
 					    <td>
 					    	<input id="originalUser" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"originalUser",${fieldAcl.isReadOnly("originalUser")},
@@ -652,7 +660,7 @@
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"newDepartName","newDepartId")}'>选择</button>
 			            	</g:if>
 			            </td>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>新使用人：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>新负责人：</div></td>
 					    <td>
 					    	<input id="newUser" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"newUser",${fieldAcl.isReadOnly("newUser")},

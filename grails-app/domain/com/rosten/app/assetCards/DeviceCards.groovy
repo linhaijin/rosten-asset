@@ -108,7 +108,7 @@ class DeviceCards {
 	//存放地点
 	String storagePosition
 	
-	//采购人
+	//负责人
 	String purchaser
 	
 	//国别

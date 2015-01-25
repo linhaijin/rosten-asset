@@ -61,7 +61,7 @@ class AssetAllocate {
 		}
 	}
 	
-	//原使用人
+	//原负责人
 	String originalUser
 	
 	//新部门
@@ -75,8 +75,8 @@ class AssetAllocate {
 		}
 	}
 	
-	//新使用人
-	@GridColumn(name="新使用人",width="80px",colIdx=5)
+	//新负责人
+	@GridColumn(name="新负责人",width="80px",colIdx=5)
 	String newUser
 	
 	//调入部门

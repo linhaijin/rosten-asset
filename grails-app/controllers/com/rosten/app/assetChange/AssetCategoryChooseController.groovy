@@ -25,7 +25,7 @@ class AssetCategoryChooseController {
 		def strname = "assetCategoryChoose"
 		def actionList = []
 		
-		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
+//		actionList << createAction("返回",webPath + imgPath + "quit_1.gif",strname + "_close")
 		actionList << createAction("添加",webPath +imgPath + "add.png",strname + "_add")
 		render actionList as JSON
 	}
@@ -97,7 +97,7 @@ class AssetCategoryChooseController {
 		_gridHeader << ["name":"资产分类","width":"100px","colIdx":2,"field":"userCategory"]
 		_gridHeader << ["name":"资产名称","width":"auto","colIdx":3,"field":"assetName"]
 		_gridHeader << ["name":"金额（元）","width":"60px","colIdx":4,"field":"onePrice"]
-		_gridHeader << ["name":"使用人","width":"60px","colIdx":5,"field":"assetUser"]
+		_gridHeader << ["name":"负责人","width":"60px","colIdx":5,"field":"assetUser"]
 		_gridHeader << ["name":"归属部门","width":"100px","colIdx":6,"field":"userDepart"]
 		_gridHeader << ["name":"购买日期","width":"80px","colIdx":7,"field":"buyDate"]
 		_gridHeader << ["name":"使用状况","width":"60px","colIdx":8,"field":"userStatus"]

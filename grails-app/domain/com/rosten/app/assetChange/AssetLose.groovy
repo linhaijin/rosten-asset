@@ -64,8 +64,8 @@ class AssetLose {
 		}
 	}
 	
-	//使用人
-	@GridColumn(name="使用人",width="70px",colIdx=4)
+	//负责人
+	@GridColumn(name="负责人",width="70px",colIdx=4)
 	String usedMan
 	
 	//申请部门

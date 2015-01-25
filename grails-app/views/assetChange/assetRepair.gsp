@@ -51,7 +51,7 @@
 				}
 				var usedMan = dojo.byId("usedMan").value;
 				if(usedMan == "" || usedMan == null){
-					rosten.alert("注意：使用人不能为空！");
+					rosten.alert("注意：负责人不能为空！");
 					document.getElementById("usedMan").focus();
 					return;
 				}
@@ -160,19 +160,23 @@
 				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 				var commentDialog = rosten.addCommentDialog({type:"assetRepair"});
 				commentDialog.callback = function(_data){
-					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetRepair?.status}",flowCode:"${flowCode}"};
-					rosten.readSync(rosten.webPath + "/share/addComment/${assetRepair?.id}",content,function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("意见填写成功！").queryDlgClose= function(){
-								var selectWidget = rosten_tabContainer.selectedChildWidget;
-								if(selectWidget.get("id")=="flowComment"){
-									rosten_tabContainer.selectedChildWidget.refresh();
-								}
-							};
-						}else{
-							rosten.alert("意见填写失败!");
-						}	
-					});
+					if(_data.content == "" || _data.content == null){
+						rosten.alert("意见不能为空！");
+					}else{
+						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${assetRepair?.status}",flowCode:"${flowCode}"};
+						rosten.readSync(rosten.webPath + "/share/addComment/${assetRepair?.id}",content,function(data){
+							if(data.result=="true" || data.result == true){
+								rosten.alert("意见填写成功！").queryDlgClose= function(){
+									var selectWidget = rosten_tabContainer.selectedChildWidget;
+									if(selectWidget.get("id")=="flowComment"){
+										rosten_tabContainer.selectedChildWidget.refresh();
+									}
+								};
+							}else{
+								rosten.alert("意见填写失败!");
+							}	
+						});
+					}
 				};
 			}
 
@@ -531,6 +535,10 @@
 								//assetCategoryChoose_search();
 								rosten.alert("资产已成功添加！").queryDlgClose= function(){
 									assetCategoryChoose_close();
+									var tabContainer_w = dijit.byId("rosten_tabContainer");
+									var node_w = registry.byId("assetRepairPane");
+									tabContainer_w.selectChild(node_w);
+									refreshAsset();
 								};
 								
 							}else{//rensult为false，处理失败
@@ -557,7 +565,7 @@
 </div>
 
 <div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="申请信息" data-dojo-props='height:"570px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
+	<div data-dojo-type="dijit/layout/ContentPane" id="assetRepairPane" title="申请信息" data-dojo-props='height:"570px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
 			<g:hiddenField name="applyMan" id="applyMan" value="${assetRepair?.applyMan == null?user.chinaName:assetRepair?.applyMan}" />
@@ -604,7 +612,7 @@
 								<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"usedDepartName","usedDepartId")}'>选择</button>
 			           		</g:if>
 			           </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="usedMan" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"usedMan",${fieldAcl.isReadOnly("usedMan")},

@@ -150,7 +150,7 @@ if(houseCardsList != null && houseCardsList.size()>0){
 	    			<td align="left"><div style="padding-left:10px;">${obj.assetName?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>
-	    			<td height="20" align="right" style="padding-right:5px;">品牌</td>
+	    			<td height="20" align="right" style="padding-right:5px;">规格型号</td>
 	    			<td align="left"><div style="padding-left:10px;">${obj.specifications?.encodeAsHTML()}</div></td>
 	    		</tr>
 	    		<tr>

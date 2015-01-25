@@ -47,7 +47,7 @@ require(["rosten/app/Application"],function(){
 	               </div>
                </div>
             </td>
-            <th width="8%">使用人</th>
+            <th width="8%">负责人</th>
             <td width="18%">
             	<input id="lose_usedMan"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true,value:"",style:"width:140px;"'/>

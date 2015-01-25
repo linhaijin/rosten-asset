@@ -70,8 +70,8 @@ class ApplyNotes {
 	@GridColumn(name="资产名称",colIdx=5)
 	String assetName
 	
-	//使用人
-	@GridColumn(name="使用人")
+	//负责人
+	@GridColumn(name="负责人")
 	String userName
 	
 	//数量

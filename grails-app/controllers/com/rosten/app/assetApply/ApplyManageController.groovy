@@ -169,6 +169,11 @@ class ApplyManageController {
 			if(user.equals(entity.currentUser)){
 				//当前处理人
 				switch (true){
+					case entity.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
 					case entity.status.contains("审核") || entity.status.contains("审批"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
@@ -179,8 +184,6 @@ class ApplyManageController {
 						actionList << createAction("完成",webPath +imgPath + "submit.png",strname + "_submit")
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
-					case entity.status.contains("新建"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 					default :
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
@@ -255,21 +258,30 @@ class ApplyManageController {
 	def assetApplyShow ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		
+		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
-//		def onePrice
 		def applyNotes = new ApplyNotes()
+		def drafter
+		def isAllowedEdit
 		if(params.id){
 			applyNotes = ApplyNotes.get(params.id)
-//			onePrice = String.format("%.2f", applyNotes.onePrice)//取消科学技术法展示
+			//判断用户是否一致，若一致且未提交状态，则可编辑
+			drafter = applyNotes.drafter
+			if(user.equals(drafter) && applyNotes.status.equals("新建")){
+				isAllowedEdit = "yes"
+			}else{
+				isAllowedEdit = "no"
+			}
 		}else{
 			applyNotes.applyUser = currentUser
 			applyNotes.userDepart = currentUser.getDepartEntity()
+			isAllowedEdit = "new"
 		}
 		
 		model["user"] = currentUser
 		model["company"] = company
 		model["applyNotes"] = applyNotes
+		model["isAllowedEdit"] = isAllowedEdit
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
@@ -502,6 +514,8 @@ class ApplyManageController {
 							deviceCard.assetName = applyNotes.assetName
 							deviceCard.userDepart = applyNotes.userDepart
 							deviceCard.onePrice = onePrice
+							deviceCard.purchaser = applyNotes.userName
+							deviceCard.specifications = applyNotes.specifications
 							deviceCard.country = applyNotes.country
 							deviceCard.assetStatus = "已入库"
 							deviceCard.save()
@@ -517,6 +531,8 @@ class ApplyManageController {
 							carCard.assetName = applyNotes.assetName
 							carCard.userDepart = applyNotes.userDepart
 							carCard.onePrice = onePrice
+							carCard.purchaser = applyNotes.userName
+							carCard.specifications = applyNotes.specifications
 							carCard.country = applyNotes.country
 							carCard.assetStatus = "已入库"
 							carCard.save()
@@ -533,6 +549,8 @@ class ApplyManageController {
 							houseCard.assetName = applyNotes.assetName
 							houseCard.userDepart = applyNotes.userDepart
 							houseCard.onePrice = onePrice
+							houseCard.purchaser = applyNotes.userName
+							houseCard.specifications = applyNotes.specifications
 							houseCard.country = applyNotes.country
 							houseCard.assetStatus = "已入库"
 							houseCard.save()
@@ -548,6 +566,8 @@ class ApplyManageController {
 							furnitureCard.assetName = applyNotes.assetName
 							furnitureCard.userDepart = applyNotes.userDepart
 							furnitureCard.onePrice = onePrice
+							furnitureCard.purchaser = applyNotes.userName
+							furnitureCard.specifications = applyNotes.specifications
 							furnitureCard.country = applyNotes.country
 							furnitureCard.assetStatus = "已入库"
 							furnitureCard.save()
@@ -614,7 +634,7 @@ class ApplyManageController {
 			_gridHeader << ["name":"申请部门","width":"100px","colIdx":3,"field":"getDepartName"]
 			_gridHeader << ["name":"资产分类","width":"100px","colIdx":4,"field":"getCategoryName"]
 			_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"assetName"]
-			_gridHeader << ["name":"使用人","width":"100px","colIdx":6,"field":"userName"]
+			_gridHeader << ["name":"负责人","width":"100px","colIdx":6,"field":"userName"]
 			_gridHeader << ["name":"数量","width":"80px","colIdx":7,"field":"amount"]
 			_gridHeader << ["name":"单价（元）","width":"80px","colIdx":8,"field":"onePrice"]
 			_gridHeader << ["name":"当前处理人","width":"100px","colIdx":9,"field":"getCurrentUserName"]

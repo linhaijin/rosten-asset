@@ -96,19 +96,23 @@
 				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 				var commentDialog = rosten.addCommentDialog({type:"assetApply"});
 				commentDialog.callback = function(_data){
-					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${applyNotes?.status}",flowCode:"${flowCode}"};
-					rosten.readSync(rosten.webPath + "/share/addComment/${applyNotes?.id}",content,function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("意见填写成功！").queryDlgClose= function(){
-								var selectWidget = rosten_tabContainer.selectedChildWidget;
-								if(selectWidget.get("id")=="flowComment"){
-									rosten_tabContainer.selectedChildWidget.refresh();
-								}
-							};
-						}else{
-							rosten.alert("意见填写失败!");
-						}	
-					});
+					if(_data.content == "" || _data.content == null){
+						rosten.alert("意见不能为空！");
+					}else{
+						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${applyNotes?.status}",flowCode:"${flowCode}"};
+						rosten.readSync(rosten.webPath + "/share/addComment/${applyNotes?.id}",content,function(data){
+							if(data.result=="true" || data.result == true){
+								rosten.alert("意见填写成功！").queryDlgClose= function(){
+									var selectWidget = rosten_tabContainer.selectedChildWidget;
+									if(selectWidget.get("id")=="flowComment"){
+										rosten_tabContainer.selectedChildWidget.refresh();
+									}
+								};
+							}else{
+								rosten.alert("意见填写失败!");
+							}	
+						});
+					}
 				};
 			};
 			
@@ -325,7 +329,7 @@
 								value:"${applyNotes?.getDepartName()}"
 				          	'/>
 				         	<g:hiddenField name="allowdepartsId" value="${applyNotes?.userDepart?.id }" />
-				         	<g:if test="${applyNotes?.applyStatus=='未审核'}">
+				         	<g:if test="${isAllowedEdit in ['new','yes']}">
 				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
 				         	</g:if>
 			           	</td>
@@ -341,18 +345,18 @@
              					value:"${applyNotes?.getCategoryName()}"
                            	'/>
                            	<g:hiddenField name="allowCategoryId" value="${applyNotes?.userCategory?.id }" />
-							<g:if test="${applyNotes?.applyStatus=='未审核'}">
+							<g:if test="${isAllowedEdit in ['new','yes']}">
 				         		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectAssetCategory("${createLink(controller:'assetConfig',action:'assetCategoryTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
 				         	</g:if>
 							
 			           	</td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>使用人：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>负责人：</div></td>
 					    <td>
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"userName",${fieldAcl.isReadOnly("userName")},
                                	trim:true,
                                	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              					value:"${applyNotes?.userName}"
                            	'/>
 					    	
@@ -365,7 +369,7 @@
                                	data-dojo-props='name:"assetName",${fieldAcl.isReadOnly("assetName")},
                                	trim:true,
                                	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              					value:"${applyNotes?.assetName}"
                            	'/>
 			           	</td>
@@ -375,7 +379,7 @@
                                	data-dojo-props='name:"amount",${fieldAcl.isReadOnly("amount")},
                                	trim:true,
                                	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
                                	value:"${applyNotes?.amount}"
                            	'/>
 			            </td>
@@ -387,7 +391,7 @@
                                	data-dojo-props='id:"onePrice",name:"onePrice",${fieldAcl.isReadOnly("onePrice")},
                                	trim:true,
                                	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              					value:"${String.format("%.0f", applyNotes?.onePrice)}"
                            	'/>
 			            </td>
@@ -433,7 +437,7 @@
                                	data-dojo-props='name:"usedBy",${fieldAcl.isReadOnly("usedBy")},
                                	trim:true,
                                	required:true,
-                               	${applyNotes?.applyStatus!='未审核'?'readOnly:true,':'' }
+                               	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
                                	style:{width:"550px",height:"80px"},
              					value:"${applyNotes?.usedBy}"
                            	'/>

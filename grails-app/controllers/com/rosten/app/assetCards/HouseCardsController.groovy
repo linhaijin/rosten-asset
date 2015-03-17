@@ -36,7 +36,7 @@ class HouseCardsController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		if("zcgly" in userGroups || "xhzcgly" in userGroups){
+		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups){
 			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
 		}
 		

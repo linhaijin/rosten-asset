@@ -206,8 +206,8 @@ class ApplyManageController {
 		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
 		  elem.group.groupName
 		}
-		if("zcgly" in userGroups || "xhzcgly" in userGroups){
-			actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups){
+			actionList << createAction("资产申请",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 			actionList << createAction("打印审批单",imgPath + "word_print.png",strname + "_print")
 		}
@@ -403,7 +403,7 @@ class ApplyManageController {
 			ids.each{
 				def applyNotes = ApplyNotes.get(it)
 				if(applyNotes){
-					if("xhzcgly" in userGroups || currentUser.getAllRolesValue().contains("资产管理员")){
+					if("协会资产管理员" in userGroups || "xhzcgly" in userGroups  || currentUser.getAllRolesValue().contains("资产管理员")){
 						applyNotes.delete(flush: true)
 						json = [result:'true']
 					}else{
@@ -474,6 +474,8 @@ class ApplyManageController {
 		//购置年月
 		Calendar cal = Calendar.getInstance();
 		c = cal.get(Calendar.YEAR).toString().substring(2) + (cal.get(Calendar.MONTH)+1).toString()
+		
+		c = c.padLeft(2,"0")
 		
 		//资产序号
 		d = config.nowSN.toString().padLeft(3,"0")

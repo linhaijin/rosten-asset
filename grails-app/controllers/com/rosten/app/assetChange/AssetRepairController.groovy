@@ -88,7 +88,7 @@ class AssetRepairController {
 		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
 		  elem.group.groupName
 		}
-		if("zcgly" in userGroups || "xhzcgly" in userGroups || "admin".equals(currentUser.getUserType())){
+		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups || "admin".equals(currentUser.getUserType())){
 			actionList << createAction("资产报修",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 //			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")

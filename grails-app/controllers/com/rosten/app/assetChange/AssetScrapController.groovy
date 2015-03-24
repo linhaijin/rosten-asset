@@ -1162,4 +1162,31 @@ class AssetScrapController {
 		}
 		return entity
 	}
+	
+	def changeCardsUserStatus = {
+		def json,message
+		
+		//处理筛选的资产卡片使用状态
+		def categoryId
+		def categoryIds = []
+		if(params.categoryId && params.categoryId !=null){
+			categoryId = params.categoryId
+			categoryIds = categoryId.split(",")
+		}
+		if(categoryIds.size()>0){
+			categoryIds.each {
+				def entity = this.getEntity(it)
+				if(entity){
+					entity.userStatus = "报废"
+				}
+			}
+			message = "操作成功！"
+			json = [result:'true',message:message]
+		}else{
+			message = "操作失败，请联系管理员！"
+			json = [result:'error',message:message]
+		}
+		render json as JSON
+	}
+		
 }

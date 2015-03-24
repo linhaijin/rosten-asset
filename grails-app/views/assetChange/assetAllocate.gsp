@@ -86,6 +86,13 @@
 				//}
 				
 				//新增是否同类型资产变更start--2014-11-15
+				//增加对多次单击的次数---------------------2015-3-24--------
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+
+				//流程相关信息
+				var content = {};
+				
 				var searchQuery = {id:"*"};
 				var categoryId = "";
 				var grid = dijit.byId("assetAllocateListGrid");
@@ -98,67 +105,38 @@
 						}
 					},queryOptions:{deep:true}
 				});
-				categoryId = categoryId.substring(0,categoryId.length-1) 
-
-				var qSeriesNo = "";
-				var seriesNo = "${assetAllocate?.seriesNo}";
-				qSeriesNo = "?seriesNo="+encodeURI(seriesNo);
-
-				var url = "${createLink(controller:'assetAllocate',action:'assetAllocateSaveCheck')}";
-				//url += "?categoryId="+encodeURI(categoryId);
-				url += qSeriesNo;
-
-				var ioArgs = {
-					url : url,
-					handleAs : "json",
-					load : function(response,args) {
-						if(response.result=="false"){//rensult为false，资产列表为不同类型资产
-							rosten.alert("注意：只能为同类型资产！");
-							return;
-						}else{//rensult为true，资产列表为同类型资产，继续
-							//增加对多次单击的次数----2014-9-4
-							var buttonWidget = object.target;
-							rosten.toggleAction(buttonWidget,true);
-			
-							//流程相关信息
-							var content = {};
-							content.categoryId = encodeURI(categoryId);
-							content.assetTotal = assetTotal;
-							<g:if test='${flowCode}'>
-								content.flowCode = "${flowCode}";
-								content.relationFlow = "${relationFlow}";
-							</g:if>
+				categoryId = categoryId.substring(0,categoryId.length-1);
+				content.categoryId = encodeURI(categoryId);
 							
-							rosten.readSync(rosten.webPath + "/assetAllocate/assetAllocateSave",content,function(data){
-								if(data.result=="true" || data.result == true){
-									rosten.alert("保存成功！").queryDlgClose= function(){
-										<g:if test='${flowCode}'>
-											if(window.location.href.indexOf(data.id)==-1){
-												window.location.replace(window.location.href + "&id=" + data.id);
-											}else{
-												window.location.reload();
-											}
-										</g:if>
-										<g:else>
-											page_quit();
-										</g:else>
-									};
+				content.assetTotal = assetTotal;
+				<g:if test='${flowCode}'>
+					content.flowCode = "${flowCode}";
+					content.relationFlow = "${relationFlow}";
+				</g:if>
+				
+				rosten.readSync(rosten.webPath + "/assetAllocate/assetAllocateSave",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("保存成功！").queryDlgClose= function(){
+							<g:if test='${flowCode}'>
+								if(window.location.href.indexOf(data.id)==-1){
+									window.location.replace(window.location.href + "&id=" + data.id);
 								}else{
-									rosten.alert("保存失败!");
+									window.location.reload();
 								}
-							},function(error){
-								rosten.alert("系统错误，请通知管理员！");
-								rosten.toggleAction(buttonWidget,false);
-							},"rosten_form");
+							</g:if>
+							<g:else>
+								page_quit();
+							</g:else>
+						}else{
+							rosten.alert("保存失败!");
+							window.location.reload();
 						}
-					},
-					error : function(response,args) {
-						rosten.alert(response.message);
-						return;
 					}
-				};
-				dojo.xhrPost(ioArgs);
-				//新增是否同类型资产变更end
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				},"rosten_form");
+
 			};
 			
 			page_quit = function(){

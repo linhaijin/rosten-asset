@@ -116,8 +116,9 @@ class ApplyManageController {
 					map["departComment"] = [content:"",date:"",name:""]
 				}
 				
-				//获取后勤意见
-				def hqyj = shareService.getCommentByStatus(assetApply.id,"后勤部领导审核")
+				//获取办公室意见
+				def hqyj = shareService.getCommentByStatus(assetApply.id,"办公室领导审核")
+				
 				if(hqyj && hqyj.size()>0){
 					map["hqComment"]= hqyj[0]
 				}else{
@@ -132,8 +133,8 @@ class ApplyManageController {
 					map["cwComment"] = [content:"",date:"",name:""]
 				}
 				
-				//获取秘书长意见
-				def mszyj = shareService.getCommentByStatus(assetApply.id,"秘书长审批")
+				//获取分管领导意见
+				def mszyj = shareService.getCommentByStatus(assetApply.id,"分管领导审核")
 				if(mszyj && mszyj.size()>0){
 					map["mszComment"]= mszyj[0]
 				}else{

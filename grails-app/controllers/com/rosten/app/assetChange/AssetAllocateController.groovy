@@ -203,10 +203,15 @@ class AssetAllocateController {
 		}else{
 			assetAllocate.originalDepart = params.originalDepartName
 		}
+		
+		def newDepart
 		if(params.newDepartId && !params.newDepartId.equals("")){
-			assetAllocate.newDepart = Depart.get(params.newDepartId)
+			newDepart = Depart.get(params.newDepartId)
+			assetAllocate.newDepart = newDepart
+			
 		}else{
 			assetAllocate.newDepart = params.newDepartName
+			newDepart = params.newDepartName
 		}
 		if(!params.seriesNo_form.equals("")){
 			assetAllocate.seriesNo = params.seriesNo_form
@@ -226,6 +231,7 @@ class AssetAllocateController {
 				if(entity){
 					entity.purchaser = params.newUser
 					entity.assetStatus = "已调拨"
+					entity.userDepart = newDepart
 					def seriesNo_exist = entity.seriesNo
 					if(seriesNo_exist != null && seriesNo_exist !=""){//操作号已存在
 						def seriesNo_exists = seriesNo_exist.split(",")
@@ -961,8 +967,8 @@ class AssetAllocateController {
 				map["acRow"] = [assetName:assetName,registerNum:registerNum,specifications:specifications]
 				
 				//所有意见默认取最后一次意见
-				//获取后勤意见
-				def hqyj = shareService.getCommentByStatus(assetAllocate.id,"后勤部领导审核")
+				//获取办公室意见
+				def hqyj = shareService.getCommentByStatus(assetAllocate.id,"办公室领导审核")
 				if(hqyj && hqyj.size()>0){
 					map["hqComment"]= hqyj[0]
 				}else{

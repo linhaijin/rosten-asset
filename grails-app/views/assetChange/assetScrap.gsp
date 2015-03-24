@@ -206,8 +206,40 @@
 				}
 				rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:assetScrap?.taskId,drafterUsername:assetScrap?.drafter?.username])}",content,function(data){
 					if(data.dealFlow==false){
-						//流程无下一节点
-						assetScrap_deal("submit",null,buttonWidget,conditionObj);
+						//流程无下一节点，异步处理资产卡片使用状态
+						var searchQuery = {id:"*"};
+						var categoryId = "";
+						var grid = dijit.byId("assetScrapListGrid");
+						var store = grid.store;
+
+						store.fetch({query:searchQuery,onComplete:function(items){
+							for(var i=0;i < items.length;i++){
+								var _item = items[i];
+								categoryId += store.getValue(_item, "id") + ",";
+							}
+						},queryOptions:{deep:true}});
+
+						categoryId = categoryId.substring(0,categoryId.length-1);
+						var url = "${createLink(controller:'assetScrap',action:'changeCardsUserStatus')}";
+						url += "?categoryId="+encodeURI(categoryId);
+
+						var ioArgs = {
+							url : url,
+							handleAs : "json",
+							load : function(response,args) {
+								if(response.result=="false"){//资产卡片使用状态未处理
+									return;
+								}else{//资产卡片使用状态已处理！，继续
+									assetScrap_deal("submit",null,buttonWidget,conditionObj);
+								}
+							},
+							error : function(response,args) {
+								rosten.alert(response.message);
+								return;
+							}
+						};
+						dojo.xhrPost(ioArgs);
+						
 						return;
 					}
 					var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";

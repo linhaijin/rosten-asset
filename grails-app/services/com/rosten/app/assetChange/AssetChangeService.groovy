@@ -28,7 +28,7 @@ class AssetChangeService {
 		def c = AssetScrap.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -57,7 +57,7 @@ class AssetChangeService {
 		}
 		def c = AssetScrap.createCriteria()
 		def query = { 
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -101,7 +101,7 @@ class AssetChangeService {
 		def c = AssetAllocate.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -130,7 +130,7 @@ class AssetChangeService {
 		}
 		def c = AssetAllocate.createCriteria()
 		def query = { 
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -174,7 +174,7 @@ class AssetChangeService {
 		def c = AssetLose.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -203,7 +203,7 @@ class AssetChangeService {
 		}
 		def c = AssetLose.createCriteria()
 		def query = { 
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -247,7 +247,7 @@ class AssetChangeService {
 		def c = AssetRepair.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)
@@ -276,7 +276,7 @@ class AssetChangeService {
 		}
 		def c = AssetRepair.createCriteria()
 		def query = { 
-			if("xhzcgly" in userGroups || "zcgly" in userGroups || user.getAllRolesValue().contains("资产管理员")){
+			if("xhzcgly" in userGroups || "zcgly" in userGroups || "协会资产管理员" in userGroups || "资产管理员" in userGroups || user.getAllRolesValue().contains("资产管理员")){
 				eq("company",company)
 			}else{
 				eq("company",company)

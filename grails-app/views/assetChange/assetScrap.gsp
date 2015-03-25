@@ -482,6 +482,13 @@
 			}
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");
+				//2015-3-25-----默认选中表格中所有的数据--------------------
+				if (grid.getGrid().rowCount > 0){
+					for(var idx = 0;idx<grid.getGrid().rowCount;idx++){
+						grid.getGrid().selection.setSelected(idx, true);
+					}
+				}
+				//--------------------------------------------------
 				var selected = grid.getSelected();
 				if (selected.length == 0) {
 					rosten.alert("注意：请在列表中选择资产！");

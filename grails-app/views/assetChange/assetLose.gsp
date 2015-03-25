@@ -430,6 +430,13 @@
 			
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");
+				//2015-3-25-----默认选中表格中所有的数据--------------------
+				if (grid.getGrid().rowCount > 0){
+					for(var idx = 0;idx<grid.getGrid().rowCount;idx++){
+						grid.getGrid().selection.setSelected(idx, true);
+					}
+				}
+				//--------------------------------------------------
 				var selected = grid.getSelected();
 				if (selected.length == 0) {
 					rosten.alert("注意：请在列表中选择资产！");
@@ -663,7 +670,7 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
+			<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;padding:2px;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetLoseListGrid" data-dojo-id="assetLoseListGrid"
 					data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetLose',action:'assetLoseListDataStore',params:[companyId:company?.id,seriesNo:assetLose?.seriesNo])}"'></div>
 			</div>

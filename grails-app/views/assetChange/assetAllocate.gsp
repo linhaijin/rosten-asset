@@ -79,12 +79,6 @@
 					return;
 				}
 
-				//if(dijit.byId("assetCategoryChoose_pane")){
-				//	var node_pane = dijit.byId("assetCategoryChoose_pane");
-				//	tabContainer.removeChild(node_pane);
-				//	node_pane.destroyRecursive();
-				//}
-				
 				//新增是否同类型资产变更start--2014-11-15
 				//增加对多次单击的次数---------------------2015-3-24--------
 				var buttonWidget = object.target;
@@ -127,10 +121,10 @@
 							<g:else>
 								page_quit();
 							</g:else>
-						}else{
-							rosten.alert("保存失败!");
-							window.location.reload();
 						}
+					}else{
+						rosten.alert("保存失败，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
 					}
 				},function(error){
 					rosten.alert("系统错误，请通知管理员！");
@@ -444,6 +438,14 @@
 			
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");
+
+				//2015-3-25-----默认选中表格中所有的数据--------------------
+				if (grid.getGrid().rowCount > 0){
+					for(var idx = 0;idx<grid.getGrid().rowCount;idx++){
+						grid.getGrid().selection.setSelected(idx, true);
+					}
+				}
+				//--------------------------------------------------
 				var selected = grid.getSelected();
 				if (selected.length == 0) {
 					rosten.alert("注意：请在列表中选择资产！");

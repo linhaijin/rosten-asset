@@ -752,6 +752,31 @@ class AssetAllocateController {
 			switch (true){
 				case assetAllocate.status.contains("已结束"):
 					logContent = "结束流程"
+					
+					//2015-3-25-------修改相关卡片信息---------
+					def _list = []
+					_list += CarCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}
+					_list += DeviceCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}
+					_list += FurnitureCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}
+					_list += HouseCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}
+					_list.each{
+						it.userDepart = assetAllocate.newDepart
+						it.purchaser = assetAllocate.newUser
+						it.save()
+					}
+					
 					break
 				case assetAllocate.status.contains("归档"):
 					logContent = "归档"

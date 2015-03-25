@@ -5,6 +5,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
          "rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
+	
+	
 	/*
 	 * 此功能默认必须存在
 	 */
@@ -16,8 +18,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		case "static":
             rosten.kernel.setHref(rosten.webPath + "/statistics/chart?companyId=" + companyId, oString);
             break;
-		case "staticDesign":
-			demo_static(oString);
+		case "staticSearch":
+			rosten.kernel.setHref(rosten.webPath + "/statistics/staticSearch?companyId=" + companyId, oString);
             break;
 		}
 		

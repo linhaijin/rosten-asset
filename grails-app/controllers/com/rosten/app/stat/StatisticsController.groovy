@@ -13,7 +13,143 @@ import com.rosten.app.assetCards.BookCards
 import com.rosten.app.assetCards.FurnitureCards
 import com.rosten.app.assetConfig.AssetCategory
 
+import com.rosten.app.share.ShareService
+
 class StatisticsController {
+	
+	def shareService
+	
+	//2015-3-25----------新增-------------------------
+	def staticSearch={
+		params._file = "staticSearch"
+		params._format = "HTML"
+		params.title = "办事部门固定资产总值"
+		
+		def reportDetails = []
+		
+		//所有地区
+		def dqList = [[name:"舟山地区",code:"zsdq"],[name:"台州地区",code:"tzdq"],[name:"温州地区",code:"wzdq"],[name:"淡水地区地区",code:"dsdq"]]
+		dqList.each{dq->
+			def zsDepart = Depart.findByDepartCode(dq.code)
+			if(zsDepart){
+				zsDepart.children.each{dept ->
+					//办事处
+					def smap =[dqID:dq.name,bsc:dept.departName,clsl:0,clyz:0,gdzcsl:0,gdzcyz:0,bgsbsl:0,bgsbyz:0,bfzcsl:0,bfzcyz:0]
+					
+					//车辆
+					CarCards.findAllByUserDepart(dept).each{card ->
+						if("报废".equals(card.userStatus)){
+							smap["clsl"] += 1
+							smap["clyz"] += card.onePrice
+						}else{
+							smap["bfzcsl"] += 1
+							smap["bfzcyz"] += card.onePrice
+						}
+					}
+					//电子设备
+					DeviceCards.findAllByUserDepart(dept).each{card ->
+						if("报废".equals(card.userStatus)){
+							smap["clsl"] += 1
+							smap["clyz"] += card.onePrice
+						}else{
+							//判断是否为固定资产或者办公设备
+							if("办公设备".equals(card.userCategory.categoryName)){
+								smap["bgsbsl"] += 1
+								smap["bgsbyz"] += card.onePrice
+							}else{
+								smap["gdzcsl"] += 1
+								smap["gdzcyz"] += card.onePrice
+							}
+						}
+					
+					}
+					
+					//办公家具
+					FurnitureCards.findAllByUserDepart(dept).each{card ->
+						if("报废".equals(card.userStatus)){
+							smap["clsl"] += 1
+							smap["clyz"] += card.onePrice
+						}else{
+							//判断是否为固定资产或者办公设备
+							if("办公设备".equals(card.userCategory.categoryName)){
+								smap["bgsbsl"] += 1
+								smap["bgsbyz"] += card.onePrice
+							}else{
+								smap["gdzcsl"] += 1
+								smap["gdzcyz"] += card.onePrice
+							}
+						}
+					
+					}
+					
+					reportDetails << smap
+				}
+			}
+		}
+		
+		//协会本部-------------------------------------------------------------------------------------------------------
+		def xhDepart = Depart.findByDepartCode("xhbb")
+		def smap =[dqID:"协会",bsc:xhDepart.departName,clsl:0,clyz:0,gdzcsl:0,gdzcyz:0,bgsbsl:0,bgsbyz:0,bfzcsl:0,bfzcyz:0]
+		
+		//获取协会下面所有的部门id
+		def userDepartList = []
+		if(xhDepart){
+			xhDepart.children.each{
+				def _list = []
+				userDepartList += shareService.getAllDepartByChild(_list,it)
+			}
+			userDepartList.unique()
+		}
+		
+		//通过所有部门找出所有的资产数据
+		//车辆
+		CarCards.createCriteria().list{
+			'in'("userDepart",userDepartList)
+		}.each{card->
+			if("报废".equals(card.userStatus)){
+				smap["clsl"] += 1
+				smap["clyz"] += card.onePrice
+			}else{
+				smap["bfzcsl"] += 1
+				smap["bfzcyz"] += card.onePrice
+			}
+		}
+		
+		//其他所有资产数据
+		def allList =[]
+		allList += HouseCards.createCriteria().list{
+				'in'("userDepart",userDepartList)
+		}
+		allList += DeviceCards.createCriteria().list{
+			'in'("userDepart",userDepartList)
+		}
+		allList += FurnitureCards.createCriteria().list{
+			'in'("userDepart",userDepartList)
+		}
+		allList.each{card->
+			if("报废".equals(card.userStatus)){
+				smap["clsl"] += 1
+				smap["clyz"] += card.onePrice
+			}else{
+				//判断是否为固定资产或者办公设备
+				if("办公设备".equals(card.userCategory.categoryName)){
+					smap["bgsbsl"] += 1
+					smap["bgsbyz"] += card.onePrice
+				}else{
+					smap["gdzcsl"] += 1
+					smap["gdzcyz"] += card.onePrice
+				}
+			}
+		}
+		reportDetails << smap
+		
+		//----------------------------------------------------------------------------------------------
+		if(reportDetails.size()==0){
+			
+		}
+		
+		chain(controller: 'jasper', action: 'index', model: [data: reportDetails], params: params)
+	}
 	
 	def getAssetStatic ={
 		def company = Company.get(params.id)

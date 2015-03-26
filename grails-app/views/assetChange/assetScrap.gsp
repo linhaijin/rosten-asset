@@ -6,9 +6,6 @@
     <title>资产变动--资产报废</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
-    	.rosten .dsj_form table tr{
-    		height:30px;
-    	}
     	body{
 			overflow:auto;
 		}
@@ -430,10 +427,10 @@
 				var scrapId = "${assetScrap?.id}";
 				var assetTotal = dojo.byId("assetTotal").value;
 				var qSeriesNo = "";
-				var seriesNo = "${assetAllocate?.seriesNo}";
+				var seriesNo = "${assetScrap?.seriesNo}";
 				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
 				var url = "${createLink(controller:'assetScrap',action:'assetChooseDelete')}";
-				url += "?assetId="+encodeURI(assetId)+"&scrapId="+scrapId+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal+qSeriesNo;
+				url += "?assetId="+encodeURI(assetId)+"&scrapId="+scrapId+"&assetTotal="+assetTotal+qSeriesNo;
 				var ioArgs = {
 					url : url,
 					handleAs : "json",
@@ -615,8 +612,8 @@
 	</div>
 </div>
 
-<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" id="assetScrapPane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
+<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" id="assetScrapPane" title="申请信息" data-dojo-props='doLayout:false,height:"520px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetScrap?.seriesNo}" />
 			<g:hiddenField name="applyMan" id="applyMan" value="${assetScrap?.applyMan == null?user.chinaName:assetScrap?.applyMan}" />
@@ -721,11 +718,11 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetScrapList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
+		</form>
+		<div id="assetScrapList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"padding:1px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetScrapListGrid" data-dojo-id="assetScrapListGrid"
 					data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetScrap',action:'assetScrapListDataStore',params:[companyId:company?.id,seriesNo:assetScrap?.seriesNo])}"'></div>
 			</div>
-		</form>
 	</div>
 	<g:if test="${assetScrap?.id}">
 		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,

@@ -4,11 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <title>资产变动--资产报失</title>
-    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
-    	.rosten .dsj_form table tr{
-    		height:30px;
-    	}
     	body{
 			overflow:auto;
 		}
@@ -377,7 +373,7 @@
 				var loseId = "${assetLose?.id}";
 				var assetTotal = dojo.byId("assetTotal").value;
 				var qSeriesNo = "";
-				var seriesNo = "${assetAllocate?.seriesNo}";
+				var seriesNo = "${assetLose?.seriesNo}";
 				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
 				var url = "${createLink(controller:'assetLose',action:'assetChooseDelete')}";
 				url += "?assetId="+encodeURI(assetId)+"&loseId="+loseId+"&assetTotal="+assetTotal+qSeriesNo;
@@ -566,8 +562,8 @@
 	</div>
 </div>
 
-<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"640px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" id="assetLosePane" title="申请信息" data-dojo-props='height:"520px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
+<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"680px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" id="assetLosePane" title="申请信息" data-dojo-props='doLayout:false,height:"520px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetLose?.seriesNo}" />
 			<g:hiddenField name="applyMan" id="applyMan" value="${assetLose?.applyMan == null?user.chinaName:assetLose?.applyMan}" />
@@ -672,11 +668,12 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;padding:2px;"'>
+			
+		</form>
+		<div id="assetLoseList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"padding:2px"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetLoseListGrid" data-dojo-id="assetLoseListGrid"
 					data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetLose',action:'assetLoseListDataStore',params:[companyId:company?.id,seriesNo:assetLose?.seriesNo])}"'></div>
 			</div>
-		</form>
 	</div>
 	<g:if test="${assetLose?.id}">
 		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,

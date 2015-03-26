@@ -14,10 +14,147 @@ import com.rosten.app.assetCards.FurnitureCards
 import com.rosten.app.assetConfig.AssetCategory
 
 import com.rosten.app.share.ShareService
+import com.rosten.app.assetChange.*
 
 class StatisticsController {
 	
 	def shareService
+	
+	def imgPath ="images/rosten/actionbar/"
+	
+	def staticExport ={
+		
+	}
+	def staticSearchAction={
+		def actionList =[]
+		def strname = "static"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("打印",imgPath + "word_print.png",strname + "_export")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
+	
+	def staticSearchView ={
+		def model =[:]
+		def company = Company.get(params.companyId)
+		model["company"] = company
+		render(view:'/statistics/staticSearch',model:model)
+	}
+	def staticSearchGrid ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		
+		def _gridHeader =[]
+		_gridHeader << ["name":"序号","width":"30px","colIdx":0,"field":"rowIndex"]
+		_gridHeader << ["name":"申请单号","width":"100px","colIdx":1,"field":"sqbh"]
+		_gridHeader << ["name":"类型","width":"60px","colIdx":2,"field":"lx"]
+		_gridHeader << ["name":"日期","width":"auto","colIdx":3,"field":"rq"]
+		_gridHeader << ["name":"资产编号","width":"auto","colIdx":4,"field":"zcbh"]
+		_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"zcmc"]
+		_gridHeader << ["name":"使用人","width":"auto","colIdx":6,"field":"syr"]
+		_gridHeader << ["name":"使用状况","width":"60px","colIdx":7,"field":"syzk"]
+		json["gridHeader"] = _gridHeader
+		
+		//增加查询条件
+		def searchArgs =[:]
+		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		
+		def totalNum = 0	//总条目数
+		
+		if(params.refreshData){
+			def _json = [identifier:'id',label:'name',items:[]]
+			
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			def offset = (nowPage-1) * perPageNum
+			def max = perPageNum
+			
+			searchArgs["offset"] = offset?offset:0
+			searchArgs["max"] = max?max:15
+			searchArgs["company"] = company
+			
+			def allList = this.getSearchData(searchArgs)
+			
+			def idx = offset
+			allList.each{
+				def applayEntity,cardEntity
+				switch (it.changeType){
+					case "报废":
+						applayEntity = AssetScrap.get(it.changeId)
+						break
+					case "报失":
+						applayEntity = AssetLose.get(it.changeId)
+						break
+					case "调拨":
+						applayEntity = AssetAllocate.get(it.changeId)
+						break
+					case "报修":
+						applayEntity = AssetRepair.get(it.changeId)
+						break
+					
+				}
+				
+				switch (it.cardType){
+					case "车辆":
+						applayEntity = CarCards.get(it.cardId)
+						break
+					case "电子设备":
+						applayEntity = DeviceCards.get(it.cardId)
+						break
+					case "办公家具":
+						applayEntity = FurnitureCards.get(it.cardId)
+						break
+					case "房屋及建筑物":
+						applayEntity = HouseCards.get(it.cardId)
+						break
+					
+				}
+				
+				def sMap =[:]
+				sMap["rowIndex"] = idx+1
+				sMap["id"] = it.id
+				sMap["sqbh"] = applayEntity.seriesNo
+				sMap["lx"] = it.changeType
+				sMap["rq"] = it.getFormattedCreatedDate()
+				sMap["zcbh"] = cardEntity.registerNum
+				sMap["zcmc"] = cardEntity.assetName
+				sMap["syr"] = cardEntity.purchaser
+				sMap["syzk"] = cardEntity.userStatus
+				
+				_json.items+=sMap
+				
+				idx ++
+			}
+			json["gridData"] = _json
+		}
+		if(params.refreshPageControl){
+			json["pageControl"] = ["total":this.getSearchDataCount(searchArgs).toString()]
+		}
+		render json as JSON
+		
+	}
+	private def getSearchData ={searchArgs->
+		def c = ChangeLog.createCriteria()
+		def pa=[max:searchArgs.max.toInteger(),offset:searchArgs.offset.toInteger()]
+		def query = {
+			eq("company",searchArgs.company)
+			order("createDate", "desc")
+		}
+		return c.list(pa,query)
+	}
+	
+	private def getSearchDataCount ={searchArgs->
+		def c = ChangeLog.createCriteria()
+		def query = {
+			eq("company",searchArgs.company)
+			order("createDate", "desc")
+		}
+		return c.count(query)
+	}
+	
+	
 	
 	//2015-3-25----------新增-------------------------
 	def staticSearch={
@@ -338,5 +475,12 @@ class StatisticsController {
 		model["departIds"] = departIds.join(",")
 		
 		render(view:'/statistics/chart',model:model)
+	}
+	private def createAction = {name,img,action->
+		def model =[:]
+		model["name"] = name
+		model["img"] = img
+		model["action"] = action
+		return model
 	}
 }

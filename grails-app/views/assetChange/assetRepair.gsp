@@ -6,9 +6,6 @@
     <title>资产运维--资产报修</title>
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
-    	.rosten .dsj_form table tr{
-    		height:30px;
-    	}
     	body{
 			overflow:auto;
 		}
@@ -391,7 +388,7 @@
 				var seriesNo = "${assetRepair?.seriesNo}";
 				qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
 				var url = "${createLink(controller:'assetRepair',action:'assetChooseDelete')}";
-				url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId+"&seriesNo="+seriesNo+"&assetTotal="+assetTotal+qSeriesNo;
+				url += "?assetId="+encodeURI(assetId)+"&repairId="+repairId+"&assetTotal="+assetTotal+qSeriesNo;
 				var ioArgs = {
 					url : url,
 					handleAs : "json",
@@ -437,7 +434,7 @@
 				var controlName = "assetRepair";
 				var url = "${createLink(controller:'assetCategoryChoose',action:'assetCategoryChooseListDataStore')}";
 				assetCategoryChoose_search_common(url,controlName,"${company?.id}","${assetRepair?.seriesNo}");
-			}
+			};
 			assetCategoryChoose_add = function(){
 				var grid = dijit.byId("assetCategoryChooseListGrid");
 				var selected = grid.getSelected();
@@ -467,7 +464,7 @@
 
 					var qSeriesNo = "";
 					var seriesNo = "${assetRepair?.seriesNo}";
-					qSeriesNo = "&seriesNo="+encodeURI(seriesNo);
+					qSeriesNo = "&seriesNo=" + encodeURI(seriesNo);
 			
 					var qAssetCardsType = "";
 					var assetCardsType;
@@ -477,13 +474,13 @@
 							assetCardsType = assetCardsTypeSel.attr("value");
 							qAssetCardsType = "&assetCardsType="+encodeURI(assetCardsType);
 						}
-					}
+					};
 
 					var qAssetId = "";
 					var assetId = "";
 					var store = grid.store;
 					dojo.forEach(selected,function(item){
-						if (assetId==""){
+						if(assetId==""){
 							assetId = store.getValue(item, "id");
 						}else{
 							assetId = assetId+","+store.getValue(item, "id");
@@ -576,8 +573,8 @@
 	</div>
 </div>
 
-<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" id="assetRepairPane" title="申请信息" data-dojo-props='height:"570px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
+<div id="rosten_tabContainer" data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",height:"730px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" id="assetRepairPane" title="申请信息" data-dojo-props='doLayout:false,height:"570px",marginBottom:"2px",region:"top",style:{padding:"4px"}'>
 		<form id="rosten_form" name="rosten_form" onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<g:hiddenField name="seriesNo_form" value="${assetRepair?.seriesNo}" />
 			<g:hiddenField name="applyMan" id="applyMan" value="${assetRepair?.applyMan == null?user.chinaName:assetRepair?.applyMan}" />
@@ -774,11 +771,12 @@
 			</button>
 			<div style="height:5px;"></div>
 			</g:if>
-			<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;height:310px;padding:2px;overflow:auto;"'>
+			
+		</form>
+		<div id="assetRepairList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"padding:1px;overflow:auto;"'>
 				<div data-dojo-type="rosten/widget/RostenGrid" id="assetRepairListGrid" data-dojo-id="assetRepairListGrid"
 					data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetRepair',action:'assetRepairListDataStore',params:[companyId:company?.id,seriesNo:assetRepair?.seriesNo])}"'></div>
 			</div>
-		</form>
 	</div>
 	<g:if test="${assetRepair?.id}">
 		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,

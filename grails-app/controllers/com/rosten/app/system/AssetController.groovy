@@ -276,6 +276,20 @@ class AssetController {
 //			model.addToResources(resource)
 			
 			resource = new Resource()
+			resource.resourceName = "变动查询"
+			resource.url = "staticSearch"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			model.save()
+			
+			resource = new Resource()
+			resource.resourceName = "统计汇总"
+			resource.url = "staticCollect"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			model.save()
+			
+			resource = new Resource()
 			resource.resourceName = "统计分析"
 			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"

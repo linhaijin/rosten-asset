@@ -753,28 +753,71 @@ class AssetAllocateController {
 				case assetAllocate.status.contains("已结束"):
 					logContent = "结束流程"
 					
-					//2015-3-25-------修改相关卡片信息---------
-					def _list = []
-					_list += CarCards.createCriteria().list{
+					//2015-3-25-------修改相关卡片信息以及增加日志---------
+					CarCards.createCriteria().list{
 						eq("company",assetAllocate.company)
 						like("seriesNo","%"+assetAllocate.seriesNo+"%")
-					}
-					_list += DeviceCards.createCriteria().list{
-						eq("company",assetAllocate.company)
-						like("seriesNo","%"+assetAllocate.seriesNo+"%")
-					}
-					_list += FurnitureCards.createCriteria().list{
-						eq("company",assetAllocate.company)
-						like("seriesNo","%"+assetAllocate.seriesNo+"%")
-					}
-					_list += HouseCards.createCriteria().list{
-						eq("company",assetAllocate.company)
-						like("seriesNo","%"+assetAllocate.seriesNo+"%")
-					}
-					_list.each{
+					}.each{
 						it.userDepart = assetAllocate.newDepart
 						it.purchaser = assetAllocate.newUser
 						it.save()
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetAllocate.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "调拨"
+						chgLog.cardType = "车辆"
+						chgLog.company = assetAllocate.company
+						chgLog.save()
+						
+					}
+					DeviceCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}.each{
+						it.userDepart = assetAllocate.newDepart
+						it.purchaser = assetAllocate.newUser
+						it.save()
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetAllocate.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "调拨"
+						chgLog.cardType = "电子设备"
+						chgLog.company = assetAllocate.company
+						chgLog.save()
+					}
+					FurnitureCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}.each{
+						it.userDepart = assetAllocate.newDepart
+						it.purchaser = assetAllocate.newUser
+						it.save()
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetAllocate.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "调拨"
+						chgLog.cardType = "办公家具"
+						chgLog.company = assetAllocate.company
+						chgLog.save()
+					}
+					HouseCards.createCriteria().list{
+						eq("company",assetAllocate.company)
+						like("seriesNo","%"+assetAllocate.seriesNo+"%")
+					}.each{
+						it.userDepart = assetAllocate.newDepart
+						it.purchaser = assetAllocate.newUser
+						it.save()
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetAllocate.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "调拨"
+						chgLog.cardType = "房屋及建筑物"
+						chgLog.company = assetAllocate.company
+						chgLog.save()
 					}
 					
 					break

@@ -708,7 +708,7 @@
 			</g:if>
 			
 		</form>
-		<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"width:780px;padding:2px"'>
+		<div id="assetAllocateList" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"padding:1px"'>
 			<div data-dojo-type="rosten/widget/RostenGrid" id="assetAllocateListGrid" data-dojo-id="assetAllocateListGrid"
 				data-dojo-props='showRowSelector:"new",imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'assetAllocate',action:'assetAllocateListDataStore',params:[companyId:company?.id,seriesNo:assetAllocate?.seriesNo])}"'></div>
 		</div>

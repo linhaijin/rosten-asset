@@ -760,6 +760,7 @@ class AssetAllocateController {
 					}.each{
 						it.userDepart = assetAllocate.newDepart
 						it.purchaser = assetAllocate.newUser
+						it.assetStatus = "已入库"
 						it.save()
 						
 						def chgLog = new ChangeLog()
@@ -777,6 +778,7 @@ class AssetAllocateController {
 					}.each{
 						it.userDepart = assetAllocate.newDepart
 						it.purchaser = assetAllocate.newUser
+						it.assetStatus = "已入库"
 						it.save()
 						
 						def chgLog = new ChangeLog()
@@ -793,6 +795,7 @@ class AssetAllocateController {
 					}.each{
 						it.userDepart = assetAllocate.newDepart
 						it.purchaser = assetAllocate.newUser
+						it.assetStatus = "已入库"
 						it.save()
 						
 						def chgLog = new ChangeLog()
@@ -809,6 +812,7 @@ class AssetAllocateController {
 					}.each{
 						it.userDepart = assetAllocate.newDepart
 						it.purchaser = assetAllocate.newUser
+						it.assetStatus = "已入库"
 						it.save()
 						
 						def chgLog = new ChangeLog()

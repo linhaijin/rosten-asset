@@ -196,7 +196,14 @@ define(["dojo/_base/connect",
             return;
         var content = {status:"是"};
         content.id = unids;
-        rosten.read(rosten.webPath + "/system/serviceStatus", content, delete_callback);
+        rosten.read(rosten.webPath + "/system/serviceStatus", content, function(data){
+        	 if (data.result == "true" || data.result == true) {
+                 rosten.alert("成功!");
+                 rosten.kernel.refreshGrid();
+             } else {
+                 rosten.alert("失败!");
+             }
+        });
     };
     close_service = function(){
     	var unids = rosten.getGridUnid("multi");
@@ -204,7 +211,14 @@ define(["dojo/_base/connect",
             return;
         var content = {status:"否"};
         content.id = unids;
-        rosten.read(rosten.webPath + "/system/serviceStatus", content, delete_callback);
+        rosten.read(rosten.webPath + "/system/serviceStatus", content, function(data){
+        	 if (data.result == "true" || data.result == true) {
+                 rosten.alert("成功!");
+                 rosten.kernel.refreshGrid();
+             } else {
+                 rosten.alert("失败!");
+             }
+        });
     };
     formatResourceTab = function(value){
     	if(value && value!=""){

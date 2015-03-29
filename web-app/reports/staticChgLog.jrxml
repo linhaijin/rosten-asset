@@ -14,13 +14,14 @@
 	<field name="zcmc" class="java.lang.String"/>
 	<field name="syr" class="java.lang.String"/>
 	<field name="syzk" class="java.lang.String"/>
-	<group name="sqbh">
-		<groupExpression><![CDATA[$V{PAGE_NUMBER}]]></groupExpression>
+	<group name="qz">
+		<groupExpression><![CDATA[$F{sqbh}]]></groupExpression>
 		<groupHeader>
 			<band height="28">
 				<textField>
-					<reportElement x="0" y="0" width="802" height="28" uuid="91bba947-aed7-418c-b7fc-71843d106c87"/>
-					<box leftPadding="40" rightPadding="0">
+					<reportElement x="0" y="0" width="802" height="28" uuid="ac0b8302-355b-4429-89fd-f83c4b7f6fe4"/>
+					<box leftPadding="30">
+						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
 						<leftPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -31,9 +32,6 @@
 				</textField>
 			</band>
 		</groupHeader>
-		<groupFooter>
-			<band/>
-		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -227,7 +225,17 @@
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band splitType="Stretch"/>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="681" y="-1" width="80" height="20" uuid="286af3c5-8d81-49ae-9014-f63128e328fa"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="761" y="-1" width="40" height="20" uuid="7077d7e8-fa40-4217-8307-91af370a63a9"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>

@@ -995,44 +995,32 @@ class AssetAllocateController {
 				map["assetAllocate"] = assetAllocate
 				def seriesNo = assetAllocate.seriesNo
 				
-				def acCount = 0
-				def acRow = []
-				def acList
-				def assetName = ""
-				def registerNum = ""
-				def specifications = ""
+				def _dataList = []
+				
 				def acCarList = CarCards.findAllBySeriesNoLike("%"+seriesNo+"%")
 				def acHouseList = HouseCards.findAllBySeriesNoLike("%"+seriesNo+"%")
 				def acDeviceList = DeviceCards.findAllBySeriesNoLike("%"+seriesNo+"%")
 				def acFurnitureList = FurnitureCards.findAllBySeriesNoLike("%"+seriesNo+"%")
-				if(acCarList.size() != 0){
-					acCount = acCarList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
-					}
-				}else if(acHouseList.size() != 0){
-					acCount = acHouseList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
-					}
-				}else if(acDeviceList.size() != 0){
-					acCount = acDeviceList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
-					}
-				}else if(acFurnitureList.size() != 0){
-					acCount = acFurnitureList.size()
-					if(acCount == 1){
-						acRow = acCarList[0]
-					}
-				}
+				
+				_dataList += acCarList
+				_dataList += acHouseList
+				_dataList += acDeviceList
+				_dataList += acFurnitureList
+				
+				def acCount = _dataList.size()
 				map["acCount"] = acCount
-				acRow.each{
-					assetName =  it.assetName
-					registerNum = it.registerNum
-					specifications = it.specifications
+				
+				def acRow
+				if(acCarList.size() != 0){
+					acRow = acCarList[0]
+				}else if(acHouseList.size() != 0){
+					acRow = acHouseList[0]
+				}else if(acDeviceList.size() != 0){
+					acRow = acDeviceList[0]
+				}else if(acFurnitureList.size() != 0){
+					acRow = acFurnitureList[0]
 				}
-				map["acRow"] = [assetName:assetName,registerNum:registerNum,specifications:specifications]
+				map["acRow"] = acRow
 				
 				//所有意见默认取最后一次意见
 				//获取办公室意见
@@ -1059,7 +1047,18 @@ class AssetAllocateController {
 					map["mszComment"] = [content:"",date:"",name:""]
 				}
 				
-				word.singlePrint(response,"zcdbd.xml",assetAllocate.seriesNo,map)
+				def dataList =[]
+				_dataList.eachWithIndex { elem, i ->
+					def smap =[:]
+					smap["idx"] = i + 1
+					smap["name"] = elem.assetName
+					smap["gg"] = elem.specifications
+					smap["sl"] = "1"
+					dataList << smap
+				}
+				map["dataList"] = dataList
+				
+				word.singlePrint(response,"zcdbd.ftl",assetAllocate.seriesNo,map)
 			}else{
 //				word.downloadZzkhbZip(response,params.id)
 			}

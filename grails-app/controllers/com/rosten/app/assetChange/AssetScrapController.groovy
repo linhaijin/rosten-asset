@@ -872,6 +872,60 @@ class AssetScrapController {
 			switch (true){
 				case assetScrap.status.contains("已结束"):
 					logContent = "结束流程"
+					
+					//2015-3-25-------修改相关卡片信息以及增加日志---------
+					CarCards.createCriteria().list{
+						eq("company",assetScrap.company)
+						like("seriesNo","%"+assetScrap.seriesNo+"%")
+					}.each{
+					
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetScrap.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报废"
+						chgLog.cardType = "车辆"
+						chgLog.company = assetScrap.company
+						chgLog.save()
+						
+					}
+					DeviceCards.createCriteria().list{
+						eq("company",assetScrap.company)
+						like("seriesNo","%"+assetScrap.seriesNo+"%")
+					}.each{
+					
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetScrap.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报废"
+						chgLog.cardType = "电子设备"
+						chgLog.company = assetScrap.company
+						chgLog.save()
+					}
+					FurnitureCards.createCriteria().list{
+						eq("company",assetScrap.company)
+						like("seriesNo","%"+assetScrap.seriesNo+"%")
+					}.each{
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetScrap.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报废"
+						chgLog.cardType = "办公家具"
+						chgLog.company = assetScrap.company
+						chgLog.save()
+					}
+					HouseCards.createCriteria().list{
+						eq("company",assetScrap.company)
+						like("seriesNo","%"+assetScrap.seriesNo+"%")
+					}.each{
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetScrap.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报废"
+						chgLog.cardType = "房屋及建筑物"
+						chgLog.company = assetScrap.company
+						chgLog.save()
+					}
 					break
 				case assetScrap.status.contains("归档"):
 					logContent = "归档"

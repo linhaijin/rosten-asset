@@ -844,6 +844,70 @@ class AssetLoseController {
 			switch (true){
 				case assetLose.status.contains("已结束"):
 					logContent = "结束流程"
+					
+					//2015-3-25-------修改相关卡片信息以及增加日志---------
+					CarCards.createCriteria().list{
+						eq("company",assetLose.company)
+						like("seriesNo","%"+assetLose.seriesNo+"%")
+					}.each{
+						it.userStatus = "报失"
+						it.save()
+					
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetLose.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报失"
+						chgLog.cardType = "车辆"
+						chgLog.company = assetLose.company
+						chgLog.save()
+						
+					}
+					DeviceCards.createCriteria().list{
+						eq("company",assetLose.company)
+						like("seriesNo","%"+assetLose.seriesNo+"%")
+					}.each{
+						it.userStatus = "报失"
+						it.save()
+					
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetLose.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报失"
+						chgLog.cardType = "电子设备"
+						chgLog.company = assetLose.company
+						chgLog.save()
+					}
+					FurnitureCards.createCriteria().list{
+						eq("company",assetLose.company)
+						like("seriesNo","%"+assetLose.seriesNo+"%")
+					}.each{
+						it.userStatus = "报失"
+						it.save()
+					
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetLose.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报失"
+						chgLog.cardType = "办公家具"
+						chgLog.company = assetLose.company
+						chgLog.save()
+					}
+					HouseCards.createCriteria().list{
+						eq("company",assetLose.company)
+						like("seriesNo","%"+assetLose.seriesNo+"%")
+					}.each{
+						it.userStatus = "报失"
+						it.save()
+						
+						def chgLog = new ChangeLog()
+						chgLog.changeId = assetLose.id
+						chgLog.cardId = it.id
+						chgLog.changeType = "报失"
+						chgLog.cardType = "房屋及建筑物"
+						chgLog.company = assetLose.company
+						chgLog.save()
+					}
+					
 					break
 				case assetLose.status.contains("归档"):
 					logContent = "归档"

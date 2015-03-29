@@ -23,7 +23,98 @@ class StatisticsController {
 	def imgPath ="images/rosten/actionbar/"
 	
 	def staticExport ={
+		params._file = "staticChgLog"
+		params.title = "资产变化统计清单"
 		
+		def company = Company.get(params.companyId)
+		
+		def reportDetails = []
+		
+		//获取所有相关数据
+		def c = ChangeLog.createCriteria()
+		
+		def allList = c.list{
+			eq("company",company)
+			
+			if(params.s_status && !"".equals(params.s_status)){
+				like("changeType","%" + params.s_status + "%")
+			}
+			
+			if(params.s_startDate && !"".equals(params.s_startDate)){
+				if(params.s_endDate && !"".equals(params.s_endDate)){
+					between("createDate", Util.convertToTimestamp(params.s_startDate), Util.convertToTimestamp(params.s_endDate))
+				}else{
+					between("createDate", Util.convertToTimestamp(params.s_startDate), new Date())
+				}
+			}else{
+				if(params.s_endDate && !"".equals(params.s_endDate)){
+					lt("createDate", Util.convertToTimestamp(params.s_endDate))
+				}
+			}
+			
+			order("createDate", "desc")
+		}
+		
+		allList.each{
+			def applayEntity,cardEntity
+			switch (it.changeType){
+				case "报废":
+					applayEntity = AssetScrap.get(it.changeId)
+					break
+				case "报失":
+					applayEntity = AssetLose.get(it.changeId)
+					break
+				case "调拨":
+					applayEntity = AssetAllocate.get(it.changeId)
+					break
+				case "报修":
+					applayEntity = AssetRepair.get(it.changeId)
+					break
+				
+			}
+			
+			switch (it.cardType){
+				case "车辆":
+					cardEntity = CarCards.get(it.cardId)
+					break
+				case "电子设备":
+					cardEntity = DeviceCards.get(it.cardId)
+					break
+				case "办公家具":
+					cardEntity = FurnitureCards.get(it.cardId)
+					break
+				case "房屋及建筑物":
+					cardEntity = HouseCards.get(it.cardId)
+					break
+				
+			}
+			
+			def sMap =[:]
+			sMap["sqbh"] = applayEntity.seriesNo
+			sMap["lx"] = it.changeType
+			sMap["rq"] = it.getFormattedCreatedDate()
+			sMap["zcbh"] = cardEntity.registerNum
+			sMap["zcmc"] = cardEntity.assetName
+			sMap["syr"] = cardEntity.purchaser
+			sMap["syzk"] = cardEntity.userStatus
+			
+			reportDetails << sMap
+			
+		}
+		
+		if(reportDetails.size()==0){
+			def sMap =[:]
+			sMap["sqbh"] = "无"
+			sMap["lx"] = "无"
+			sMap["rq"] = "无"
+			sMap["zcbh"] = "无"
+			sMap["zcmc"] = "无"
+			sMap["syr"] = "无"
+			sMap["syzk"] = "无"
+			
+			reportDetails << sMap
+		}
+		chain(controller: 'jasper', action: 'index', model: [data: reportDetails], params: params)
 	}
 	def staticSearchAction={
 		def actionList =[]
@@ -47,18 +138,20 @@ class StatisticsController {
 		
 		def _gridHeader =[]
 		_gridHeader << ["name":"序号","width":"30px","colIdx":0,"field":"rowIndex"]
-		_gridHeader << ["name":"申请单号","width":"100px","colIdx":1,"field":"sqbh"]
-		_gridHeader << ["name":"类型","width":"60px","colIdx":2,"field":"lx"]
-		_gridHeader << ["name":"日期","width":"auto","colIdx":3,"field":"rq"]
-		_gridHeader << ["name":"资产编号","width":"auto","colIdx":4,"field":"zcbh"]
-		_gridHeader << ["name":"资产名称","width":"auto","colIdx":5,"field":"zcmc"]
-		_gridHeader << ["name":"使用人","width":"auto","colIdx":6,"field":"syr"]
-		_gridHeader << ["name":"使用状况","width":"60px","colIdx":7,"field":"syzk"]
+		_gridHeader << ["name":"申请单号","width":"120px","colIdx":1,"field":"sqbh"]
+		_gridHeader << ["name":"类型","width":"80px","colIdx":2,"field":"lx"]
+		_gridHeader << ["name":"资产编号","width":"auto","colIdx":3,"field":"zcbh"]
+		_gridHeader << ["name":"资产名称","width":"auto","colIdx":4,"field":"zcmc"]
+		_gridHeader << ["name":"使用人","width":"auto","colIdx":5,"field":"syr"]
+		_gridHeader << ["name":"使用状况","width":"60px","colIdx":6,"field":"syzk"]
+		_gridHeader << ["name":"日期","width":"auto","colIdx":7,"field":"rq"]
 		json["gridHeader"] = _gridHeader
 		
 		//增加查询条件
 		def searchArgs =[:]
-		if(params.seriesNo && !"".equals(params.seriesNo)) searchArgs["seriesNo"] = params.seriesNo
+		if(params.s_status && !"".equals(params.s_status)) searchArgs["changeType"] = params.s_status
+		if(params.s_startDate && !"".equals(params.s_startDate)) searchArgs["startDate"] = Util.convertToTimestamp(params.s_startDate)
+		if(params.s_endDate && !"".equals(params.s_endDate)) searchArgs["endDate"] = Util.convertToTimestamp(params.s_endDate)
 		
 		def totalNum = 0	//总条目数
 		
@@ -98,16 +191,16 @@ class StatisticsController {
 				
 				switch (it.cardType){
 					case "车辆":
-						applayEntity = CarCards.get(it.cardId)
+						cardEntity = CarCards.get(it.cardId)
 						break
 					case "电子设备":
-						applayEntity = DeviceCards.get(it.cardId)
+						cardEntity = DeviceCards.get(it.cardId)
 						break
 					case "办公家具":
-						applayEntity = FurnitureCards.get(it.cardId)
+						cardEntity = FurnitureCards.get(it.cardId)
 						break
 					case "房屋及建筑物":
-						applayEntity = HouseCards.get(it.cardId)
+						cardEntity = HouseCards.get(it.cardId)
 						break
 					
 				}
@@ -140,6 +233,22 @@ class StatisticsController {
 		def pa=[max:searchArgs.max.toInteger(),offset:searchArgs.offset.toInteger()]
 		def query = {
 			eq("company",searchArgs.company)
+			
+			if(searchArgs.changeType && !"".equals(searchArgs.changeType)){
+				like("changeType","%" + searchArgs.changeType + "%")
+			}
+			if(searchArgs.startDate && !"".equals(searchArgs.startDate)){
+				if(searchArgs.endDate && !"".equals(searchArgs.endDate)){
+					between("createDate", searchArgs.startDate, searchArgs.endDate)
+				}else{
+					between("createDate", searchArgs.startDate, new Date())
+				}
+			}else{
+				if(searchArgs.endDate && !"".equals(searchArgs.endDate)){
+					lt("createDate", searchArgs.endDate)
+				}
+			}
+			
 			order("createDate", "desc")
 		}
 		return c.list(pa,query)
@@ -149,6 +258,20 @@ class StatisticsController {
 		def c = ChangeLog.createCriteria()
 		def query = {
 			eq("company",searchArgs.company)
+			if(searchArgs.changeType && !"".equals(searchArgs.changeType)){
+				like("changeType","%" + searchArgs.changeType + "%")
+			}
+			if(searchArgs.startDate && !"".equals(searchArgs.startDate)){
+				if(searchArgs.endDate && !"".equals(searchArgs.endDate)){
+					between("createDate", searchArgs.startDate, searchArgs.endDate)
+				}else{
+					between("createDate", searchArgs.startDate, new Date())
+				}
+			}else{
+				if(searchArgs.endDate && !"".equals(searchArgs.endDate)){
+					lt("createDate", searchArgs.endDate)
+				}
+			}
 			order("createDate", "desc")
 		}
 		return c.count(query)

@@ -1,30 +1,31 @@
 /**
  * @author rosten
  */
-define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","dojo/date/stamp",,
+define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","dojo/date/stamp",
          "rosten/kernel/behavior" ], function(
-		connect, lang,registry,kernel,stamp) {
+		connect, lang,registry,kernel,datestamp) {
 	
 	static_export =function(){
 		var htmlStr = rosten.webPath + "/statistics/staticExport";
 		
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+    	htmlStr += "?_format=HTML&companyId=" + companyId;
+    	
 		var s_status = registry.byId("s_status");
 		if(s_status.get("value")!=""){
-			htmlStr += "?s_status=" + s_status.get("value");
+			htmlStr += "&s_status=" + s_status.get("value");
 		}
 		
 		var s_startDate = registry.byId("s_startDate");
-		if(s_startDate.get("value")!=""){
-			htmlStr += "?s_status=" + datestamp.toISOString(s_startDate.get("value"),{selector: "date"});
+		if(s_startDate.get("value") && s_startDate.get("value")!=""){
+			htmlStr += "&s_startDate=" + datestamp.toISOString(s_startDate.get("value"),{selector: "date"});
 		}
 
 		var s_endDate = registry.byId("s_endDate");
-		if(s_endDate.get("value")!=""){
-			htmlStr += "?s_status=" + datestamp.toISOString(s_endDate.get("value"),{selector: "date"});
+		if(s_endDate.get("value") && s_endDate.get("value")!=""){
+			htmlStr += "&s_endDate=" + datestamp.toISOString(s_endDate.get("value"),{selector: "date"});
 		}
 		
-    	htmlStr += "&_format=HTML";
-    	
     	window.open(htmlStr);
 	};
 	static_search =function(){
@@ -36,12 +37,12 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		}
 		
 		var s_startDate = registry.byId("s_startDate");
-		if(s_startDate.get("value")!=""){
+		if(s_startDate.get("value") && s_startDate.get("value")!=""){
 			content.s_startDate = datestamp.toISOString(s_startDate.get("value"),{selector: "date"});
 		}
 
 		var s_endDate = registry.byId("s_endDate");
-		if(s_endDate.get("value")!=""){
+		if(s_endDate.get("value") && s_endDate.get("value")!=""){
 			content.s_endDate = datestamp.toISOString(s_endDate.get("value"),{selector: "date"});
 		}
 		
@@ -55,8 +56,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			registry.byId("s_status").set("value","");
-			registry.byId("s_startDate").set("value","");
-			registry.byId("s_endDate").set("value","");
+			registry.byId("s_startDate").set("value"," ");
+			registry.byId("s_endDate").set("value"," ");
 			
 			rosten.kernel.refreshGrid();
 			break;

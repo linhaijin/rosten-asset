@@ -174,7 +174,12 @@ class AssetCategoryChooseController {
 					like("assetStatus","%已报失%")
 				}
 			}else{
-				eq("assetStatus","已入库")
+				or{
+					eq("assetStatus","已入库")
+					like("assetStatus","%已调拨%")
+					like("assetStatus","%已报废%")
+					like("assetStatus","%已报修%")
+				}
 			}
 			
 			if(assetDepart != null && assetDepart != ""){

@@ -19,7 +19,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	//2014-12-06 修复资产卡片分类信息
 	asset_repair = function(){
-		rosten.readSyncNoTime(rosten.webPath + "/assetConfig/assetCategoryRepair", {},function(data){
+		rosten.readSyncNoTime(rosten.webPath + "/assetConfig/assetDataRepair", {},function(data){
 			if(data.result==true || data.result == "true"){
 				rosten.alert("修复成功！");
 			}else{

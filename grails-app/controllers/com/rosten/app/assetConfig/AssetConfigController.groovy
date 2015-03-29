@@ -10,6 +10,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Depart
 import com.rosten.app.assetCards.*
+import com.rosten.app.assetChange.*
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -19,6 +20,117 @@ class AssetConfigController {
 	def assetConfigService
 	
 	def imgPath ="images/rosten/actionbar/"
+	
+	//2015-3-29---------修复相关数据------仅供管理员使用
+	private def createChgLog ={changeType,changeEntity,cardType,cardEntity->
+		def chgLog = new ChangeLog()
+		chgLog.changeId = changeEntity.id
+		chgLog.cardId = cardEntity.id
+		chgLog.changeType = changeType
+		chgLog.cardType = cardType
+		chgLog.company = changeEntity.company
+		chgLog.save()
+	}
+	def assetDataRepair ={
+		def json
+		
+		try{
+			//获取所有的申请
+			def allList =[]
+			allList << [name:"调拨",data:AssetAllocate.createCriteria().list{eq("status","已结束")}]
+			allList << [name:"报修",data:AssetRepair.createCriteria().list{eq("status","已结束")}]
+			allList << [name:"报失",data:AssetLose.createCriteria().list{eq("status","已结束")}]
+			allList << [name:"报废",data:AssetScrap.createCriteria().list{eq("status","已结束")}]
+			
+			allList.each{
+				it.data.each{item->
+					//车辆
+					CarCards.createCriteria().list{
+						like("seriesNo","%"+item.seriesNo+"%")
+					}.each{card ->
+						
+						//判断是否已经存在变换日志
+						def _entity = ChangeLog.findByChangeIdAndCardId(item.id,card.id)
+						if(!_entity){
+							if(it.name.equals("调拨")){
+								card.userDepart = item.newDepart
+								card.purchaser = item.newUser
+								card.assetStatus = "已入库"
+								card.save()
+							}
+							this.createChgLog(it.name,item,"车辆",card)
+						}
+						
+					}
+					
+					//电子设备
+					DeviceCards.createCriteria().list{
+						like("seriesNo","%"+item.seriesNo+"%")
+					}.each{card ->
+						//判断是否已经存在变换日志
+						def _entity = ChangeLog.findByChangeIdAndCardId(item.id,card.id)
+						if(!_entity){
+							if(it.name.equals("调拨")){
+								card.userDepart = item.newDepart
+								card.purchaser = item.newUser
+								card.assetStatus = "已入库"
+								card.save()
+							}
+						
+							this.createChgLog(it.name,item,"电子设备",card)
+						}
+					}
+					
+					//办公家具
+					FurnitureCards.createCriteria().list{
+						like("seriesNo","%"+item.seriesNo+"%")
+					}.each{card ->
+						
+						//判断是否已经存在变换日志
+						def _entity = ChangeLog.findByChangeIdAndCardId(item.id,card.id)
+						if(!_entity){
+						
+							if(it.name.equals("调拨")){
+								card.userDepart = item.newDepart
+								card.purchaser = item.newUser
+								card.assetStatus = "已入库"
+								card.save()
+							}
+						
+							this.createChgLog(it.name,item,"办公家具",card)
+						}
+					}
+					
+					//房屋及建筑物
+					HouseCards.createCriteria().list{
+						like("seriesNo","%"+item.seriesNo+"%")
+					}.each{card ->
+					
+						//判断是否已经存在变换日志
+						def _entity = ChangeLog.findByChangeIdAndCardId(item.id,card.id)
+						if(!_entity){
+					
+							if(it.name.equals("调拨")){
+								card.userDepart = item.newDepart
+								card.purchaser = item.newUser
+								card.assetStatus = "已入库"
+								card.save()
+							}
+						
+							this.createChgLog(it.name,item,"房屋及建筑物",card)
+						
+						}
+					}
+				}
+			}
+			
+			
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
 	
 	//2014-12-06 修复资产 卡片信息-----仅供管理员使用
 	private def getRostenCategoryByName={rootCategory,categoryName->
@@ -273,7 +385,7 @@ class AssetConfigController {
 		//2014-12-06 修复资产看片分类信息
 		def currentUser = springSecurityService.getCurrentUser()
 		if("admin".equals(currentUser.getUserType())){
-			actionList << createAction("修复资产卡片分类",imgPath + "init.gif","asset_repair")
+			actionList << createAction("修复资产相关数据",imgPath + "init.gif","asset_repair")
 		
 		}
 		render actionList as JSON

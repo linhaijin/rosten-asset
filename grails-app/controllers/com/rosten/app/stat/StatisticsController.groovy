@@ -52,7 +52,7 @@ class StatisticsController {
 				}
 			}
 			
-			order("createDate", "desc")
+			order("changeId", "desc")
 		}
 		
 		allList.each{
@@ -249,7 +249,7 @@ class StatisticsController {
 				}
 			}
 			
-			order("createDate", "desc")
+			order("changeId", "desc")
 		}
 		return c.list(pa,query)
 	}
@@ -272,7 +272,6 @@ class StatisticsController {
 					lt("createDate", searchArgs.endDate)
 				}
 			}
-			order("createDate", "desc")
 		}
 		return c.count(query)
 	}

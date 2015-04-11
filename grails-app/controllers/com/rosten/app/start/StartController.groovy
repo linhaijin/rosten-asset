@@ -73,6 +73,7 @@ class StartController {
 		render json as JSON
 	}
 	def getGtask ={
+		
 		def user = User.get(params.userId)
 		def company = Company.get(params.companyId)
 		

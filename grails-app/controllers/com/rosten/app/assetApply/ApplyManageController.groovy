@@ -61,6 +61,8 @@ class ApplyManageController {
 	def shareService
 	def startService
 	
+	private def flowCode = "assetApply"
+	
 //	/*机构代码转化列表*/
 //	def getRegions = {
 //		def regions = []
@@ -182,6 +184,7 @@ class ApplyManageController {
 						break;
 					case entity.status.contains("打印"):
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("打印申请单",webPath +imgPath + "word_print.png",strname + "_form_print")
 						actionList << createAction("完成",webPath +imgPath + "submit.png",strname + "_submit")
 						actionList << createAction("回退",webPath +imgPath + "back.png",strname + "_back")
 						break;
@@ -207,9 +210,13 @@ class ApplyManageController {
 		def userGroups = UserGroup.findAllByUser(currentUser).collect { elem ->
 		  elem.group.groupName
 		}
-		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups){
+		//2015-4-10-----资产申请允许所有员工均能申请
+		if("xhzcgly" in userGroups || "协会资产管理员" in userGroups){
 			actionList << createAction("资产申请",imgPath + "add.png",strname + "_add")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+			actionList << createAction("打印审批单",imgPath + "word_print.png",strname + "_print")
+		}else{
+			actionList << createAction("资产申请",imgPath + "add.png",strname + "_add")
 			actionList << createAction("打印审批单",imgPath + "word_print.png",strname + "_print")
 		}
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
@@ -474,9 +481,7 @@ class ApplyManageController {
 		
 		//购置年月
 		Calendar cal = Calendar.getInstance();
-		c = cal.get(Calendar.YEAR).toString().substring(2) + (cal.get(Calendar.MONTH)+1).toString()
-		
-		c = c.padLeft(2,"0")
+		c = cal.get(Calendar.YEAR).toString().substring(2) + (cal.get(Calendar.MONTH)+1).toString().padLeft(2,"0")
 		
 		//资产序号
 		d = config.nowSN.toString().padLeft(3,"0")
@@ -818,6 +823,12 @@ class ApplyManageController {
 		}
 		
 		if(applyNotes.save(flush:true)){
+			
+			if(!"新建".equals(frontStatus) && !"打印盖章".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,applyNotes.id,this.flowCode)
+			}
+			
 			//添加日志
 			def logContent
 			switch (true){

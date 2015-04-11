@@ -44,6 +44,7 @@ class AssetLoseController {
 	def startService
 	
 	def imgPath ="images/rosten/actionbar/"
+	private def flowCode = "assetLose"
 	
 	def assetLoseForm = {
 		def webPath = request.getContextPath() + "/"
@@ -95,10 +96,13 @@ class AssetLoseController {
 		}
 		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups || "admin".equals(currentUser.getUserType())){
 			actionList << createAction("资产报失",imgPath + "add.png",strname + "_add")
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		}else{
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		}
-		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -839,6 +843,12 @@ class AssetLoseController {
 		}
 		
 		if(assetLose.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新建".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,assetLose.id,this.flowCode)
+			}
+			//--------------------------------------------------------------------------
 			//添加日志
 			def logContent
 			switch (true){

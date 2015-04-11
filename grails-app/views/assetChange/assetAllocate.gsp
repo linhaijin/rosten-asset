@@ -170,9 +170,10 @@
 				rosten.toggleAction(buttonWidget,true);
 				
 				var content = {};
-
+				var status = "${assetAllocate?.status}";
+				
 				//增加对应节点上的金额控制
-				if("${assetAllocate?.status}" == "新建"){
+				if(status == "新建"){
 					if("${isSubDepart}"==true || "${isSubDepart}"=="true"){
 						content.selectDepart = "${assetAllocate?.getOriginalDepartName()}";
 					}
@@ -181,9 +182,16 @@
 					}
 					conditionObj.conditionName = "IsSubDepart";
 					conditionObj.conditionValue = "${isSubDepart}";
-				}else if("${assetAllocate?.status}" == "调出部门审核" || "${assetAllocate?.status}" == "调入部门资产管理员审核"){
+				}else if(status == "调出部门审核" || status == "调入部门资产管理员审核"){
 					//此种情况只在二级单位无子部门情况
 					content.selectDepart = "${assetAllocate?.getNewDepartName()}";
+				}else if(status=="财务部审核"){
+					//2015-4-11------增加金额的判断
+					if(!conditionObj){
+						conditionObj = {};
+					}
+					conditionObj.conditionName = "condition";
+					conditionObj.conditionValue = ${assetAllocate?.assetTotal};
 				}
 
 				//增加对排他分支的控制

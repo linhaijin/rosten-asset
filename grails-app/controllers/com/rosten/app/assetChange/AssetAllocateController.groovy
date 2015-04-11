@@ -33,6 +33,9 @@ import com.rosten.app.gtask.Gtask
 import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport
 
+/*
+ * 资产调拨
+ */
 class AssetAllocateController {
 	def assetCardsService
     def assetChangeService
@@ -44,6 +47,7 @@ class AssetAllocateController {
 	def startService
 
 	def imgPath ="images/rosten/actionbar/"
+	private def flowCode = "assetAllocate"
 	
 	def assetAllocateForm = {
 		def webPath = request.getContextPath() + "/"
@@ -91,12 +95,15 @@ class AssetAllocateController {
 		}
 		if("zcgly" in userGroups || "xhzcgly" in userGroups || "admin".equals(currentUser.getUserType()) || "资产管理员" in userGroups || "协会资产管理员" in userGroups){
 			actionList << createAction("资产调拨",imgPath + "add.png",strname + "_add")
+			actionList << createAction("打印调拨单",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
-			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		}else{
+			actionList << createAction("打印调拨单",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		}
-		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
-		
 		render actionList as JSON
 	}
 
@@ -747,6 +754,13 @@ class AssetAllocateController {
 		}
 		
 		if(assetAllocate.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新建".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,assetAllocate.id,this.flowCode)
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){

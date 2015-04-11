@@ -5,6 +5,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
          "rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel,datestamp) {
 	
+	//2015-4-11------------------统计汇总导出，打印功能-------------------------
+	staticSearch_export = function(type){
+	    var companyId = rosten.kernel.getUserInforByKey("companyid");
+	    var url = rosten.webPath + "/statistics/staticSearch?companyId=" + companyId;
+	    url += "&_format=" + type;
+	    window.open(url);
+	};
+	
 	static_export =function(){
 		var htmlStr = rosten.webPath + "/statistics/staticExport";
 		
@@ -76,7 +84,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             rosten.kernel.setHref(rosten.webPath + "/statistics/chart?companyId=" + companyId, oString);
             break;
 		case "staticCollect":
-			rosten.kernel.setHref(rosten.webPath + "/statistics/staticSearch?companyId=" + companyId, oString);
+			// rosten.kernel.setHref(rosten.webPath + "/statistics/staticSearch?companyId=" + companyId, oString);
+			rosten.kernel.setHref(rosten.webPath + "/statistics/staticSearchTool?companyId=" + companyId, oString);
             break;
 		case "staticSearch":
 			var naviJson = {
@@ -88,6 +97,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             rosten.kernel.addRightContent(naviJson);
 		}
 		
-	}
+	};
 	connect.connect("show_naviEntity", show_staticNaviEntity);
 });

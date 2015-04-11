@@ -276,12 +276,18 @@ class StatisticsController {
 		return c.count(query)
 	}
 	
-	
+	//2015-4-11-----------新增-------------------------
+	def staticSearchTool ={
+		def model =[:]
+		def company = Company.get(params.companyId)
+		model["company"] = company
+		render(view:'/statistics/staticSearchView',model:model)
+	}
 	
 	//2015-3-25----------新增-------------------------
 	def staticSearch={
 		params._file = "staticSearch"
-		params._format = "HTML"
+//		params._format = "HTML"
 		params.title = "办事部门固定资产总值"
 		
 		def reportDetails = []
@@ -297,7 +303,7 @@ class StatisticsController {
 					
 					//车辆
 					CarCards.findAllByUserDepart(dept).each{card ->
-						if("报废".equals(card.userStatus)){
+						if(!"报废".equals(card.userStatus)){
 							smap["clsl"] += 1
 							smap["clyz"] += card.onePrice
 						}else{
@@ -307,7 +313,7 @@ class StatisticsController {
 					}
 					//电子设备
 					DeviceCards.findAllByUserDepart(dept).each{card ->
-						if("报废".equals(card.userStatus)){
+						if(!"报废".equals(card.userStatus)){
 							smap["clsl"] += 1
 							smap["clyz"] += card.onePrice
 						}else{
@@ -325,7 +331,7 @@ class StatisticsController {
 					
 					//办公家具
 					FurnitureCards.findAllByUserDepart(dept).each{card ->
-						if("报废".equals(card.userStatus)){
+						if(!"报废".equals(card.userStatus)){
 							smap["clsl"] += 1
 							smap["clyz"] += card.onePrice
 						}else{
@@ -365,7 +371,7 @@ class StatisticsController {
 		CarCards.createCriteria().list{
 			'in'("userDepart",userDepartList)
 		}.each{card->
-			if("报废".equals(card.userStatus)){
+			if(!"报废".equals(card.userStatus)){
 				smap["clsl"] += 1
 				smap["clyz"] += card.onePrice
 			}else{
@@ -386,7 +392,7 @@ class StatisticsController {
 			'in'("userDepart",userDepartList)
 		}
 		allList.each{card->
-			if("报废".equals(card.userStatus)){
+			if(!"报废".equals(card.userStatus)){
 				smap["clsl"] += 1
 				smap["clyz"] += card.onePrice
 			}else{

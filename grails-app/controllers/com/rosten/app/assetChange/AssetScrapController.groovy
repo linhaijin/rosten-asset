@@ -33,6 +33,9 @@ import com.rosten.app.gtask.Gtask
 import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport
 
+/*
+ * 资产报废
+ */
 class AssetScrapController {
 	def assetCardsService
     def assetChangeService
@@ -44,6 +47,7 @@ class AssetScrapController {
 	def startService
 
 	def imgPath ="images/rosten/actionbar/"
+	private def flowCode = "assetScrap"
 	
 	def assetScrapForm = {
 		def webPath = request.getContextPath() + "/"
@@ -90,11 +94,15 @@ class AssetScrapController {
 		}
 		if("zcgly" in userGroups || "xhzcgly" in userGroups || "资产管理员" in userGroups || "协会资产管理员" in userGroups || "admin".equals(currentUser.getUserType())){
 			actionList << createAction("资产报废",imgPath + "add.png",strname + "_add")
+			actionList << createAction("打印报废单",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
 			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
-			actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		}else{
+			actionList << createAction("打印报废单",imgPath + "word_print.png",strname + "_print")
+			actionList << createAction("批量导出",imgPath + "export.png",strname + "_export")
+			actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		}
-		actionList << createAction("导出",imgPath + "export.png",strname + "_export")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
@@ -867,6 +875,13 @@ class AssetScrapController {
 		}
 		
 		if(assetScrap.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新建".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,assetScrap.id,this.flowCode)
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){

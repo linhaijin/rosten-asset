@@ -684,7 +684,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="55" splitType="Immediate">
+		<band height="61" splitType="Immediate">
 			<staticText>
 				<reportElement x="0" y="0" width="138" height="41" uuid="c4406cb2-9261-410c-ba9d-4b0fd8b02eb9"/>
 				<box>
@@ -816,6 +816,15 @@
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjbsczzcyz}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="642" y="41" width="80" height="20" uuid="6c4b3232-fdb9-4d0e-aa6b-3b2b3f546227"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="722" y="41" width="40" height="20" uuid="a5cf0195-0b83-49a8-a8a8-d7c987350d9b"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

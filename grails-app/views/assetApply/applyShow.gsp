@@ -288,6 +288,11 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
+			//2015-4-11------增加表单中审批单打印功能-----------------------------------------------------
+			assetApply_form_print = function(){
+				var id = registry.byId("id").get("value");
+				window.open(rosten.webPath + "/applyManage/assetApplyPrint/" + id,"审批单打印");
+			};
 		});
     </script>
 </head>
@@ -383,12 +388,11 @@
 			            </td>
 					</tr>
 					<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>规格型号：</div></td>
+						<td><div align="right">规格型号：</div></td>
 			            <td>
 			            	<input id="specifications" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"specifications",${fieldAcl.isReadOnly("specifications")},
                                	trim:true,
-                               	required:true,
                                	${isAllowedEdit in ['new','yes']?'':'readOnly:true,'} 
              					value:"${applyNotes?.specifications}"
                            	'/>
@@ -425,7 +429,7 @@
 			            </td>
 			       	</tr>
 			       	<tr>
-						<td><div align="right"><span style="color:red">*&nbsp;</span>是否列入<br>年度预算：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>列入年度预算：</div></td>
 					    <td colspan="3">
 					    	<input id="isInYearPlan1" data-dojo-type="dijit/form/RadioButton"
 				           		data-dojo-props='name:"isInYearPlan",type:"radio",${fieldAcl.isReadOnly("isInYearPlan")},

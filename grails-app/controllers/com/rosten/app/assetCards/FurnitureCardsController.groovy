@@ -218,7 +218,9 @@ class FurnitureCardsController {
 		if(params.userDepart && !"".equals(params.userDepart)){
 			params.userDepart.split(",").each{
 				def _list = []
-				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
+				def _depart = Depart.get(it)
+				userDepartList += shareService.getAllDepartByChild(_list,_depart)
+				userDepartList << _depart
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}

@@ -38,28 +38,28 @@
 	<field name="bgsbyz" class="java.lang.Double"/>
 	<field name="bfzcsl" class="java.lang.Double"/>
 	<field name="bfzcyz" class="java.lang.Double"/>
-	<variable name="clyzsum" class="java.lang.Double" calculation="Sum">
+	<variable name="clyzsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{clyz}]]></variableExpression>
 	</variable>
-	<variable name="clslsum" class="java.lang.Double" calculation="Sum">
+	<variable name="clslsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{clsl}]]></variableExpression>
 	</variable>
-	<variable name="gdzcslsum" class="java.lang.Double" calculation="Sum">
+	<variable name="gdzcslsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{gdzcsl}]]></variableExpression>
 	</variable>
-	<variable name="gdzcyzsum" class="java.lang.Double" calculation="Sum">
+	<variable name="gdzcyzsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{gdzcyz}]]></variableExpression>
 	</variable>
-	<variable name="bgsbslsum" class="java.lang.Double" calculation="Sum">
+	<variable name="bgsbslsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{bgsbsl}]]></variableExpression>
 	</variable>
-	<variable name="bgsbyzsum" class="java.lang.Double" calculation="Sum">
+	<variable name="bgsbyzsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{bgsbyz}]]></variableExpression>
 	</variable>
-	<variable name="bfzcslsum" class="java.lang.Double" calculation="Sum">
+	<variable name="bfzcslsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{bfzcsl}]]></variableExpression>
 	</variable>
-	<variable name="bfzcyzsum" class="java.lang.Double" calculation="Sum">
+	<variable name="bfzcyzsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{bfzcyz}]]></variableExpression>
 	</variable>
 	<variable name="zhjclsl" class="java.lang.Double" calculation="Sum">

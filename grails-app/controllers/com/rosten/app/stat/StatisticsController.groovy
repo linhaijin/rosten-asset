@@ -307,6 +307,7 @@ class StatisticsController {
 							smap["clsl"] += 1
 							smap["clyz"] += card.onePrice
 						}else{
+							//报废
 							smap["bfzcsl"] += 1
 							smap["bfzcyz"] += card.onePrice
 						}
@@ -314,10 +315,6 @@ class StatisticsController {
 					//电子设备
 					DeviceCards.findAllByUserDepart(dept).each{card ->
 						if(!"报废".equals(card.userStatus)){
-							smap["clsl"] += 1
-							smap["clyz"] += card.onePrice
-						}else{
-							//判断是否为固定资产或者办公设备
 							if("办公设备".equals(card.userCategory.categoryName)){
 								smap["bgsbsl"] += 1
 								smap["bgsbyz"] += card.onePrice
@@ -325,6 +322,10 @@ class StatisticsController {
 								smap["gdzcsl"] += 1
 								smap["gdzcyz"] += card.onePrice
 							}
+						}else{
+							//报废---------------------
+							smap["bfzcsl"] += 1
+							smap["bfzcyz"] += card.onePrice
 						}
 					
 					}
@@ -332,9 +333,7 @@ class StatisticsController {
 					//办公家具
 					FurnitureCards.findAllByUserDepart(dept).each{card ->
 						if(!"报废".equals(card.userStatus)){
-							smap["clsl"] += 1
-							smap["clyz"] += card.onePrice
-						}else{
+							
 							//判断是否为固定资产或者办公设备
 							if("办公设备".equals(card.userCategory.categoryName)){
 								smap["bgsbsl"] += 1
@@ -343,6 +342,9 @@ class StatisticsController {
 								smap["gdzcsl"] += 1
 								smap["gdzcyz"] += card.onePrice
 							}
+						}else{
+							smap["bfzcsl"] += 1
+							smap["bfzcyz"] += card.onePrice
 						}
 					
 					}
@@ -359,6 +361,7 @@ class StatisticsController {
 		//获取协会下面所有的部门id
 		def userDepartList = []
 		if(xhDepart){
+			userDepartList << xhDepart
 			xhDepart.children.each{
 				def _list = []
 				userDepartList += shareService.getAllDepartByChild(_list,it)
@@ -391,11 +394,8 @@ class StatisticsController {
 		allList += FurnitureCards.createCriteria().list{
 			'in'("userDepart",userDepartList)
 		}
-		allList.each{card->
+		allList.unique().each{card->
 			if(!"报废".equals(card.userStatus)){
-				smap["clsl"] += 1
-				smap["clyz"] += card.onePrice
-			}else{
 				//判断是否为固定资产或者办公设备
 				if("办公设备".equals(card.userCategory.categoryName)){
 					smap["bgsbsl"] += 1
@@ -404,6 +404,9 @@ class StatisticsController {
 					smap["gdzcsl"] += 1
 					smap["gdzcyz"] += card.onePrice
 				}
+			}else{
+				smap["bfzcsl"] += 1
+				smap["bfzcyz"] += card.onePrice
 			}
 		}
 		reportDetails << smap

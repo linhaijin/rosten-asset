@@ -297,7 +297,7 @@ class InventoryTaskController {
 			params.userDepart.split(",").each{
 				def _list = []
 				userDepartList += shareService.getAllDepartByChild(_list,Depart.get(it))
-//				userDepartList << Depart.get(it)
+				userDepartList << Depart.get(it)
 			}
 			searchArgs["userDepart"] = userDepartList.unique()
 		}

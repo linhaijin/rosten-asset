@@ -318,7 +318,7 @@ class StatisticsController {
 							if("办公设备".equals(card.userCategory.categoryName)){
 								smap["bgsbsl"] += 1
 								smap["bgsbyz"] += card.onePrice
-							}else{
+							}else if("固定资产".equals(card.userCategory.categoryName)){
 								smap["gdzcsl"] += 1
 								smap["gdzcyz"] += card.onePrice
 							}
@@ -338,7 +338,26 @@ class StatisticsController {
 							if("办公设备".equals(card.userCategory.categoryName)){
 								smap["bgsbsl"] += 1
 								smap["bgsbyz"] += card.onePrice
-							}else{
+							}else if("固定资产".equals(card.userCategory.categoryName)){
+								smap["gdzcsl"] += 1
+								smap["gdzcyz"] += card.onePrice
+							}
+						}else{
+							smap["bfzcsl"] += 1
+							smap["bfzcyz"] += card.onePrice
+						}
+					
+					}
+					
+					//房屋及建筑物
+					HouseCards.findAllByUserDepart(dept).each{card ->
+						if(!"报废".equals(card.userStatus)){
+							
+							//判断是否为固定资产或者办公设备
+							if("办公设备".equals(card.userCategory.categoryName)){
+								smap["bgsbsl"] += 1
+								smap["bgsbyz"] += card.onePrice
+							}else if("固定资产".equals(card.userCategory.categoryName)){
 								smap["gdzcsl"] += 1
 								smap["gdzcyz"] += card.onePrice
 							}
@@ -400,7 +419,7 @@ class StatisticsController {
 				if("办公设备".equals(card.userCategory.categoryName)){
 					smap["bgsbsl"] += 1
 					smap["bgsbyz"] += card.onePrice
-				}else{
+				}else if("固定资产".equals(card.userCategory.categoryName)){
 					smap["gdzcsl"] += 1
 					smap["gdzcyz"] += card.onePrice
 				}

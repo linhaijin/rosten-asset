@@ -62,35 +62,35 @@
 	<variable name="bfzcyzsum" class="java.lang.Double" resetType="Group" resetGroup="diquID" calculation="Sum">
 		<variableExpression><![CDATA[$F{bfzcyz}]]></variableExpression>
 	</variable>
-	<variable name="zhjclsl" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{clslsum}]]></variableExpression>
+	<variable name="zhclslzj" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{clsl}]]></variableExpression>
 	</variable>
 	<variable name="zhjclyz" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{clyzsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{clyz}]]></variableExpression>
 	</variable>
 	<variable name="zhjgdzcsl" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{gdzcslsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{gdzcsl}]]></variableExpression>
 	</variable>
 	<variable name="zhjgdzcyz" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{gdzcyzsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{gdzcyz}]]></variableExpression>
 	</variable>
 	<variable name="zhjbgsbsl" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{bgsbslsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{bgsbsl}]]></variableExpression>
 	</variable>
 	<variable name="zhjbgsbyz" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{bgsbyzsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{bgsbyz}]]></variableExpression>
 	</variable>
 	<variable name="zhjbfzcsl" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{bfzcslsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{bfzcsl}]]></variableExpression>
 	</variable>
 	<variable name="zhjbfzcyz" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{bfzcyzsum}]]></variableExpression>
+		<variableExpression><![CDATA[$F{bfzcyz}]]></variableExpression>
 	</variable>
-	<variable name="zhjbsczzcsl" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{clslsum}+$V{gdzcslsum}+$V{bgsbslsum}]]></variableExpression>
+	<variable name="zhjbsczzcsl" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{zhclslzj}+$V{zhjgdzcsl}+$V{zhjbgsbsl}]]></variableExpression>
 	</variable>
-	<variable name="zhjbsczzcyz" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$V{clyzsum}+$V{gdzcyzsum}+$V{bgsbyzsum}]]></variableExpression>
+	<variable name="zhjbsczzcyz" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{zhjclyz}+$V{zhjgdzcyz}+$V{zhjbgsbyz}]]></variableExpression>
 	</variable>
 	<group name="diquID">
 		<groupExpression><![CDATA[$F{dqID}]]></groupExpression>
@@ -697,8 +697,17 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[总合计]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="642" y="41" width="80" height="20" uuid="6c4b3232-fdb9-4d0e-aa6b-3b2b3f546227"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="722" y="41" width="40" height="20" uuid="a5cf0195-0b83-49a8-a8a8-d7c987350d9b"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 			<textField pattern="###0">
-				<reportElement x="138" y="0" width="28" height="41" uuid="a828c29c-a01f-4d9a-89e0-a43483295ffe"/>
+				<reportElement x="138" y="0" width="28" height="41" uuid="76b47ac2-e7c4-4053-8f40-1286d4a8a880"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -707,10 +716,10 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$V{zhjclsl}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{zhclslzj}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="166" y="0" width="87" height="41" uuid="01ffeee9-d096-4793-9d7b-ff837892b905"/>
+			<textField pattern="###0.00">
+				<reportElement x="166" y="0" width="87" height="41" uuid="01d72ad2-f27f-459d-9ac9-d93ae7953a90"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -721,8 +730,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjclyz}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0">
-				<reportElement x="253" y="0" width="28" height="41" uuid="5edf5435-b5ab-49e0-95e2-9fed321d1636"/>
+			<textField>
+				<reportElement x="253" y="0" width="28" height="41" uuid="cbc57a04-6856-46ee-9950-305fcf28eb3a"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -733,8 +742,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjgdzcsl}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="281" y="0" width="87" height="41" uuid="15323491-ecba-4c56-8857-460fb70af13b"/>
+			<textField pattern="###0.00">
+				<reportElement x="281" y="0" width="87" height="41" uuid="dfbe4794-d12a-4134-a2f1-c9dcbb9b94d6"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -746,7 +755,7 @@
 				<textFieldExpression><![CDATA[$V{zhjgdzcyz}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="368" y="0" width="28" height="41" uuid="f9f49f4e-b20a-48cb-a44d-1b450ed3ccef"/>
+				<reportElement x="368" y="0" width="28" height="41" uuid="ac953f92-8747-4560-a90c-fc590ff99ef5"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -757,8 +766,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjbgsbsl}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="396" y="0" width="87" height="41" uuid="13f86e04-ec2a-4ef4-8137-96b00da72148"/>
+			<textField pattern="###0.00">
+				<reportElement x="396" y="0" width="87" height="41" uuid="2fd9d07f-fc7a-4c9e-8702-07624b96d201"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -770,7 +779,7 @@
 				<textFieldExpression><![CDATA[$V{zhjbgsbyz}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="483" y="0" width="28" height="41" uuid="84c3f477-950e-4867-bda5-c4e60dd7f6b2"/>
+				<reportElement x="483" y="0" width="28" height="41" uuid="75be530e-85ab-49c0-932b-edfdc91c6fa2"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -781,8 +790,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjbfzcsl}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="511" y="0" width="87" height="41" uuid="64399c89-0815-4116-936b-19ca4a58c07d"/>
+			<textField pattern="###0.00">
+				<reportElement x="511" y="0" width="87" height="41" uuid="ed278fcf-f3f3-44e9-8273-124a3226e181"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -794,7 +803,7 @@
 				<textFieldExpression><![CDATA[$V{zhjbfzcyz}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="598" y="0" width="42" height="41" uuid="ab12a82c-28e3-4545-b062-2ad7f907b317"/>
+				<reportElement x="598" y="0" width="42" height="41" uuid="476362e0-a51b-49f1-b9d8-94585ca36383"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -805,8 +814,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjbsczzcsl}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="640" y="0" width="122" height="41" uuid="2fba4bd5-97a5-47d1-9c0f-4490298fc13d"/>
+			<textField pattern="###0.00">
+				<reportElement x="640" y="0" width="122" height="41" uuid="eac5e527-5d5d-47f3-902e-97821ac43de9"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -816,15 +825,6 @@
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{zhjbsczzcyz}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="642" y="41" width="80" height="20" uuid="6c4b3232-fdb9-4d0e-aa6b-3b2b3f546227"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="722" y="41" width="40" height="20" uuid="a5cf0195-0b83-49a8-a8a8-d7c987350d9b"/>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

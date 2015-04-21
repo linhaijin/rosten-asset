@@ -132,7 +132,7 @@
 						conditionObj = {};
 					}
 					conditionObj.conditionName = "money";
-					conditionObj.conditionValue = ${applyNotes?.onePrice};
+					conditionObj.conditionValue = ${Math.round(applyNotes.onePrice?applyNotes.onePrice:0)};
 				}
 				
 				//增加对排他分支的控制

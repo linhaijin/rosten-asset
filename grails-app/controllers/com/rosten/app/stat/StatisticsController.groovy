@@ -293,7 +293,7 @@ class StatisticsController {
 		def reportDetails = []
 		
 		//所有地区
-		def dqList = [[name:"舟山地区",code:"zsdq"],[name:"台州地区",code:"tzdq"],[name:"温州地区",code:"wzdq"],[name:"淡水地区地区",code:"dsdq"]]
+		def dqList = [[name:"舟山地区",code:"zsdq"],[name:"台州地区",code:"tzdq"],[name:"温州地区",code:"wzdq"],[name:"淡水地区地区",code:"dsdq"],[name:"服务中心",code:"fwzx"]]
 		dqList.each{dq->
 			def zsDepart = Depart.findByDepartCode(dq.code)
 			if(zsDepart){

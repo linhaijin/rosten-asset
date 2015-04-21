@@ -194,7 +194,7 @@
 						conditionObj = {};
 					}
 					conditionObj.conditionName = "money";
-					conditionObj.conditionValue = ${assetScrap?.assetTotal};
+					conditionObj.conditionValue = ${Math.round(assetScrap.assetTotal?assetScrap.assetTotal:0)};
 				}
 				
 				//增加对排他分支的控制

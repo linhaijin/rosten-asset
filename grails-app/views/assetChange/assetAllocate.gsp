@@ -191,7 +191,7 @@
 						conditionObj = {};
 					}
 					conditionObj.conditionName = "condition";
-					conditionObj.conditionValue = ${Math.round(assetScrap.assetTotal?assetScrap.assetTotal:0)};
+					conditionObj.conditionValue = ${Math.round(assetAllocate.assetTotal?assetAllocate.assetTotal:0)};
 				}
 
 				//增加对排他分支的控制
